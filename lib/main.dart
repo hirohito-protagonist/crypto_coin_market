@@ -1,4 +1,8 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'crypto_compare.service.dart';
+import 'model/total_volume.model.dart';
 
 void main() => runApp(new MyApp());
 
@@ -39,25 +43,23 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: new AppBar(
         title: new Text(widget.title),
       ),
-      body: new Center(
-        child: new Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            new Text(
-              'You have pushed the button this many times:',
-            ),
-            new Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: new FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: new Icon(Icons.add),
-      ),
+      body: FutureBuilder<http.Response>(
+        future: volumeData(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            final response = json.decode(snapshot.data.body);
+
+            final items = List.of(response['Data'].map((item) => TotalVolume.fromJson(item)));
+
+            return ListView.builder(
+              itemCount: items.length,
+              itemBuilder: (context, index) {
+                return Text('${index + 1} ${items[index].coinInfo.name}');
+              },
+            );
+          }
+          return CircularProgressIndicator();
+        }),
     );
   }
 }
