@@ -43,13 +43,12 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: new AppBar(
         title: new Text(widget.title),
       ),
-      body: FutureBuilder<http.Response>(
-        future: volumeData(),
+      body: FutureBuilder<List<TotalVolume>>(
+        future: volumeData(http.Client()),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            final response = json.decode(snapshot.data.body);
 
-            final items = List.of(response['Data'].map((item) => TotalVolume.fromJson(item)));
+            final items  = snapshot.data;
 
             return ListView.builder(
               itemCount: items.length,
