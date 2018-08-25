@@ -14,10 +14,11 @@ void main() {
 
       final client = MockClient();
       final response = {
-        "Data": [
+        'Data': [
           {
-            "CoinInfo": {
-              "Name": "BTC"
+            'CoinInfo': {
+              'Name': 'BTC',
+              'ImageUrl': '/btc.png'
             }
           }
         ]
@@ -30,6 +31,7 @@ void main() {
       final data = await volumeData(client);
       expect(data.length, 1);
       expect(data[0].coinInfo.name, 'BTC');
+      expect(data[0].coinInfo.imageUrl, 'https://www.cryptocompare.com/btc.png');
     });
 
     test('error response should return empty collection', () async {

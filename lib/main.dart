@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
 import 'crypto_compare.service.dart';
 import 'model/total_volume.model.dart';
@@ -46,18 +47,37 @@ class _MyHomePageState extends State<MyHomePage> {
       body: FutureBuilder<List<TotalVolume>>(
         future: volumeData(http.Client()),
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
 
-            final items  = snapshot.data;
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+            case ConnectionState.waiting:
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            default: {
 
-            return ListView.builder(
-              itemCount: items.length,
-              itemBuilder: (context, index) {
-                return Text('${index + 1} ${items[index].coinInfo.name}');
-              },
-            );
+              final items  = snapshot.data;
+
+              return ListView.builder(
+                itemCount: items.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    child: Row(
+                      children: <Widget>[
+                        Text('${index + 1}'),
+                        CachedNetworkImage(
+                          placeholder: CircularProgressIndicator(),
+                          imageUrl: items[index].coinInfo.imageUrl,
+                          height: 30.0,
+                        ),
+                        Text('${items[index].coinInfo.name}'),
+                      ],
+                    ),
+                  );
+                },
+              );
+            }
           }
-          return CircularProgressIndicator();
         }),
     );
   }

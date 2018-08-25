@@ -6,9 +6,13 @@ class TotalVolume {
   TotalVolume({ this.coinInfo });
 
   factory TotalVolume.fromJson(dynamic json) {
+
+    final coinInfo = json['CoinInfo'];
+
     return TotalVolume(
       coinInfo: CoinInfo(
-        name: json['CoinInfo']['Name']
+        name: coinInfo['Name'],
+        imageUrl: 'https://www.cryptocompare.com${coinInfo['ImageUrl']}',
       ),
     );
   }
