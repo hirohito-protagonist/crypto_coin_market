@@ -30,13 +30,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,18 +52,21 @@ class _MyHomePageState extends State<MyHomePage> {
               final items  = snapshot.data;
 
               return ListView.builder(
+                padding: new EdgeInsets.all(8.0),
                 itemCount: items.length,
                 itemBuilder: (context, index) {
-                  return Container(
-                    child: Row(
+                  return new Card(
+                    child: new Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        Text('${index + 1}'),
-                        CachedNetworkImage(
-                          placeholder: CircularProgressIndicator(),
-                          imageUrl: items[index].coinInfo.imageUrl,
-                          height: 30.0,
+                        new ListTile(
+                          leading: CachedNetworkImage(
+                            placeholder: CircularProgressIndicator(),
+                            imageUrl: items[index].coinInfo.imageUrl,
+                            height: 30.0,
+                          ),
+                          title: new Text('${items[index].coinInfo.name}'),
                         ),
-                        Text('${items[index].coinInfo.name}'),
                       ],
                     ),
                   );
