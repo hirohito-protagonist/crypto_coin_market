@@ -43,5 +43,15 @@ void main() {
       final data = await volumeData(client);
       expect(data.length, 0);
     });
+
+    test('parse error resposne should return empty collection', () async {
+
+      final client = MockClient();
+      when(client.get('https://min-api.cryptocompare.com/data/top/totalvol?limit=2000&tsym=USD'))
+          .thenAnswer((_) async => http.Response('', 200));
+
+      final data = await volumeData(client);
+      expect(data.length, 0);
+    });
   });
 }
