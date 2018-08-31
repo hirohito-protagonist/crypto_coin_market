@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
@@ -20,6 +20,18 @@ class MyApp extends StatelessWidget {
   }
 }
 
+Future<dynamic> marketData() async {
+
+  final volume =  await volumeData(http.Client());
+  final coins = volume.map((TotalVolume tv) => tv.coinInfo.name).toList();
+  final prices = await priceMultiFull(http.Client(), coins);
+
+  return {
+    'volume': volume,
+    'prices': prices
+  };
+}
+
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
 
@@ -37,8 +49,8 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: new AppBar(
         title: new Text(widget.title),
       ),
-      body: FutureBuilder<List<TotalVolume>>(
-        future: volumeData(http.Client()),
+      body: FutureBuilder<dynamic>(
+        future: marketData(),
         builder: (context, snapshot) {
 
           switch (snapshot.connectionState) {
@@ -48,13 +60,19 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: CircularProgressIndicator(),
               );
             default: {
+              print(snapshot.data['volume']);
 
-              final items  = snapshot.data;
+              final items  = snapshot.data['volume'];
+              final prices = snapshot.data['prices'];
 
               return ListView.builder(
                 padding: new EdgeInsets.all(8.0),
                 itemCount: items.length,
                 itemBuilder: (context, index) {
+
+                  final priceNode = prices['DISPLAY'][items[index].coinInfo.name];
+                  final price = priceNode != null ? priceNode['USD']['PRICE'] : '';
+
                   return new Card(
                     child: new Column(
                       mainAxisSize: MainAxisSize.min,
@@ -66,6 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             height: 30.0,
                           ),
                           title: new Text('${items[index].coinInfo.name}'),
+                          subtitle: new Text('${price}'),
                         ),
                       ],
                     ),

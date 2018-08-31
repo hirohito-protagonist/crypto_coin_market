@@ -27,3 +27,13 @@ Future<List<TotalVolume>> volumeData(http.Client client) async {
       .map<TotalVolume>((item) => TotalVolume.fromJson(item))
       .toList();
 }
+
+Future<dynamic> priceMultiFull(http.Client client, List<String> coins) async {
+
+  final response = await client.get('${ENDPOINT}data/pricemultifull?fsyms=BTC,ETH&tsyms=USD');
+
+  return parsedOrDefault(response.body, {
+    'RAW': {},
+    'DISPLAY': {}
+  });
+}
