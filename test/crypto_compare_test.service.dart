@@ -54,4 +54,18 @@ void main() {
       expect(data.length, 0);
     });
   });
+
+  group('partition', () {
+
+    test('split array to equal chunks', () {
+
+      expect(partition([1,2,3,4,5,6], 2), [[1,2],[3,4],[5,6]]);
+    });
+
+    test('split array to not equal chunks', () {
+
+      expect(partition([1,2,3,4,5], 3), [[1,2,3],[4,5]]);
+      expect(partition([1,2,3,4,5], 4), [[1,2,3,4],[5]]);
+    });
+  });
 }

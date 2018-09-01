@@ -28,6 +28,24 @@ Future<List<TotalVolume>> volumeData(http.Client client) async {
       .toList();
 }
 
+List<dynamic> partition(List<dynamic> arr, int maxSize) {
+
+  final out = [];
+  var innerArr = [];
+
+  for (int i = 0; i < arr.length; i++) {
+    innerArr.add(arr[i]);
+    if (innerArr.length == maxSize) {
+      out.add(innerArr);
+      innerArr = [];
+    }
+    if (i == arr.length - 1 && innerArr.length > 0) {
+      out.add(innerArr);
+    }
+  }
+  return out;
+}
+
 Future<dynamic> priceMultiFull(http.Client client, List<String> coins) async {
 
   final response = await client.get('${ENDPOINT}data/pricemultifull?fsyms=BTC,ETH&tsyms=USD');
