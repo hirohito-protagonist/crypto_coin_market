@@ -46,12 +46,33 @@ List<dynamic> partition(List<dynamic> arr, int maxSize) {
   return out;
 }
 
-Future<dynamic> priceMultiFull(http.Client client, List<String> coins) async {
+Future<dynamic> priceMultiFull(http.Client client, List<dynamic> coins) async {
 
-  final response = await client.get('${ENDPOINT}data/pricemultifull?fsyms=BTC,ETH&tsyms=USD');
+  final response = await client.get('${ENDPOINT}data/pricemultifull?fsyms=${coins.join(',')}&tsyms=USD');
 
   return parsedOrDefault(response.body, {
     'RAW': {},
     'DISPLAY': {}
   });
+}
+
+Future<dynamic> allPriceMultiFull(http.Client client, List<dynamic> coins) async {
+
+  final coinsPartition = partition(coins, 70);
+
+  return Future.wait(coinsPartition.map((c) => priceMultiFull(client, c)))
+    .then((List responses) {
+      final model = {
+        'RAW': {},
+        'DISPLAY': {}
+      };
+
+      responses.forEach((response) {
+
+        model['RAW'].addAll(response['RAW']);
+        model['DISPLAY'].addAll(response['DISPLAY']);
+      });
+      print(model);
+      return model;
+    });
 }

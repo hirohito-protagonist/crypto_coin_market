@@ -24,7 +24,7 @@ Future<dynamic> marketData() async {
 
   final volume =  await volumeData(http.Client());
   final coins = volume.map((TotalVolume tv) => tv.coinInfo.name).toList();
-  final prices = await priceMultiFull(http.Client(), coins);
+  final prices = await allPriceMultiFull(http.Client(), coins);
 
   return {
     'volume': volume,
