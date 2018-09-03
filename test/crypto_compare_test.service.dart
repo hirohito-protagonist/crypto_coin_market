@@ -24,7 +24,6 @@ void main() {
         ]
       };
 
-
       when(client.get('https://min-api.cryptocompare.com/data/top/totalvol?limit=2000&tsym=USD'))
         .thenAnswer((_) async => http.Response(json.encode(response), 200));
 
@@ -52,6 +51,70 @@ void main() {
 
       final data = await volumeData(client);
       expect(data.length, 0);
+    });
+  });
+
+  group('priceMultiFull', () {
+
+    var response;
+    var client;
+
+    setUp(() {
+      client = MockClient();
+      response = {
+        'RAW': {
+          'BTC': {
+            'PRICE': 1000
+          },
+          'ETC': {
+            'PRICE': 2000
+          }
+        },
+        'DISPLAY': {
+          'BTC': {
+            'PRICE': '\$ 1000'
+          },
+          'ETC': {
+            'PRICE': '\$ 2000'
+          }
+        }
+      };
+    });
+
+    test('success response should map to model', () async {
+
+      when(client.get('https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,ETC&tsyms=USD'))
+          .thenAnswer((_) async => http.Response(json.encode(response), 200));
+
+      final data = await priceMultiFull(client, ['BTC', 'ETC']);
+
+      expect(data, response);
+    });
+
+    test('exception of deserialization json should return default model', () async {
+
+      when(client.get('https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,ETC&tsyms=USD'))
+          .thenAnswer((_) async => http.Response('test', 200));
+
+      final data = await priceMultiFull(client, ['BTC', 'ETC']);
+
+      expect(data, {
+        'RAW': {},
+        'DISPLAY': {}
+      });
+    });
+
+    test('error response server should return default model', () async {
+
+      when(client.get('https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,ETC&tsyms=USD'))
+          .thenAnswer((_) async => http.Response(json.encode(response), 500));
+
+      final data = await priceMultiFull(client, ['BTC', 'ETC']);
+
+      expect(data, {
+        'RAW': {},
+        'DISPLAY': {}
+      });
     });
   });
 

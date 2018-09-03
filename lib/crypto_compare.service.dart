@@ -49,11 +49,13 @@ List<dynamic> partition(List<dynamic> arr, int maxSize) {
 Future<dynamic> priceMultiFull(http.Client client, List<dynamic> coins) async {
 
   final response = await client.get('${ENDPOINT}data/pricemultifull?fsyms=${coins.join(',')}&tsyms=USD');
-
-  return parsedOrDefault(response.body, {
+  final defaultModel = {
     'RAW': {},
     'DISPLAY': {}
-  });
+  };
+
+  return response.statusCode != 200 ? defaultModel :
+    parsedOrDefault(response.body, defaultModel);
 }
 
 Future<dynamic> allPriceMultiFull(http.Client client, List<dynamic> coins) async {
