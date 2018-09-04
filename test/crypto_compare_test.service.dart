@@ -118,6 +118,57 @@ void main() {
     });
   });
 
+  group('allPriceMultiFull', () {
+
+    var response;
+    var client;
+
+    setUp(() {
+      client = MockClient();
+      response = {
+        'RAW': {
+          'BTC': {
+            'PRICE': 1000
+          },
+          'ETC': {
+            'PRICE': 2000
+          }
+        },
+        'DISPLAY': {
+          'BTC': {
+            'PRICE': '\$ 1000'
+          },
+          'ETC': {
+            'PRICE': '\$ 2000'
+          }
+        }
+      };
+    });
+
+    test('should merge responses to default model', () async {
+
+      when(client.get('https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,ETC&tsyms=USD'))
+          .thenAnswer((_) async => http.Response(json.encode(response), 200));
+
+      final data = await allPriceMultiFull(client, ['BTC', 'ETC']);
+
+      expect(data, response);
+    });
+
+    test('in case of exception should return default model', () async {
+
+      when(client.get('https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,ETC&tsyms=USD'))
+          .thenThrow(new ArgumentError('The coins are limited to 300 characters'));
+
+      final data = await allPriceMultiFull(client, ['BTC', 'ETC']);
+
+      expect(data, {
+        'RAW': {},
+        'DISPLAY': {}
+      });
+    });
+  });
+
   group('partition', () {
 
     test('split array to equal chunks', () {

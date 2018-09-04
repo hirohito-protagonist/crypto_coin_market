@@ -74,7 +74,14 @@ Future<dynamic> allPriceMultiFull(http.Client client, List<dynamic> coins) async
         model['RAW'].addAll(response['RAW']);
         model['DISPLAY'].addAll(response['DISPLAY']);
       });
-      print(model);
+
       return model;
+    })
+    .catchError((e) {
+
+      return {
+        'RAW': {},
+        'DISPLAY': {}
+      };
     });
 }
