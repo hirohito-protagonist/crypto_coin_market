@@ -88,7 +88,8 @@ void main() {
 
       final data = await priceMultiFull(client, ['BTC', 'ETC']);
 
-      expect(data, response);
+      expect(data.raw, response['RAW']);
+      expect(data.display, response['DISPLAY']);
     });
 
     test('exception of deserialization json should return default model', () async {
@@ -98,10 +99,8 @@ void main() {
 
       final data = await priceMultiFull(client, ['BTC', 'ETC']);
 
-      expect(data, {
-        'RAW': {},
-        'DISPLAY': {}
-      });
+      expect(data.raw, {});
+      expect(data.display, {});
     });
 
     test('error response server should return default model', () async {
@@ -111,10 +110,8 @@ void main() {
 
       final data = await priceMultiFull(client, ['BTC', 'ETC']);
 
-      expect(data, {
-        'RAW': {},
-        'DISPLAY': {}
-      });
+      expect(data.raw, {});
+      expect(data.display, {});
     });
   });
 
@@ -152,7 +149,8 @@ void main() {
 
       final data = await allPriceMultiFull(client, ['BTC', 'ETC']);
 
-      expect(data, response);
+      expect(data.raw, response['RAW']);
+      expect(data.display, response['DISPLAY']);
     });
 
     test('in case of exception should return default model', () async {
@@ -162,10 +160,8 @@ void main() {
 
       final data = await allPriceMultiFull(client, ['BTC', 'ETC']);
 
-      expect(data, {
-        'RAW': {},
-        'DISPLAY': {}
-      });
+      expect(data.raw, {});
+      expect(data.display, {});
     });
   });
 

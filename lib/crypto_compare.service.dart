@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import 'model/total_volume.model.dart';
+import 'model/multiple_sybmols.model.dart';
 
 const ENDPOINT = 'https://min-api.cryptocompare.com/';
 
@@ -46,7 +47,7 @@ List<dynamic> partition(List<dynamic> arr, int maxSize) {
   return out;
 }
 
-Future<dynamic> priceMultiFull(http.Client client, List<dynamic> coins) async {
+Future<MultipleSymbols> priceMultiFull(http.Client client, List<dynamic> coins) async {
 
   final response = await client.get('${ENDPOINT}data/pricemultifull?fsyms=${coins.join(',')}&tsyms=USD');
   final defaultModel = {
@@ -54,34 +55,34 @@ Future<dynamic> priceMultiFull(http.Client client, List<dynamic> coins) async {
     'DISPLAY': {}
   };
 
-  return response.statusCode != 200 ? defaultModel :
-    parsedOrDefault(response.body, defaultModel);
+  return MultipleSymbols.fromJson(response.statusCode != 200 ? defaultModel :
+    parsedOrDefault(response.body, defaultModel));
 }
 
-Future<dynamic> allPriceMultiFull(http.Client client, List<dynamic> coins) async {
+Future<MultipleSymbols> allPriceMultiFull(http.Client client, List<dynamic> coins) async {
 
   final coinsPartition = partition(coins, 70);
 
   return Future.wait(coinsPartition.map((c) => priceMultiFull(client, c)))
-    .then((List responses) {
-      final model = {
+    .then((List<MultipleSymbols> responses) {
+      final model = MultipleSymbols.fromJson({
         'RAW': {},
         'DISPLAY': {}
-      };
+      });
 
-      responses.forEach((response) {
+      responses.forEach((MultipleSymbols response) {
 
-        model['RAW'].addAll(response['RAW']);
-        model['DISPLAY'].addAll(response['DISPLAY']);
+        model.raw.addAll(response.raw);
+        model.display.addAll(response.display);
       });
 
       return model;
     })
     .catchError((e) {
 
-      return {
+      return MultipleSymbols.fromJson({
         'RAW': {},
         'DISPLAY': {}
-      };
+      });
     });
 }

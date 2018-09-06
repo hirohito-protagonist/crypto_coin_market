@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
 import 'crypto_compare.service.dart';
 import 'model/total_volume.model.dart';
+import 'model/markets_view.model.dart';
 
 void main() => runApp(new MyApp());
 
@@ -20,16 +21,16 @@ class MyApp extends StatelessWidget {
   }
 }
 
-Future<dynamic> marketData() async {
+Future<MarketsViewModel> marketData() async {
 
   final volume =  await volumeData(http.Client());
   final coins = volume.map((TotalVolume tv) => tv.coinInfo.name).toList();
   final prices = await allPriceMultiFull(http.Client(), coins);
 
-  return {
-    'volume': volume,
-    'prices': prices
-  };
+  return MarketsViewModel(
+    prices: prices,
+    volume: volume,
+  );
 }
 
 class MyHomePage extends StatefulWidget {
@@ -49,7 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: new AppBar(
         title: new Text(widget.title),
       ),
-      body: FutureBuilder<dynamic>(
+      body: FutureBuilder<MarketsViewModel>(
         future: marketData(),
         builder: (context, snapshot) {
 
@@ -60,17 +61,17 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: CircularProgressIndicator(),
               );
             default: {
-              print(snapshot.data['volume']);
 
-              final items  = snapshot.data['volume'];
-              final prices = snapshot.data['prices'];
+              final items  = snapshot.data.volume;
+              final prices = snapshot.data.prices;
 
               return ListView.builder(
                 padding: new EdgeInsets.all(8.0),
                 itemCount: items.length,
                 itemBuilder: (context, index) {
 
-                  final priceNode = prices['DISPLAY'][items[index].coinInfo.name];
+                  final currency = items[index].coinInfo.name;
+                  final priceNode = prices.display.containsKey(currency) ? prices.display[currency] : null;
                   final price = priceNode != null ? priceNode['USD']['PRICE'] : '';
 
                   return new Card(
@@ -83,7 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             imageUrl: items[index].coinInfo.imageUrl,
                             height: 30.0,
                           ),
-                          title: new Text('${items[index].coinInfo.name}'),
+                          title: new Text('${currency}'),
                           subtitle: new Text('${price}'),
                         ),
                       ],
