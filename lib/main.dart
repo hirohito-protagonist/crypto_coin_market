@@ -71,8 +71,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 itemBuilder: (context, index) {
 
                   final currency = items[index].coinInfo.name;
-                  final priceNode = prices.display.containsKey(currency) ? prices.display[currency] : null;
-                  final price = priceNode != null ? priceNode['USD']['PRICE'] : '';
+                  final displayPriceNode = prices.display.containsKey(currency) ? prices.display[currency] : null;
+                  final rawPriceNode = prices.raw.containsKey(currency) ? prices.raw[currency] : null;
+                  final price = displayPriceNode != null ? displayPriceNode['USD']['PRICE'] : '';
+                  final priceChangeDisplay = displayPriceNode != null ? displayPriceNode['USD']['CHANGEPCT24HOUR'] : '';
+                  final priceChange = rawPriceNode != null ? rawPriceNode['USD']['CHANGEPCT24HOUR'] : 0;
 
                   return new Card(
                     child: new Column(
@@ -84,8 +87,41 @@ class _MyHomePageState extends State<MyHomePage> {
                             imageUrl: items[index].coinInfo.imageUrl,
                             height: 30.0,
                           ),
-                          title: new Text('${currency}'),
-                          subtitle: new Text('${price}'),
+                          title: Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '${items[index].coinInfo.fullName}',
+                                      style: TextStyle(
+                                        color: Colors.grey[500],
+                                      ),
+                                    ),
+                                    Text(
+                                      '${currency}',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: <Widget>[
+                                  Text(
+                                    '${priceChangeDisplay}%',
+                                    style: TextStyle(
+                                      color: priceChange == 0 ? Colors.black : priceChange > 0 ? Colors.green : Colors.red,
+                                    ),
+                                  ),
+                                  Text('${price}'),
+                                ],
+                              ),
+                            ]
+                          ),
                         ),
                       ],
                     ),

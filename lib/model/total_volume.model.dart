@@ -13,6 +13,7 @@ class TotalVolume {
       coinInfo: CoinInfo(
         name: coinInfo['Name'],
         imageUrl: 'https://www.cryptocompare.com${coinInfo['ImageUrl']}',
+        fullName: coinInfo['FullName'],
       ),
     );
   }
