@@ -44,93 +44,96 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
+  MarketsViewModel data;
+  var refreshKey = GlobalKey<RefreshIndicatorState>();
+
+  @override
+  void initState() {
+    super.initState();
+    refreshList();
+  }
+
+  Future<Null> refreshList() async {
+    MarketsViewModel market = await marketData();
+
+    setState(() {
+      data = market;
+    });
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
         title: new Text(widget.title),
       ),
-      body: FutureBuilder<MarketsViewModel>(
-        future: marketData(),
-        builder: (context, snapshot) {
+      body: RefreshIndicator(
+        key: refreshKey,
+        child: ListView.builder(
+          itemCount: data?.volume?.length,
+          itemBuilder: (context, i) {
 
-          switch (snapshot.connectionState) {
-            case ConnectionState.none:
-            case ConnectionState.waiting:
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            default: {
+            final currency = data.volume[i].coinInfo.name;
+            final displayPriceNode = data.prices.display.containsKey(currency) ? data.prices.display[currency] : null;
+            final rawPriceNode = data.prices.raw.containsKey(currency) ? data.prices.raw[currency] : null;
+            final price = displayPriceNode != null ? displayPriceNode['USD']['PRICE'] : '';
+            final priceChangeDisplay = displayPriceNode != null ? displayPriceNode['USD']['CHANGEPCT24HOUR'] : '';
+            final priceChange = rawPriceNode != null ? rawPriceNode['USD']['CHANGEPCT24HOUR'] : 0;
 
-              final items  = snapshot.data.volume;
-              final prices = snapshot.data.prices;
-
-              return ListView.builder(
-                padding: new EdgeInsets.all(8.0),
-                itemCount: items.length,
-                itemBuilder: (context, index) {
-
-                  final currency = items[index].coinInfo.name;
-                  final displayPriceNode = prices.display.containsKey(currency) ? prices.display[currency] : null;
-                  final rawPriceNode = prices.raw.containsKey(currency) ? prices.raw[currency] : null;
-                  final price = displayPriceNode != null ? displayPriceNode['USD']['PRICE'] : '';
-                  final priceChangeDisplay = displayPriceNode != null ? displayPriceNode['USD']['CHANGEPCT24HOUR'] : '';
-                  final priceChange = rawPriceNode != null ? rawPriceNode['USD']['CHANGEPCT24HOUR'] : 0;
-
-                  return new Card(
-                    child: new Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        new ListTile(
-                          leading: CachedNetworkImage(
-                            placeholder: CircularProgressIndicator(),
-                            imageUrl: items[index].coinInfo.imageUrl,
-                            height: 30.0,
-                          ),
-                          title: Row(
+            return new Card(
+              child: new Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  new ListTile(
+                    leading: CachedNetworkImage(
+                      placeholder: CircularProgressIndicator(),
+                      imageUrl: data.volume[i].coinInfo.imageUrl,
+                      height: 30.0,
+                    ),
+                    title: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      '${items[index].coinInfo.fullName}',
-                                      style: TextStyle(
-                                        color: Colors.grey[500],
-                                      ),
-                                    ),
-                                    Text(
-                                      '${currency}',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
+                              Text(
+                                '${data.volume[i].coinInfo.fullName}',
+                                style: TextStyle(
+                                  color: Colors.grey[500],
                                 ),
                               ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: <Widget>[
-                                  Text(
-                                    '${priceChangeDisplay}%',
-                                    style: TextStyle(
-                                      color: priceChange == 0 ? Colors.black : priceChange > 0 ? Colors.green : Colors.red,
-                                    ),
-                                  ),
-                                  Text('${price}'),
-                                ],
+                              Text(
+                                '${currency}',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ]
+                            ],
                           ),
                         ),
-                      ],
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: <Widget>[
+                            Text(
+                              '${priceChangeDisplay}%',
+                              style: TextStyle(
+                                color: priceChange == 0 ? Colors.black : priceChange > 0 ? Colors.green : Colors.red,
+                              ),
+                            ),
+                            Text('${price}'),
+                          ],
+                        ),
+                      ]
                     ),
-                  );
-                },
-              );
-            }
-          }
-        }),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+        onRefresh: refreshList,
+      ),
     );
   }
 }
