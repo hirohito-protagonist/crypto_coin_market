@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
 import 'crypto_compare.service.dart';
 import 'model/total_volume.model.dart';
 import 'model/markets_view.model.dart';
+import 'model/multiple_sybmols.model.dart';
+import 'widgets/coin_list_tile.widget.dart';
 
 void main() => runApp(new MyApp());
 
@@ -44,7 +45,10 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  MarketsViewModel data;
+  MarketsViewModel data = new MarketsViewModel(
+      volume: [],
+      prices: new MultipleSymbols(raw: {}, display: {}),
+  );
   var refreshKey = GlobalKey<RefreshIndicatorState>();
 
   @override
@@ -74,61 +78,21 @@ class _MyHomePageState extends State<MyHomePage> {
           itemCount: data?.volume?.length,
           itemBuilder: (context, i) {
 
-            final currency = data.volume[i].coinInfo.name;
+            final currency = data.volume[i]?.coinInfo?.name;
             final displayPriceNode = data.prices.display.containsKey(currency) ? data.prices.display[currency] : null;
             final rawPriceNode = data.prices.raw.containsKey(currency) ? data.prices.raw[currency] : null;
             final price = displayPriceNode != null ? displayPriceNode['USD']['PRICE'] : '';
             final priceChangeDisplay = displayPriceNode != null ? displayPriceNode['USD']['CHANGEPCT24HOUR'] : '';
             final priceChange = rawPriceNode != null ? rawPriceNode['USD']['CHANGEPCT24HOUR'] : 0;
 
-            return new Card(
-              child: new Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  new ListTile(
-                    leading: CachedNetworkImage(
-                      placeholder: CircularProgressIndicator(),
-                      imageUrl: data.volume[i].coinInfo.imageUrl,
-                      height: 30.0,
-                    ),
-                    title: Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                '${data.volume[i].coinInfo.fullName}',
-                                style: TextStyle(
-                                  color: Colors.grey[500],
-                                ),
-                              ),
-                              Text(
-                                '${currency}',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: <Widget>[
-                            Text(
-                              '${priceChangeDisplay}%',
-                              style: TextStyle(
-                                color: priceChange == 0 ? Colors.black : priceChange > 0 ? Colors.green : Colors.red,
-                              ),
-                            ),
-                            Text('${price}'),
-                          ],
-                        ),
-                      ]
-                    ),
-                  ),
-                ],
-              ),
+            return new CoinListTile(
+              key: Key("coin-list-tile-${i}"),
+              imageUrl: data.volume[i]?.coinInfo?.imageUrl,
+              name: currency,
+              fullName: data.volume[i]?.coinInfo?.fullName,
+              formattedPrice: price,
+              formattedPriceChange: priceChangeDisplay,
+              priceChange: priceChange,
             );
           },
         ),
