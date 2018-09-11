@@ -12,12 +12,12 @@ class CoinListTile extends StatelessWidget {
 
   const CoinListTile({
     Key key,
-    this.imageUrl,
-    this.name,
-    this.fullName,
-    this.formattedPrice,
-    this.priceChange,
-    this.formattedPriceChange
+    this.imageUrl = '',
+    this.name = '',
+    this.fullName = '',
+    this.formattedPrice = '',
+    this.priceChange = 0,
+    this.formattedPriceChange = ''
   }) : super(key: key);
 
   @override
@@ -58,7 +58,7 @@ class CoinListTile extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
                       Text(
-                        '${formattedPriceChange}%',
+                        formattedPriceChange == '' ? '' : '${formattedPriceChange}%',
                         style: TextStyle(
                           color: priceChange == 0 ? Colors.black : priceChange > 0 ? Colors.green : Colors.red,
                         ),
