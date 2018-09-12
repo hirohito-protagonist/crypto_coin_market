@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import './../crypto_compare.service.dart';
-import './../model/total_volume.model.dart';
-import './../model/markets_view.model.dart';
-import './../model/multiple_sybmols.model.dart';
-import './../widgets/coin_list_tile.widget.dart';
+import 'package:crypto_coin_market/crypto_compare.service.dart';
+import 'package:crypto_coin_market/model/total_volume.model.dart';
+import 'package:crypto_coin_market/model/markets_view.model.dart';
+import 'package:crypto_coin_market/model/multiple_sybmols.model.dart';
+import 'package:crypto_coin_market/widgets/coin_list_tile.widget.dart';
 
 Future<MarketsViewModel> marketData() async {
 

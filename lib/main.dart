@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'views/markets.view.dart';
+import 'package:crypto_coin_market/views/markets.view.dart';
 
 void main() => runApp(new MyApp());
 
