@@ -20,12 +20,15 @@ Future<MarketsViewModel> marketData() async {
 }
 
 class MarketsView extends StatefulWidget {
-  MarketsView({Key key, this.title}) : super(key: key);
+  MarketsView({Key key, this.title, this.onSelect}) : super(key: key);
 
   final String title;
+  final dynamic onSelect;
 
   @override
-  _MarketsViewState createState() => new _MarketsViewState();
+  _MarketsViewState createState() => new _MarketsViewState(
+    onSelect: this.onSelect
+  );
 }
 
 class _MarketsViewState extends State<MarketsView> {
@@ -35,6 +38,10 @@ class _MarketsViewState extends State<MarketsView> {
     prices: new MultipleSymbols(raw: {}, display: {}),
   );
   var refreshKey = GlobalKey<RefreshIndicatorState>();
+
+  final dynamic onSelect;
+
+  _MarketsViewState({this.onSelect}): super();
 
   @override
   void initState() {
@@ -78,6 +85,10 @@ class _MarketsViewState extends State<MarketsView> {
               formattedPrice: price,
               formattedPriceChange: priceChangeDisplay,
               priceChange: priceChange,
+              onSelect: (data) {
+                this.onSelect(context, data);
+              }
+
             );
           },
         ),

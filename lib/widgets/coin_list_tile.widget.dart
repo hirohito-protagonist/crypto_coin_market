@@ -9,6 +9,7 @@ class CoinListTile extends StatelessWidget {
   final String formattedPrice;
   final num priceChange;
   final String formattedPriceChange;
+  final dynamic onSelect;
 
   const CoinListTile({
     Key key,
@@ -17,7 +18,8 @@ class CoinListTile extends StatelessWidget {
     this.fullName = '',
     this.formattedPrice = '',
     this.priceChange = 0,
-    this.formattedPriceChange = ''
+    this.formattedPriceChange = '',
+    this.onSelect
   }) : super(key: key);
 
   @override
@@ -33,6 +35,16 @@ class CoinListTile extends StatelessWidget {
               imageUrl: imageUrl,
               height: 30.0,
             ),
+            onTap: () {
+              this.onSelect({
+                imageUrl: this.imageUrl,
+                name: this.name,
+                fullName: this.fullName,
+                formattedPrice: this.formattedPrice,
+                priceChange: this.priceChange,
+                formattedPriceChange: this.formattedPriceChange,
+              });
+            },
             title: Row(
                 children: [
                   Expanded(
