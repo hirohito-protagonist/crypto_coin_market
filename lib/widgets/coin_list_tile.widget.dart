@@ -36,14 +36,14 @@ class CoinListTile extends StatelessWidget {
               height: 30.0,
             ),
             onTap: () {
-              this.onSelect({
-                imageUrl: this.imageUrl,
-                name: this.name,
-                fullName: this.fullName,
-                formattedPrice: this.formattedPrice,
-                priceChange: this.priceChange,
-                formattedPriceChange: this.formattedPriceChange,
-              });
+              this.onSelect(Map.of({
+                'imageUrl': imageUrl,
+                'name': name,
+                'fullName': fullName,
+                'formattedPrice': formattedPrice,
+                'priceChange': priceChange,
+                'formattedPriceChange': formattedPriceChange,
+              }));
             },
             title: Row(
                 children: [
