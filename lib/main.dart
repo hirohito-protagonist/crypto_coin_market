@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:crypto_coin_market/views/markets.view.dart';
-import 'package:crypto_coin_market/widgets/coin_list_tile.widget.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 void main() => runApp(new MarketsPage());
 
@@ -41,13 +41,54 @@ class DetailPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Detail information'),
       ),
-      body: new CoinListTile(
-        imageUrl: data['imageUrl'],
-        name: data['name'],
-        fullName: data['fullName'],
-        formattedPrice: data['formattedPrice'],
-        formattedPriceChange: data['formattedPriceChange'],
-        priceChange: data['priceChange'],
+      body: Container(
+        padding: EdgeInsets.all(10.0),
+        child: Row(
+          children: <Widget>[
+            Column(
+              children: <Widget>[
+                CachedNetworkImage(
+                  placeholder: CircularProgressIndicator(),
+                  imageUrl: data['imageUrl'],
+                  height: 100.0,
+                ),
+                Text(data['fullName']),
+              ],
+            ),
+            Column(
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Text(
+                      '1 ${data['name']} = ',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.0
+                      ),
+                    ),
+                    Text(
+                      '${data['formattedPrice']}',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20.0
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    Text(
+                      data['formattedPriceChange'] == '' ? '' : '${data['formattedPriceChange']}%',
+                      style: TextStyle(
+                        color: data['priceChange'] == 0 ? Colors.black : data['priceChange'] > 0 ? Colors.green : Colors.red,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
