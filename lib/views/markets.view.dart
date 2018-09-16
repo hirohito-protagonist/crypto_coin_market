@@ -37,7 +37,8 @@ class _MarketsViewState extends State<MarketsView> {
     volume: [],
     prices: new MultipleSymbols(raw: {}, display: {}),
   );
-  var refreshKey = GlobalKey<RefreshIndicatorState>();
+  final GlobalKey<RefreshIndicatorState> _refreshKey = GlobalKey<RefreshIndicatorState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final dynamic onSelect;
 
@@ -60,12 +61,22 @@ class _MarketsViewState extends State<MarketsView> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text(widget.title),
+    return Scaffold(
+      key: _scaffoldKey,
+      appBar: AppBar(
+        title: Text(widget.title),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            tooltip: 'Refresh',
+            onPressed: () {
+              _refreshKey.currentState.show();
+            },
+          ),
+        ],
       ),
       body: RefreshIndicator(
-        key: refreshKey,
+        key: _refreshKey,
         child: ListView.builder(
           itemCount: data.volume.length,
           itemBuilder: (context, i) {
