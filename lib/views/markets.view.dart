@@ -52,7 +52,15 @@ class _MarketsViewState extends State<MarketsView> {
 
   Future<Null> refreshList() async {
     MarketsViewModel market = await marketData();
-
+    _scaffoldKey.currentState?.showSnackBar(SnackBar(
+      content: const Text('Refresh complete'),
+      action: SnackBarAction(
+        label: 'RETRY',
+        onPressed: () {
+          _refreshKey.currentState.show();
+        },
+      ),
+    ));
     setState(() {
       data = market;
     });
