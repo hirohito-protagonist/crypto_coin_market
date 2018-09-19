@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:crypto_coin_market/widgets/price_change.widget.dart';
+
 
 class DetailsView extends StatefulWidget {
 
@@ -59,11 +61,9 @@ class _DetailsView extends State<DetailsView> {
                 ),
                 Row(
                   children: <Widget>[
-                    Text(
-                      data['formattedPriceChange'] == '' ? '' : '${data['formattedPriceChange']}%',
-                      style: TextStyle(
-                        color: data['priceChange'] == 0 ? Colors.black : data['priceChange'] > 0 ? Colors.green : Colors.red,
-                      ),
+                    PriceChange(
+                      change: data['priceChange'],
+                      price: data['formattedPriceChange'],
                     ),
                   ],
                 ),

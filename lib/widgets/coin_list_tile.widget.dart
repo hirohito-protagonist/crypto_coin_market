@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:crypto_coin_market/widgets/price_change.widget.dart';
 
 class CoinListTile extends StatelessWidget {
 
@@ -69,11 +70,9 @@ class CoinListTile extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
-                      Text(
-                        formattedPriceChange == '' ? '' : '${formattedPriceChange}%',
-                        style: TextStyle(
-                          color: priceChange == 0 ? Colors.black : priceChange > 0 ? Colors.green : Colors.red,
-                        ),
+                      PriceChange(
+                        change: priceChange,
+                        price: formattedPriceChange,
                       ),
                       Text('${formattedPrice}'),
                     ],
