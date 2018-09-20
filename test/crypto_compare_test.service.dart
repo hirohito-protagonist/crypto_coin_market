@@ -27,7 +27,7 @@ void main() {
       when(client.get('https://min-api.cryptocompare.com/data/top/totalvol?limit=2000&tsym=USD'))
         .thenAnswer((_) async => http.Response(json.encode(response), 200));
 
-      final data = await volumeData(client);
+      final data = await volumeData(client, 'USD');
       expect(data.length, 1);
       expect(data[0].coinInfo.name, 'BTC');
       expect(data[0].coinInfo.imageUrl, 'https://www.cryptocompare.com/btc.png');
@@ -39,7 +39,7 @@ void main() {
       when(client.get('https://min-api.cryptocompare.com/data/top/totalvol?limit=2000&tsym=USD'))
           .thenAnswer((_) async => http.Response('', 500));
 
-      final data = await volumeData(client);
+      final data = await volumeData(client, 'USD');
       expect(data.length, 0);
     });
 
@@ -49,7 +49,7 @@ void main() {
       when(client.get('https://min-api.cryptocompare.com/data/top/totalvol?limit=2000&tsym=USD'))
           .thenAnswer((_) async => http.Response('', 200));
 
-      final data = await volumeData(client);
+      final data = await volumeData(client, 'USD');
       expect(data.length, 0);
     });
   });
@@ -86,7 +86,7 @@ void main() {
       when(client.get('https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,ETC&tsyms=USD'))
           .thenAnswer((_) async => http.Response(json.encode(response), 200));
 
-      final data = await priceMultiFull(client, ['BTC', 'ETC']);
+      final data = await priceMultiFull(client, ['BTC', 'ETC'], 'USD');
 
       expect(data.raw, response['RAW']);
       expect(data.display, response['DISPLAY']);
@@ -97,7 +97,7 @@ void main() {
       when(client.get('https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,ETC&tsyms=USD'))
           .thenAnswer((_) async => http.Response('test', 200));
 
-      final data = await priceMultiFull(client, ['BTC', 'ETC']);
+      final data = await priceMultiFull(client, ['BTC', 'ETC'], 'USD');
 
       expect(data.raw, {});
       expect(data.display, {});
@@ -108,7 +108,7 @@ void main() {
       when(client.get('https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,ETC&tsyms=USD'))
           .thenAnswer((_) async => http.Response(json.encode(response), 500));
 
-      final data = await priceMultiFull(client, ['BTC', 'ETC']);
+      final data = await priceMultiFull(client, ['BTC', 'ETC'], 'USD');
 
       expect(data.raw, {});
       expect(data.display, {});
@@ -147,7 +147,7 @@ void main() {
       when(client.get('https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,ETC&tsyms=USD'))
           .thenAnswer((_) async => http.Response(json.encode(response), 200));
 
-      final data = await allPriceMultiFull(client, ['BTC', 'ETC']);
+      final data = await allPriceMultiFull(client, ['BTC', 'ETC'], 'USD');
 
       expect(data.raw, response['RAW']);
       expect(data.display, response['DISPLAY']);
@@ -158,7 +158,7 @@ void main() {
       when(client.get('https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,ETC&tsyms=USD'))
           .thenThrow(new ArgumentError('The coins are limited to 300 characters'));
 
-      final data = await allPriceMultiFull(client, ['BTC', 'ETC']);
+      final data = await allPriceMultiFull(client, ['BTC', 'ETC'], 'USD');
 
       expect(data.raw, {});
       expect(data.display, {});

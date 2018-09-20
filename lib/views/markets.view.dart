@@ -7,11 +7,11 @@ import 'package:crypto_coin_market/model/markets_view.model.dart';
 import 'package:crypto_coin_market/model/multiple_sybmols.model.dart';
 import 'package:crypto_coin_market/widgets/coin_list_tile.widget.dart';
 
-Future<MarketsViewModel> marketData() async {
+Future<MarketsViewModel> marketData(String currency) async {
 
-  final volume =  await volumeData(http.Client());
+  final volume =  await volumeData(http.Client(), currency);
   final coins = volume.map((TotalVolume tv) => tv.coinInfo.name).toList();
-  final prices = await allPriceMultiFull(http.Client(), coins);
+  final prices = await allPriceMultiFull(http.Client(), coins, currency);
 
   return MarketsViewModel(
     prices: prices,
@@ -33,6 +33,8 @@ class MarketsView extends StatefulWidget {
 
 class _MarketsViewState extends State<MarketsView> {
 
+  String activeCurrency = 'USD';
+
   MarketsViewModel data = new MarketsViewModel(
     volume: [],
     prices: new MultipleSymbols(raw: {}, display: {}),
@@ -51,7 +53,7 @@ class _MarketsViewState extends State<MarketsView> {
   }
 
   Future<Null> refreshList() async {
-    MarketsViewModel market = await marketData();
+    MarketsViewModel market = await marketData(activeCurrency);
     _scaffoldKey.currentState?.showSnackBar(SnackBar(
       content: const Text('Refresh complete'),
       action: SnackBarAction(
@@ -92,9 +94,9 @@ class _MarketsViewState extends State<MarketsView> {
             final currency = data.volume[i]?.coinInfo?.name;
             final displayPriceNode = data.prices.display.containsKey(currency) ? data.prices.display[currency] : null;
             final rawPriceNode = data.prices.raw.containsKey(currency) ? data.prices.raw[currency] : null;
-            final price = displayPriceNode != null ? displayPriceNode['USD']['PRICE'] : '';
-            final priceChangeDisplay = displayPriceNode != null ? displayPriceNode['USD']['CHANGEPCT24HOUR'] : '';
-            final priceChange = rawPriceNode != null ? rawPriceNode['USD']['CHANGEPCT24HOUR'] : 0;
+            final price = displayPriceNode != null ? Map.of(displayPriceNode).values.toList()[0]['PRICE'] : '';
+            final priceChangeDisplay = displayPriceNode != null ? Map.of(displayPriceNode).values.toList()[0]['CHANGEPCT24HOUR'] : '';
+            final priceChange = rawPriceNode != null ? Map.of(rawPriceNode).values.toList()[0]['CHANGEPCT24HOUR'] : 0;
 
             return new CoinListTile(
               key: Key("coin-list-tile-${i}"),
@@ -112,6 +114,27 @@ class _MarketsViewState extends State<MarketsView> {
           },
         ),
         onRefresh: refreshList,
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: Row(
+          children: <Widget>[
+            DropdownButton(
+              value: activeCurrency,
+              items: <String>['USD', 'EUR'].map((String value) {
+                return new DropdownMenuItem<String>(
+                  value: value,
+                  child: new Text(value),
+                );
+              }).toList(),
+              onChanged: (String currency) {
+                activeCurrency = currency;
+                setState(()  {
+                  _refreshKey.currentState.show();
+                });
+              },
+            )
+          ],
+        ),
       ),
     );
   }

@@ -18,9 +18,9 @@ dynamic parsedOrDefault(String input, dynamic defaultValue) {
   return output;
 }
 
-Future<List<TotalVolume>> volumeData(http.Client client) async {
+Future<List<TotalVolume>> volumeData(http.Client client, String currency) async {
 
-  final response = await client.get('${ENDPOINT}data/top/totalvol?limit=2000&tsym=USD');
+  final response = await client.get('${ENDPOINT}data/top/totalvol?limit=2000&tsym=${currency}');
 
   return response.statusCode != 200 ? [] :
     parsedOrDefault(response.body, { 'Data': [] })
@@ -47,9 +47,9 @@ List<dynamic> partition(List<dynamic> arr, int maxSize) {
   return out;
 }
 
-Future<MultipleSymbols> priceMultiFull(http.Client client, List<dynamic> coins) async {
+Future<MultipleSymbols> priceMultiFull(http.Client client, List<dynamic> coins, String currency) async {
 
-  final response = await client.get('${ENDPOINT}data/pricemultifull?fsyms=${coins.join(',')}&tsyms=USD');
+  final response = await client.get('${ENDPOINT}data/pricemultifull?fsyms=${coins.join(',')}&tsyms=${currency}');
   final defaultModel = {
     'RAW': {},
     'DISPLAY': {}
@@ -59,11 +59,11 @@ Future<MultipleSymbols> priceMultiFull(http.Client client, List<dynamic> coins) 
     parsedOrDefault(response.body, defaultModel));
 }
 
-Future<MultipleSymbols> allPriceMultiFull(http.Client client, List<dynamic> coins) async {
+Future<MultipleSymbols> allPriceMultiFull(http.Client client, List<dynamic> coins, String currency) async {
 
   final coinsPartition = partition(coins, 70);
 
-  return Future.wait(coinsPartition.map((c) => priceMultiFull(client, c)))
+  return Future.wait(coinsPartition.map((c) => priceMultiFull(client, c, currency)))
     .then((List<MultipleSymbols> responses) {
       final model = MultipleSymbols.fromJson({
         'RAW': {},
