@@ -5,9 +5,10 @@ import 'package:crypto_coin_market/crypto_compare.service.dart';
 import 'package:crypto_coin_market/model/total_volume.model.dart';
 import 'package:crypto_coin_market/model/markets_view.model.dart';
 import 'package:crypto_coin_market/model/multiple_sybmols.model.dart';
+import 'package:crypto_coin_market/model/currency.model.dart';
 import 'package:crypto_coin_market/widgets/coin_list_tile.widget.dart';
 
-Future<MarketsViewModel> marketData(String currency) async {
+Future<MarketsViewModel> marketData(Currency currency) async {
 
   final volume =  await volumeData(http.Client(), currency);
   final coins = volume.map((TotalVolume tv) => tv.coinInfo.name).toList();
@@ -33,7 +34,8 @@ class MarketsView extends StatefulWidget {
 
 class _MarketsViewState extends State<MarketsView> {
 
-  String activeCurrency = 'USD';
+  String activeCurrency = Currency.availableCurrencies()[0];
+  List<String> availableCurrencyCodes = Currency.availableCurrencies();
 
   MarketsViewModel data = new MarketsViewModel(
     volume: [],
@@ -53,7 +55,7 @@ class _MarketsViewState extends State<MarketsView> {
   }
 
   Future<Null> refreshList() async {
-    MarketsViewModel market = await marketData(activeCurrency);
+    MarketsViewModel market = await marketData(Currency.fromCurrencyCode(activeCurrency));
     _scaffoldKey.currentState?.showSnackBar(SnackBar(
       content: const Text('Refresh complete'),
       action: SnackBarAction(
@@ -120,7 +122,7 @@ class _MarketsViewState extends State<MarketsView> {
           children: <Widget>[
             DropdownButton(
               value: activeCurrency,
-              items: <String>['USD', 'EUR'].map((String value) {
+              items: availableCurrencyCodes.map((String value) {
                 return new DropdownMenuItem<String>(
                   value: value,
                   child: new Text(value),

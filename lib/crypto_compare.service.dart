@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 
 import 'model/total_volume.model.dart';
 import 'model/multiple_sybmols.model.dart';
+import 'model/currency.model.dart';
 
 const ENDPOINT = 'https://min-api.cryptocompare.com/';
 
@@ -18,9 +19,9 @@ dynamic parsedOrDefault(String input, dynamic defaultValue) {
   return output;
 }
 
-Future<List<TotalVolume>> volumeData(http.Client client, String currency) async {
+Future<List<TotalVolume>> volumeData(http.Client client, Currency currency) async {
 
-  final response = await client.get('${ENDPOINT}data/top/totalvol?limit=2000&tsym=${currency}');
+  final response = await client.get('${ENDPOINT}data/top/totalvol?limit=2000&tsym=${currency.currencyCode()}');
 
   return response.statusCode != 200 ? [] :
     parsedOrDefault(response.body, { 'Data': [] })
@@ -47,9 +48,9 @@ List<dynamic> partition(List<dynamic> arr, int maxSize) {
   return out;
 }
 
-Future<MultipleSymbols> priceMultiFull(http.Client client, List<dynamic> coins, String currency) async {
+Future<MultipleSymbols> priceMultiFull(http.Client client, List<dynamic> coins, Currency currency) async {
 
-  final response = await client.get('${ENDPOINT}data/pricemultifull?fsyms=${coins.join(',')}&tsyms=${currency}');
+  final response = await client.get('${ENDPOINT}data/pricemultifull?fsyms=${coins.join(',')}&tsyms=${currency.currencyCode()}');
   final defaultModel = {
     'RAW': {},
     'DISPLAY': {}
@@ -59,7 +60,7 @@ Future<MultipleSymbols> priceMultiFull(http.Client client, List<dynamic> coins, 
     parsedOrDefault(response.body, defaultModel));
 }
 
-Future<MultipleSymbols> allPriceMultiFull(http.Client client, List<dynamic> coins, String currency) async {
+Future<MultipleSymbols> allPriceMultiFull(http.Client client, List<dynamic> coins, Currency currency) async {
 
   final coinsPartition = partition(coins, 70);
 
