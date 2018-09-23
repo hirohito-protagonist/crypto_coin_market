@@ -62,7 +62,7 @@ Future<MultipleSymbols> priceMultiFull(http.Client client, List<dynamic> coins, 
 
 Future<MultipleSymbols> allPriceMultiFull(http.Client client, List<dynamic> coins, Currency currency) async {
 
-  final coinsPartition = partition(coins, 70);
+  final coinsPartition = partition(coins, 65);
 
   return Future.wait(coinsPartition.map((c) => priceMultiFull(client, c, currency)))
     .then((List<MultipleSymbols> responses) {
