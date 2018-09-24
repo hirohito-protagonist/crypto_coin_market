@@ -34,7 +34,7 @@ class MarketsView extends StatefulWidget {
 
 class _MarketsViewState extends State<MarketsView> {
 
-  String activeCurrency = Currency.availableCurrencies()[0];
+  String activeCurrency = Currency.defaultSymbol;
   List<String> availableCurrencyCodes = Currency.availableCurrencies();
 
   MarketsViewModel data = new MarketsViewModel(
@@ -119,6 +119,7 @@ class _MarketsViewState extends State<MarketsView> {
       ),
       bottomNavigationBar: BottomAppBar(
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
             DropdownButton(
               value: activeCurrency,
