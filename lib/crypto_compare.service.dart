@@ -19,9 +19,9 @@ dynamic parsedOrDefault(String input, dynamic defaultValue) {
   return output;
 }
 
-Future<List<TotalVolume>> volumeData(http.Client client, Currency currency) async {
+Future<List<TotalVolume>> volumeData(http.Client client, Currency currency, { int page = 0 }) async {
 
-  final response = await client.get('${ENDPOINT}data/top/totalvol?limit=2000&tsym=${currency.currencyCode()}');
+  final response = await client.get('${ENDPOINT}data/top/totalvol?limit=2000&tsym=${currency.currencyCode()}&page=${page}');
 
   return response.statusCode != 200 ? [] :
     parsedOrDefault(response.body, { 'Data': [] })

@@ -25,7 +25,7 @@ void main() {
         ]
       };
 
-      when(client.get('https://min-api.cryptocompare.com/data/top/totalvol?limit=2000&tsym=USD'))
+      when(client.get('https://min-api.cryptocompare.com/data/top/totalvol?limit=2000&tsym=USD&page=0'))
         .thenAnswer((_) async => http.Response(json.encode(response), 200));
 
       final data = await volumeData(client, Currency.fromCurrencyCode('USD'));
@@ -37,7 +37,7 @@ void main() {
     test('error response should return empty collection', () async {
 
       final client = MockClient();
-      when(client.get('https://min-api.cryptocompare.com/data/top/totalvol?limit=2000&tsym=USD'))
+      when(client.get('https://min-api.cryptocompare.com/data/top/totalvol?limit=2000&tsym=USD&page=0'))
           .thenAnswer((_) async => http.Response('', 500));
 
       final data = await volumeData(client, Currency.fromCurrencyCode('USD'));
@@ -47,7 +47,7 @@ void main() {
     test('parse error resposne should return empty collection', () async {
 
       final client = MockClient();
-      when(client.get('https://min-api.cryptocompare.com/data/top/totalvol?limit=2000&tsym=USD'))
+      when(client.get('https://min-api.cryptocompare.com/data/top/totalvol?limit=2000&tsym=USD&page=0'))
           .thenAnswer((_) async => http.Response('', 200));
 
       final data = await volumeData(client, Currency.fromCurrencyCode('USD'));
