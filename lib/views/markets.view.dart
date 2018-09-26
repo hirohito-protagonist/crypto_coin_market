@@ -36,6 +36,7 @@ class _MarketsViewState extends State<MarketsView> {
 
   String activeCurrency = Currency.defaultSymbol;
   List<String> availableCurrencyCodes = Currency.availableCurrencies();
+  num activePage = 1;
 
   MarketsViewModel data = new MarketsViewModel(
     volume: [],
@@ -122,6 +123,22 @@ class _MarketsViewState extends State<MarketsView> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
             DropdownButton(
+              value: activePage,
+              items: List.generate(26, (i) => i + 1).map((num value) {
+                return new DropdownMenuItem<num>(
+                  value: value,
+                  child: new Text(value.toString()),
+                );
+              }).toList(),
+              onChanged: (page) {
+                activePage = page;
+                setState(()  {
+                  _refreshKey.currentState.show();
+                });
+              },
+            ),
+            Padding(padding: EdgeInsets.symmetric(horizontal: 5.0)),
+            DropdownButton(
               value: activeCurrency,
               items: availableCurrencyCodes.map((String value) {
                 return new DropdownMenuItem<String>(
@@ -135,7 +152,8 @@ class _MarketsViewState extends State<MarketsView> {
                   _refreshKey.currentState.show();
                 });
               },
-            )
+            ),
+            Padding(padding: EdgeInsets.symmetric(horizontal: 5.0)),
           ],
         ),
       ),
