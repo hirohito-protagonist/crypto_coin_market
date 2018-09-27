@@ -8,9 +8,9 @@ import 'package:crypto_coin_market/model/multiple_sybmols.model.dart';
 import 'package:crypto_coin_market/model/currency.model.dart';
 import 'package:crypto_coin_market/widgets/coin_list_tile.widget.dart';
 
-Future<MarketsViewModel> marketData(Currency currency) async {
+Future<MarketsViewModel> marketData(Currency currency, num page) async {
 
-  final volume =  await volumeData(http.Client(), currency);
+  final volume =  await volumeData(http.Client(), currency, page: page);
   final coins = volume.map((TotalVolume tv) => tv.coinInfo.name).toList();
   final prices = await allPriceMultiFull(http.Client(), coins, currency);
 
@@ -56,7 +56,7 @@ class _MarketsViewState extends State<MarketsView> {
   }
 
   Future<Null> refreshList() async {
-    MarketsViewModel market = await marketData(Currency.fromCurrencyCode(activeCurrency));
+    MarketsViewModel market = await marketData(Currency.fromCurrencyCode(activeCurrency), activePage - 1);
     _scaffoldKey.currentState?.showSnackBar(SnackBar(
       content: const Text('Refresh complete'),
       action: SnackBarAction(
