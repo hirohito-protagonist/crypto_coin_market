@@ -110,7 +110,11 @@ class _MarketsViewState extends State<MarketsView> {
               formattedPriceChange: priceChangeDisplay,
               priceChange: priceChange,
               onSelect: (data) {
-                this.onSelect(context, data);
+                final model = {
+                  'coinInformation': data,
+                  'currency': activeCurrency
+                };
+                this.onSelect(context, model);
               }
 
             );
