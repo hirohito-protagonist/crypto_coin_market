@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:crypto_coin_market/widgets/price_change.widget.dart';
 
+typedef void SelectedCoinTileCallback(SelectedCoinTile selectedCoinTile);
+
 class CoinListTile extends StatelessWidget {
 
   final String imageUrl;
@@ -10,7 +12,7 @@ class CoinListTile extends StatelessWidget {
   final String formattedPrice;
   final num priceChange;
   final String formattedPriceChange;
-  final dynamic onSelect;
+  final SelectedCoinTileCallback onSelect;
 
   const CoinListTile({
     Key key,
@@ -37,14 +39,14 @@ class CoinListTile extends StatelessWidget {
               height: 30.0,
             ),
             onTap: () {
-              this.onSelect(Map.of({
-                'imageUrl': imageUrl,
-                'name': name,
-                'fullName': fullName,
-                'formattedPrice': formattedPrice,
-                'priceChange': priceChange,
-                'formattedPriceChange': formattedPriceChange,
-              }));
+              this.onSelect(new SelectedCoinTile(
+                fullName: fullName,
+                imageUrl: imageUrl,
+                name: name,
+                formattedPrice: formattedPrice,
+                priceChange: priceChange,
+                formattedPriceChange: formattedPriceChange,
+              ));
             },
             title: Row(
                 children: [
@@ -84,5 +86,19 @@ class CoinListTile extends StatelessWidget {
       ),
     );
   }
+
+}
+
+
+class SelectedCoinTile {
+  final String imageUrl;
+  final String name;
+  final String fullName;
+  final String formattedPrice;
+  final num priceChange;
+  final String formattedPriceChange;
+
+  SelectedCoinTile({this.imageUrl, this.name, this.fullName, this.formattedPrice,
+      this.priceChange, this.formattedPriceChange});
 
 }

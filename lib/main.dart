@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:crypto_coin_market/views/markets.view.dart';
 import 'package:crypto_coin_market/views/details.view.dart';
+import 'package:crypto_coin_market/model/details_view.model.dart';
 
 void main() => runApp(new MarketsPage());
 
@@ -14,7 +15,7 @@ class MarketsPage extends StatelessWidget {
       ),
       home: new MarketsView(
         title: 'Crypto Coin Market',
-        onSelect: (context, data) {
+        onSelect: (context, DetailsViewModel data) {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => DetailsView(

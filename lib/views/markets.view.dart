@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:crypto_coin_market/crypto_compare.service.dart';
 import 'package:crypto_coin_market/model/total_volume.model.dart';
 import 'package:crypto_coin_market/model/markets_view.model.dart';
+import 'package:crypto_coin_market/model/details_view.model.dart';
 import 'package:crypto_coin_market/model/multiple_sybmols.model.dart';
 import 'package:crypto_coin_market/model/currency.model.dart';
 import 'package:crypto_coin_market/widgets/coin_list_tile.widget.dart';
@@ -32,6 +33,8 @@ class MarketsView extends StatefulWidget {
   );
 }
 
+typedef void SelectedCoin(dynamic context, DetailsViewModel detailsModel);
+
 class _MarketsViewState extends State<MarketsView> {
 
   String activeCurrency = Currency.defaultSymbol;
@@ -45,7 +48,7 @@ class _MarketsViewState extends State<MarketsView> {
   final GlobalKey<RefreshIndicatorState> _refreshKey = GlobalKey<RefreshIndicatorState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  final dynamic onSelect;
+  final SelectedCoin onSelect;
 
   _MarketsViewState({this.onSelect}): super();
 
@@ -109,12 +112,19 @@ class _MarketsViewState extends State<MarketsView> {
               formattedPrice: price,
               formattedPriceChange: priceChangeDisplay,
               priceChange: priceChange,
-              onSelect: (data) {
-                final model = {
-                  'coinInformation': data,
-                  'currency': activeCurrency
-                };
-                this.onSelect(context, model);
+              onSelect: (SelectedCoinTile data) {
+
+                this.onSelect(context, new DetailsViewModel(
+                  currency: activeCurrency,
+                  coinInformation: new DetailsCoinInformation(
+                    fullName: data.fullName,
+                    imageUrl: data.imageUrl,
+                    name: data.name,
+                    formattedPrice: data.formattedPrice,
+                    priceChange: data.priceChange,
+                    formattedPriceChange: data.formattedPriceChange,
+                  ),
+                ));
               }
 
             );
