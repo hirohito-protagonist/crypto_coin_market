@@ -30,6 +30,33 @@ Future<List<TotalVolume>> volumeData(http.Client client, Currency currency, { in
       .toList();
 }
 
+Future<Map<String, dynamic>> _historyOHLCV(http.Client client, String historyType, Currency currency, String coin) async {
+
+  final response = await client.get('${ENDPOINT}data/hist${historyType}?fsym=${coin}&tsym=${currency.currencyCode()}&limit=10');
+  final Map<String, dynamic> defaultModel = {
+    'Data': []
+  };
+
+  return response.statusCode != 200 ? defaultModel :
+    parsedOrDefault(response.body, defaultModel);
+}
+
+
+Future<Map<String, dynamic>> dailyHistoryOHLCV(http.Client client, Currency currency, String coin) async {
+
+  return await _historyOHLCV(client, 'today', currency, coin);
+}
+
+Future<Map<String, dynamic>> hourlyHistoryOHLCV(http.Client client, Currency currency, String coin) async {
+
+  return await _historyOHLCV(client, 'hour', currency, coin);
+}
+
+Future<Map<String, dynamic>> minuteHistoryOHLCV(http.Client client, Currency currency, String coin) async {
+
+  return await _historyOHLCV(client, 'minute', currency, coin);
+}
+
 List<dynamic> partition(List<dynamic> arr, int maxSize) {
 
   final out = [];
