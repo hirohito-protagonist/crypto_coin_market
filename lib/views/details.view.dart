@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:http/http.dart' as http;
+import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:crypto_coin_market/model/currency.model.dart';
@@ -69,39 +70,57 @@ class _DetailsView extends State<DetailsView> {
         key: _refreshKey,
         child: Container(
           padding: EdgeInsets.all(10.0),
-          child: Row(
+          child: Column(
             children: <Widget>[
-              Column(
+              Row(
                 children: <Widget>[
-                  CachedNetworkImage(
-                    placeholder: CircularProgressIndicator(),
-                    imageUrl: data.imageUrl,
-                    height: 100.0,
-                  ),
-                  Text(data.fullName),
-                ],
-              ),
-              Column(
-                children: <Widget>[
-                  Row(
+                  Column(
                     children: <Widget>[
-                      Text(
-                        '1 ${data.name} = ',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20.0),
+                      CachedNetworkImage(
+                        placeholder: CircularProgressIndicator(),
+                        imageUrl: data.imageUrl,
+                        height: 100.0,
                       ),
-                      Text(
-                        '${data.formattedPrice}',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20.0),
+                      Text(data.fullName),
+                    ],
+                  ),
+                  Column(
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Text(
+                            '1 ${data.name} = ',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 20.0),
+                          ),
+                          Text(
+                            '${data.formattedPrice}',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 20.0),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: <Widget>[
+                          PriceChange(
+                            change: data.priceChange,
+                            price: data.formattedPriceChange,
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                  Row(
+                ],
+              ),
+              Row(
+                children: <Widget>[
+                  Column(
                     children: <Widget>[
-                      PriceChange(
-                        change: data.priceChange,
-                        price: data.formattedPriceChange,
+                      Text('Fake chart'),
+                      SizedBox(
+                        width: 310.0,
+                        height: 200.0,
+                        child: charts.LineChart(_createSampleData(), animate: true),
                       ),
                     ],
                   ),
@@ -114,4 +133,30 @@ class _DetailsView extends State<DetailsView> {
       ),
     );
   }
+
+  static List<charts.Series<LinearFake, int>> _createSampleData() {
+    final data = [
+      new LinearFake(0, 5),
+      new LinearFake(1, 25),
+      new LinearFake(2, 100),
+      new LinearFake(3, 75),
+    ];
+
+    return [
+      new charts.Series<LinearFake, int>(
+        id: 'Fake',
+        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
+        domainFn: (LinearFake f, _) => f.year,
+        measureFn: (LinearFake f, _) => f.sales,
+        data: data,
+      )
+    ];
+  }
+}
+
+class LinearFake {
+  final int year;
+  final int sales;
+
+  LinearFake(this.year, this.sales);
 }
