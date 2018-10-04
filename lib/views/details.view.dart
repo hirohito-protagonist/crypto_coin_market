@@ -71,60 +71,62 @@ class _DetailsView extends State<DetailsView> {
         child: Container(
           padding: EdgeInsets.all(10.0),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      CachedNetworkImage(
-                        placeholder: CircularProgressIndicator(),
-                        imageUrl: data.imageUrl,
-                        height: 100.0,
-                      ),
-                      Text(data.fullName),
-                    ],
-                  ),
-                  Column(
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Text(
-                            '1 ${data.name} = ',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 20.0),
-                          ),
-                          Text(
-                            '${data.formattedPrice}',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 20.0),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: <Widget>[
-                          PriceChange(
-                            change: data.priceChange,
-                            price: data.formattedPriceChange,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
+              Container(
+                padding: const EdgeInsets.all(0.0),
+                alignment: Alignment.center,
+                width: 1.7976931348623157e+308,
+                height: 150.0,
+                child:               Row(
+                  children: <Widget>[
+                    Column(
+                      children: <Widget>[
+                        CachedNetworkImage(
+                          placeholder: CircularProgressIndicator(),
+                          imageUrl: data.imageUrl,
+                          height: 100.0,
+                        ),
+                        Text(data.fullName),
+                      ],
+                    ),
+                    Column(
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Text(
+                              '1 ${data.name} = ',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 20.0),
+                            ),
+                            Text(
+                              '${data.formattedPrice}',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 20.0),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: <Widget>[
+                            PriceChange(
+                              change: data.priceChange,
+                              price: data.formattedPriceChange,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-              Row(
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      Text('Fake chart'),
-                      SizedBox(
-                        width: 310.0,
-                        height: 200.0,
-                        child: charts.LineChart(_createSampleData(), animate: true),
-                      ),
-                    ],
-                  ),
-                ],
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(0.0),
+                  alignment: Alignment.center,
+                  child: charts.LineChart(_createSampleData(), animate: true),
+                ),
               ),
             ],
           ),
