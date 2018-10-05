@@ -25,11 +25,16 @@ class _DetailsView extends State<DetailsView> {
   final GlobalKey<RefreshIndicatorState> _refreshKey =
       GlobalKey<RefreshIndicatorState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  var histData = [];
+  bool refreshData = true;
 
   Future<Null> updateData() async {
     final currency = widget.data.coinInformation.name;
     final prices = await allPriceMultiFull(http.Client(), [currency], Currency.fromCurrencyCode(widget.data.currency));
+    final histOHLCV = await dailyHistoryOHLCV(http.Client(), Currency.fromCurrencyCode(widget.data.currency), currency);
+
     setState(() {
+      histData = List.of(histOHLCV['Data']);
       final displayPriceNode = prices.display.containsKey(currency) ? prices.display[currency] : null;
       final rawPriceNode = prices.raw.containsKey(currency) ? prices.raw[currency] : null;
       final coinModel = new DetailsCoinInformation(
@@ -44,8 +49,15 @@ class _DetailsView extends State<DetailsView> {
         coinInformation: coinModel,
         currency: widget.data.currency,
       );
+      refreshData = false;
     });
     return null;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    updateData();
   }
 
   @override
@@ -125,31 +137,35 @@ class _DetailsView extends State<DetailsView> {
                 child: Container(
                   padding: const EdgeInsets.all(0.0),
                   alignment: Alignment.center,
-                  child: charts.LineChart(_createSampleData(), animate: true),
+                  child: refreshData ?  CircularProgressIndicator() : charts.TimeSeriesChart(_createSampleData(histData), animate: true),
                 ),
               ),
             ],
           ),
         ),
-        onRefresh: updateData,
+        onRefresh: () async {
+          setState(() {
+            refreshData = true;
+          });
+          await updateData();
+        },
       ),
     );
   }
 
-  static List<charts.Series<LinearFake, int>> _createSampleData() {
-    final data = [
-      new LinearFake(0, 5),
-      new LinearFake(1, 25),
-      new LinearFake(2, 100),
-      new LinearFake(3, 75),
-    ];
+  static List<charts.Series<LinearFake, DateTime>> _createSampleData(List<dynamic> histData)  {
+    final data = histData.map((d) {
+      return new LinearFake(d['close'], DateTime.fromMillisecondsSinceEpoch(d['time']), d['high'], d['low']);
+    }).toList();
 
     return [
-      new charts.Series<LinearFake, int>(
+      new charts.Series<LinearFake, DateTime>(
         id: 'Fake',
-        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-        domainFn: (LinearFake f, _) => f.year,
-        measureFn: (LinearFake f, _) => f.sales,
+        colorFn: (_, __) => charts.MaterialPalette.purple.shadeDefault,
+        domainFn: (LinearFake f, _) => f.time,
+        measureFn: (LinearFake f, _) => f.close,
+        measureLowerBoundFn: (LinearFake f, _) => f.low,
+        measureUpperBoundFn: (LinearFake f, _) => f.high,
         data: data,
       )
     ];
@@ -157,8 +173,10 @@ class _DetailsView extends State<DetailsView> {
 }
 
 class LinearFake {
-  final int year;
-  final int sales;
+  final num close;
+  final num high;
+  final num low;
+  final DateTime time;
 
-  LinearFake(this.year, this.sales);
+  LinearFake(this.close, this.time, this.high, this.low);
 }
