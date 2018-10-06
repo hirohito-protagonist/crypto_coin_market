@@ -26,7 +26,7 @@ class _DetailsView extends State<DetailsView> {
       GlobalKey<RefreshIndicatorState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   var histData = [];
-  bool refreshData = true;
+  bool isRefresh = true;
 
   Future<Null> updateData() async {
     final currency = widget.data.coinInformation.name;
@@ -49,7 +49,7 @@ class _DetailsView extends State<DetailsView> {
         coinInformation: coinModel,
         currency: widget.data.currency,
       );
-      refreshData = false;
+      isRefresh = false;
     });
     return null;
   }
@@ -137,7 +137,7 @@ class _DetailsView extends State<DetailsView> {
                 child: Container(
                   padding: const EdgeInsets.all(0.0),
                   alignment: Alignment.center,
-                  child: refreshData ?  CircularProgressIndicator() : charts.TimeSeriesChart(_createSampleData(histData), animate: true),
+                  child: isRefresh ?  CircularProgressIndicator() : charts.TimeSeriesChart(_createSampleData(histData), animate: true),
                 ),
               ),
             ],
@@ -145,7 +145,7 @@ class _DetailsView extends State<DetailsView> {
         ),
         onRefresh: () async {
           setState(() {
-            refreshData = true;
+            isRefresh = true;
           });
           await updateData();
         },
@@ -153,30 +153,30 @@ class _DetailsView extends State<DetailsView> {
     );
   }
 
-  static List<charts.Series<LinearFake, DateTime>> _createSampleData(List<dynamic> histData)  {
+  static List<charts.Series<LinearTime, DateTime>> _createSampleData(List<dynamic> histData)  {
     final data = histData.map((d) {
-      return new LinearFake(d['close'], DateTime.fromMillisecondsSinceEpoch(d['time']), d['high'], d['low']);
+      return new LinearTime(d['close'], DateTime.fromMillisecondsSinceEpoch(d['time']), d['high'], 0);
     }).toList();
 
     return [
-      new charts.Series<LinearFake, DateTime>(
-        id: 'Fake',
+      new charts.Series<LinearTime, DateTime>(
+        id: 'TimeSeriesOfClosePrice',
         colorFn: (_, __) => charts.MaterialPalette.purple.shadeDefault,
-        domainFn: (LinearFake f, _) => f.time,
-        measureFn: (LinearFake f, _) => f.close,
-        measureLowerBoundFn: (LinearFake f, _) => f.low,
-        measureUpperBoundFn: (LinearFake f, _) => f.high,
+        domainFn: (LinearTime f, _) => f.time,
+        measureFn: (LinearTime f, _) => f.close,
+        measureLowerBoundFn: (LinearTime f, _) => f.low,
+        measureUpperBoundFn: (LinearTime f, _) => f.high,
         data: data,
       )
     ];
   }
 }
 
-class LinearFake {
+class LinearTime {
   final num close;
   final num high;
   final num low;
   final DateTime time;
 
-  LinearFake(this.close, this.time, this.high, this.low);
+  LinearTime(this.close, this.time, this.high, this.low);
 }
