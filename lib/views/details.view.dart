@@ -92,7 +92,7 @@ class _DetailsView extends State<DetailsView> {
                 alignment: Alignment.center,
                 width: 1.7976931348623157e+308,
                 height: 150.0,
-                child:               Row(
+                child: Row(
                   children: <Widget>[
                     Column(
                       children: <Widget>[
@@ -134,11 +134,35 @@ class _DetailsView extends State<DetailsView> {
                 ),
               ),
               Expanded(
-                child: Container(
-                  padding: const EdgeInsets.all(0.0),
-                  alignment: Alignment.center,
-                  child: isRefresh ?  CircularProgressIndicator() : charts.TimeSeriesChart(_createSampleData(histData), animate: true),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.all(0.0),
+                        alignment: Alignment.center,
+                        child: isRefresh ?
+                          CircularProgressIndicator() :
+                          charts.TimeSeriesChart(_createHistCostData(histData), animate: true),
+                      ),
+                    ),
+                    Container(
+                      height: 100.0,
+                      child: isRefresh ?
+                        CircularProgressIndicator() :
+                        charts.TimeSeriesChart(
+                          _createHistVolumeData(histData),
+                          animate: true,
+                          domainAxis: new charts.DateTimeAxisSpec(usingBarRenderer: true),
+                          defaultRenderer: new charts.BarRendererConfig<DateTime>(),
+                        ),
+                    ),
+                  ],
                 ),
+
+
               ),
             ],
           ),
@@ -153,9 +177,9 @@ class _DetailsView extends State<DetailsView> {
     );
   }
 
-  static List<charts.Series<LinearTime, DateTime>> _createSampleData(List<dynamic> histData)  {
+  static List<charts.Series<LinearTime, DateTime>> _createHistCostData(List<dynamic> histData)  {
     final data = histData.map((d) {
-      return new LinearTime(d['close'], DateTime.fromMillisecondsSinceEpoch(d['time']), d['high'], 0);
+      return new LinearTime(d['close'], DateTime.fromMillisecondsSinceEpoch(d['time']), d['high'], 0, d['volumeto']);
     }).toList();
 
     return [
@@ -170,6 +194,22 @@ class _DetailsView extends State<DetailsView> {
       )
     ];
   }
+
+  static List<charts.Series<LinearTime, DateTime>> _createHistVolumeData(List<dynamic> histData)  {
+    final data = histData.map((d) {
+      return new LinearTime(d['close'], DateTime.fromMillisecondsSinceEpoch(d['time']), d['high'], 0, d['volumeto']);
+    }).toList();
+
+    return [
+      new charts.Series<LinearTime, DateTime>(
+        id: 'TimeSeriesOfVolume',
+        colorFn: (_, __) => charts.MaterialPalette.purple.shadeDefault,
+        domainFn: (LinearTime f, _) => f.time,
+        measureFn: (LinearTime f, _) => f.volumeTo,
+        data: data,
+      )
+    ];
+  }
 }
 
 class LinearTime {
@@ -177,6 +217,7 @@ class LinearTime {
   final num high;
   final num low;
   final DateTime time;
+  final num volumeTo;
 
-  LinearTime(this.close, this.time, this.high, this.low);
+  LinearTime(this.close, this.time, this.high, this.low, this.volumeTo);
 }
