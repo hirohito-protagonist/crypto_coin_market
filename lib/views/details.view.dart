@@ -144,12 +144,19 @@ class _DetailsView extends State<DetailsView> {
                         padding: const EdgeInsets.all(0.0),
                         alignment: Alignment.center,
                         child: isRefresh ?
-                          CircularProgressIndicator() :
-                          charts.TimeSeriesChart(_createHistCostData(histData), animate: true),
+                        CircularProgressIndicator() :
+                        charts.TimeSeriesChart(
+                          _createHistCostData(histData),
+                          animate: true,
+                          primaryMeasureAxis: charts.NumericAxisSpec(
+                            tickProviderSpec: charts.BasicNumericTickProviderSpec(zeroBound: false),
+                          ),
+                        ),
                       ),
                     ),
                     Container(
                       height: 100.0,
+                      alignment: Alignment.center,
                       child: isRefresh ?
                         CircularProgressIndicator() :
                         charts.TimeSeriesChart(
@@ -188,8 +195,6 @@ class _DetailsView extends State<DetailsView> {
         colorFn: (_, __) => charts.MaterialPalette.purple.shadeDefault,
         domainFn: (LinearTime f, _) => f.time,
         measureFn: (LinearTime f, _) => f.close,
-        measureLowerBoundFn: (LinearTime f, _) => f.low,
-        measureUpperBoundFn: (LinearTime f, _) => f.high,
         data: data,
       )
     ];

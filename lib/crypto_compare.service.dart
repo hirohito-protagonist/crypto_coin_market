@@ -32,7 +32,7 @@ Future<List<TotalVolume>> volumeData(http.Client client, Currency currency, { in
 
 Future<Map<String, dynamic>> _historyOHLCV(http.Client client, String historyType, Currency currency, String coin) async {
 
-  final response = await client.get('${ENDPOINT}data/his${historyType}?fsym=${coin}&tsym=${currency.currencyCode()}&limit=144&aggregate=10');
+  final response = await client.get('${ENDPOINT}data/his${historyType}?fsym=${coin}&tsym=${currency.currencyCode()}&limit=60&aggregate=1');
   final Map<String, dynamic> defaultModel = {
     'Data': []
   };
