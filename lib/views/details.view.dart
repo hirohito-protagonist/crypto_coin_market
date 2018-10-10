@@ -162,8 +162,8 @@ class _DetailsView extends State<DetailsView> {
                         charts.TimeSeriesChart(
                           _createHistVolumeData(histData),
                           animate: true,
-                          domainAxis: new charts.DateTimeAxisSpec(usingBarRenderer: true),
-                          defaultRenderer: new charts.BarRendererConfig<DateTime>(),
+                          domainAxis: charts.DateTimeAxisSpec(usingBarRenderer: true),
+                          defaultRenderer: charts.BarRendererConfig<DateTime>(),
                         ),
                     ),
                   ],
@@ -185,12 +185,18 @@ class _DetailsView extends State<DetailsView> {
   }
 
   static List<charts.Series<LinearTime, DateTime>> _createHistCostData(List<dynamic> histData)  {
-    final data = histData.map((d) {
-      return new LinearTime(d['close'], DateTime.fromMillisecondsSinceEpoch(d['time']), d['high'], 0, d['volumeto']);
-    }).toList();
+    final data = histData.map((d) =>
+      LinearTime(
+        d['close'],
+        DateTime.fromMillisecondsSinceEpoch(d['time'] * 1000),
+        d['high'],
+        0,
+        d['volumeto']
+      )
+    ).toList();
 
     return [
-      new charts.Series<LinearTime, DateTime>(
+      charts.Series<LinearTime, DateTime>(
         id: 'TimeSeriesOfClosePrice',
         colorFn: (_, __) => charts.MaterialPalette.purple.shadeDefault,
         domainFn: (LinearTime f, _) => f.time,
@@ -201,12 +207,18 @@ class _DetailsView extends State<DetailsView> {
   }
 
   static List<charts.Series<LinearTime, DateTime>> _createHistVolumeData(List<dynamic> histData)  {
-    final data = histData.map((d) {
-      return new LinearTime(d['close'], DateTime.fromMillisecondsSinceEpoch(d['time']), d['high'], 0, d['volumeto']);
-    }).toList();
+    final data = histData.map((d) =>
+      LinearTime(
+        d['close'],
+        DateTime.fromMillisecondsSinceEpoch(d['time'] * 1000),
+        d['high'],
+        0,
+        d['volumeto']
+      )
+    ).toList();
 
     return [
-      new charts.Series<LinearTime, DateTime>(
+      charts.Series<LinearTime, DateTime>(
         id: 'TimeSeriesOfVolume',
         colorFn: (_, __) => charts.MaterialPalette.purple.shadeDefault,
         domainFn: (LinearTime f, _) => f.time,
