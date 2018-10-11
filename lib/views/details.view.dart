@@ -151,6 +151,13 @@ class _DetailsView extends State<DetailsView> {
                           primaryMeasureAxis: charts.NumericAxisSpec(
                             tickProviderSpec: charts.BasicNumericTickProviderSpec(zeroBound: false),
                           ),
+                          behaviors: [
+                            charts.Slider(
+                              initialDomainValue: DateTime.fromMillisecondsSinceEpoch(histData[0]['time'] * 1000),
+                              onChangeCallback: _onSliderChange,
+                              snapToDatum: true,
+                            )
+                          ],
                         ),
                       ),
                     ),
@@ -182,6 +189,22 @@ class _DetailsView extends State<DetailsView> {
         },
       ),
     );
+  }
+
+  _onSliderChange(point, dynamic domain, charts.SliderListenerDragState dragState) {
+    if (dragState == charts.SliderListenerDragState.end) {
+      print(point);
+      print(domain);
+      histData.forEach((d) {
+//      print(DateTime.fromMillisecondsSinceEpoch(d['time'] * 1000));
+        if (DateTime.fromMillisecondsSinceEpoch(d['time'] * 1000)
+            .isAtSameMomentAs(domain)) {
+          print(d);
+        }
+      });
+
+      print(dragState.toString());
+    }
   }
 
   static List<charts.Series<LinearTime, DateTime>> _createHistCostData(List<dynamic> histData)  {
