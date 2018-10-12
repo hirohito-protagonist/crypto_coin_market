@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/scheduler.dart';
 import 'package:http/http.dart' as http;
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/foundation.dart';
@@ -26,6 +27,10 @@ class _DetailsView extends State<DetailsView> {
       GlobalKey<RefreshIndicatorState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   var histData = [];
+  var sliderData = {
+    'date': '',
+    'close': ''
+  };
   bool isRefresh = true;
 
   Future<Null> updateData() async {
@@ -128,6 +133,12 @@ class _DetailsView extends State<DetailsView> {
                             ),
                           ],
                         ),
+                        Column(
+                          children: <Widget>[
+                            sliderData['date'] == '' ? Text('') : Text('Date ${sliderData['date']}'),
+                            sliderData['close'] == '' ? Text('') : Text('Close ${sliderData['close']}'),
+                          ],
+                        ),
                       ],
                     ),
                   ],
@@ -175,8 +186,6 @@ class _DetailsView extends State<DetailsView> {
                     ),
                   ],
                 ),
-
-
               ),
             ],
           ),
@@ -193,17 +202,21 @@ class _DetailsView extends State<DetailsView> {
 
   _onSliderChange(point, dynamic domain, charts.SliderListenerDragState dragState) {
     if (dragState == charts.SliderListenerDragState.end) {
-      print(point);
-      print(domain);
-      histData.forEach((d) {
-//      print(DateTime.fromMillisecondsSinceEpoch(d['time'] * 1000));
-        if (DateTime.fromMillisecondsSinceEpoch(d['time'] * 1000)
-            .isAtSameMomentAs(domain)) {
-          print(d);
-        }
-      });
+      void rebuild(_) {
 
-      print(dragState.toString());
+        histData.forEach((d) {
+          if (DateTime.fromMillisecondsSinceEpoch(d['time'] * 1000)
+              .isAtSameMomentAs(domain)) {
+            print(d);
+            setState(() {
+              sliderData['date'] = domain.toString();
+              sliderData['close'] = d['close'].toString();
+            });
+          }
+        });
+      }
+
+      SchedulerBinding.instance.addPostFrameCallback(rebuild);
     }
   }
 
