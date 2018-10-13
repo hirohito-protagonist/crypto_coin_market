@@ -133,12 +133,6 @@ class _DetailsView extends State<DetailsView> {
                             ),
                           ],
                         ),
-                        Column(
-                          children: <Widget>[
-                            sliderData['date'] == '' ? Text('') : Text('Date ${sliderData['date']}'),
-                            sliderData['close'] == '' ? Text('') : Text('Close ${sliderData['close']}'),
-                          ],
-                        ),
                       ],
                     ),
                   ],
@@ -150,6 +144,15 @@ class _DetailsView extends State<DetailsView> {
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
+                    SizedBox(
+                      height: 15.0,
+                      child: Row(
+                        children: <Widget>[
+                          sliderData['date'] == '' ? Text('') : Text('Date: ${sliderData['date']}'),
+                          sliderData['close'] == '' ? Text('') : Text(' Close: ${sliderData['close']}'),
+                        ],
+                      ),
+                    ),
                     Expanded(
                       child: Container(
                         padding: const EdgeInsets.all(0.0),
@@ -205,9 +208,9 @@ class _DetailsView extends State<DetailsView> {
       void rebuild(_) {
 
         histData.forEach((d) {
-          if (DateTime.fromMillisecondsSinceEpoch(d['time'] * 1000)
-              .isAtSameMomentAs(domain)) {
-            print(d);
+          final date = DateTime.fromMillisecondsSinceEpoch(d['time'] * 1000);
+
+          if (date.isAtSameMomentAs(domain)) {
             setState(() {
               sliderData['date'] = domain.toString();
               sliderData['close'] = d['close'].toString();
