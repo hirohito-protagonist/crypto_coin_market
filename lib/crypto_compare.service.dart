@@ -30,9 +30,9 @@ Future<List<TotalVolume>> volumeData(http.Client client, Currency currency, { in
       .toList();
 }
 
-Future<Map<String, dynamic>> _historyOHLCV(http.Client client, String historyType, Currency currency, String coin) async {
+Future<Map<String, dynamic>> _historyOHLCV(http.Client client, String historyType, Currency currency, String coin, int limit, int aggregate) async {
 
-  final response = await client.get('${ENDPOINT}data/his${historyType}?fsym=${coin}&tsym=${currency.currencyCode()}&limit=60&aggregate=1');
+  final response = await client.get('${ENDPOINT}data/his${historyType}?fsym=${coin}&tsym=${currency.currencyCode()}&limit=${limit}&aggregate=${aggregate}');
   final Map<String, dynamic> defaultModel = {
     'Data': []
   };
@@ -42,19 +42,19 @@ Future<Map<String, dynamic>> _historyOHLCV(http.Client client, String historyTyp
 }
 
 
-Future<Map<String, dynamic>> dailyHistoryOHLCV(http.Client client, Currency currency, String coin) async {
+Future<Map<String, dynamic>> dailyHistoryOHLCV(http.Client client, Currency currency, String coin, int limit, int aggregate) async {
 
-  return await _historyOHLCV(client, 'today', currency, coin);
+  return await _historyOHLCV(client, 'today', currency, coin, limit, aggregate);
 }
 
-Future<Map<String, dynamic>> hourlyHistoryOHLCV(http.Client client, Currency currency, String coin) async {
+Future<Map<String, dynamic>> hourlyHistoryOHLCV(http.Client client, Currency currency, String coin, int limit, int aggregate) async {
 
-  return await _historyOHLCV(client, 'hour', currency, coin);
+  return await _historyOHLCV(client, 'tohour', currency, coin, limit, aggregate);
 }
 
-Future<Map<String, dynamic>> minuteHistoryOHLCV(http.Client client, Currency currency, String coin) async {
+Future<Map<String, dynamic>> minuteHistoryOHLCV(http.Client client, Currency currency, String coin, int limit, int aggregate) async {
 
-  return await _historyOHLCV(client, 'tominute', currency, coin);
+  return await _historyOHLCV(client, 'tominute', currency, coin, limit, aggregate);
 }
 
 List<dynamic> partition(List<dynamic> arr, int maxSize) {

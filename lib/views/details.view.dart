@@ -27,6 +27,7 @@ class _DetailsView extends State<DetailsView> {
       GlobalKey<RefreshIndicatorState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   var histData = [];
+  String activeHistogramRange = '1D';
   var sliderData = {
     'date': '',
     'close': ''
@@ -36,7 +37,7 @@ class _DetailsView extends State<DetailsView> {
   Future<Null> updateData() async {
     final currency = widget.data.coinInformation.name;
     final prices = await allPriceMultiFull(http.Client(), [currency], Currency.fromCurrencyCode(widget.data.currency));
-    final histOHLCV = await dailyHistoryOHLCV(http.Client(), Currency.fromCurrencyCode(widget.data.currency), currency);
+    final histOHLCV = await resolveHistOHLCV(activeHistogramRange, widget.data.currency, currency);
 
     setState(() {
       histData = List.of(histOHLCV['Data']);
@@ -200,7 +201,37 @@ class _DetailsView extends State<DetailsView> {
           await updateData();
         },
       ),
+      bottomNavigationBar: BottomAppBar(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            DropdownButton(
+              value: activeHistogramRange,
+              items: ['1H', '1D', '1W', '1M'].map((String value) {
+                return new DropdownMenuItem<String>(
+                  value: value,
+                  child: new Text(value),
+                );
+              }).toList(),
+              onChanged: (String value) {
+                activeHistogramRange = value;
+                setState(() {
+                  _refreshKey.currentState.show();
+                });
+              },
+            ),
+            Padding(padding: EdgeInsets.symmetric(horizontal: 5.0)),
+          ],
+        ),
+      ),
     );
+  }
+
+  resolveHistOHLCV(String range, String currency, String cryptoCoin) async {
+    var method = range == '1H' || range == '1D' ? minuteHistoryOHLCV : hourlyHistoryOHLCV;
+    var limit = range == '1H' ? 60 : range == '1D' ? 144 : range == '1W' ? 168 : 120;
+    var aggregate = range == '1H' ? 1 : range == '1D' ? 10 : range == '1W' ? 1 : 6;
+    return await method(http.Client(), Currency.fromCurrencyCode(currency), cryptoCoin, limit, aggregate);
   }
 
   _onSliderChange(point, dynamic domain, charts.SliderListenerDragState dragState) {
