@@ -26,7 +26,7 @@ class _DetailsView extends State<DetailsView> {
   final GlobalKey<RefreshIndicatorState> _refreshKey =
       GlobalKey<RefreshIndicatorState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  var histData = [];
+  List<_HistogramDataModel> histData = [];
   String activeHistogramRange = '1D';
   var sliderData = {
     'date': '',
@@ -40,7 +40,7 @@ class _DetailsView extends State<DetailsView> {
     final histOHLCV = await resolveHistOHLCV(activeHistogramRange, widget.data.currency, currency);
 
     setState(() {
-      histData = List.of(histOHLCV['Data']);
+      histData = List.of(histOHLCV['Data']).map((raw) => _HistogramDataModel.fromJson(raw)).toList();
       final displayPriceNode = prices.display.containsKey(currency) ? prices.display[currency] : null;
       final rawPriceNode = prices.raw.containsKey(currency) ? prices.raw[currency] : null;
       final coinModel = new DetailsCoinInformation(
@@ -168,7 +168,7 @@ class _DetailsView extends State<DetailsView> {
                           ),
                           behaviors: [
                             charts.Slider(
-                              initialDomainValue: DateTime.fromMillisecondsSinceEpoch(histData[0]['time'] * 1000),
+                              initialDomainValue: histData[0].time,
                               onChangeCallback: _onSliderChange,
                               snapToDatum: true,
                             )
@@ -239,12 +239,12 @@ class _DetailsView extends State<DetailsView> {
       void rebuild(_) {
 
         histData.forEach((d) {
-          final date = DateTime.fromMillisecondsSinceEpoch(d['time'] * 1000);
+          final date = d.time;
 
           if (date.isAtSameMomentAs(domain)) {
             setState(() {
               sliderData['date'] = domain.toString();
-              sliderData['close'] = d['close'].toString();
+              sliderData['close'] = d.close.toString();
             });
           }
         });
@@ -254,16 +254,8 @@ class _DetailsView extends State<DetailsView> {
     }
   }
 
-  static List<charts.Series<LinearTime, DateTime>> _createHistCostData(List<dynamic> histData)  {
-    final data = histData.map((d) =>
-      LinearTime(
-        d['close'],
-        DateTime.fromMillisecondsSinceEpoch(d['time'] * 1000),
-        d['high'],
-        0,
-        d['volumeto']
-      )
-    ).toList();
+  static List<charts.Series<LinearTime, DateTime>> _createHistCostData(List<_HistogramDataModel> histData)  {
+    final data = histData.map((d) => LinearTime(d.close, d.time, d.high, 0, d.volumeTo)).toList();
 
     return [
       charts.Series<LinearTime, DateTime>(
@@ -276,16 +268,9 @@ class _DetailsView extends State<DetailsView> {
     ];
   }
 
-  static List<charts.Series<LinearTime, DateTime>> _createHistVolumeData(List<dynamic> histData)  {
-    final data = histData.map((d) =>
-      LinearTime(
-        d['close'],
-        DateTime.fromMillisecondsSinceEpoch(d['time'] * 1000),
-        d['high'],
-        0,
-        d['volumeto']
-      )
-    ).toList();
+  static List<charts.Series<LinearTime, DateTime>> _createHistVolumeData(List<_HistogramDataModel> histData)  {
+
+    final data = histData.map((d) => LinearTime(d.close, d.time, d.high, 0, d.volumeTo)).toList();
 
     return [
       charts.Series<LinearTime, DateTime>(
@@ -307,4 +292,31 @@ class LinearTime {
   final num volumeTo;
 
   LinearTime(this.close, this.time, this.high, this.low, this.volumeTo);
+}
+
+class _HistogramDataModel {
+
+  final DateTime time;
+  final num close;
+  final num high;
+  final num low;
+  final num open;
+  final num volumeFrom;
+  final num volumeTo;
+
+  _HistogramDataModel({this.time, this.close, this.high, this.low, this.open,
+      this.volumeFrom, this.volumeTo});
+
+
+  factory _HistogramDataModel.fromJson(dynamic json) {
+    return _HistogramDataModel(
+      close: json['close'],
+      high: json['high'],
+      low: json['low'],
+      open: json['open'],
+      time: DateTime.fromMillisecondsSinceEpoch(json['time'] * 1000),
+      volumeFrom: json['volumefrom'],
+      volumeTo: json['volumeto'],
+    );
+  }
 }
