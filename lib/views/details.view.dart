@@ -28,10 +28,7 @@ class _DetailsView extends State<DetailsView> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<_HistogramDataModel> histData = [];
   String activeHistogramRange = '1D';
-  var sliderData = {
-    'date': '',
-    'close': ''
-  };
+  _SliderValueModel sliderModel = _SliderValueModel(close: '', date: '');
   bool isRefresh = true;
 
   Future<Null> updateData() async {
@@ -149,8 +146,8 @@ class _DetailsView extends State<DetailsView> {
                       height: 15.0,
                       child: Row(
                         children: <Widget>[
-                          sliderData['date'] == '' ? Text('') : Text('Date: ${sliderData['date']}'),
-                          sliderData['close'] == '' ? Text('') : Text(' Close: ${sliderData['close']}'),
+                          Text(sliderModel.date == '' ? '' : 'Date: ${sliderModel.date}'),
+                          Text(sliderModel.close == '' ?  '' : ' Close: ${sliderModel.close}'),
                         ],
                       ),
                     ),
@@ -243,8 +240,7 @@ class _DetailsView extends State<DetailsView> {
 
           if (date.isAtSameMomentAs(domain)) {
             setState(() {
-              sliderData['date'] = domain.toString();
-              sliderData['close'] = d.close.toString();
+              sliderModel = _SliderValueModel(date: domain.toString(), close: d.close.toString());
             });
           }
         });
@@ -319,4 +315,11 @@ class _HistogramDataModel {
       volumeTo: json['volumeto'],
     );
   }
+}
+
+class _SliderValueModel {
+  final String date;
+  final String close;
+
+  _SliderValueModel({this.date, this.close});
 }
