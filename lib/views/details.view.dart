@@ -65,7 +65,6 @@ class _DetailsView extends State<DetailsView> {
 
   @override
   Widget build(BuildContext context) {
-    final data = widget.data.coinInformation;
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
@@ -95,46 +94,7 @@ class _DetailsView extends State<DetailsView> {
                 alignment: Alignment.center,
                 width: 1.7976931348623157e+308,
                 height: 150.0,
-                child: Row(
-                  children: <Widget>[
-                    Column(
-                      children: <Widget>[
-                        CachedNetworkImage(
-                          placeholder: CircularProgressIndicator(),
-                          imageUrl: data.imageUrl,
-                          height: 100.0,
-                        ),
-                        Text(data.fullName),
-                      ],
-                    ),
-                    Column(
-                      children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            Text(
-                              '1 ${data.name} = ',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 20.0),
-                            ),
-                            Text(
-                              '${data.formattedPrice}',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 20.0),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: <Widget>[
-                            PriceChange(
-                              change: data.priceChange,
-                              price: data.formattedPriceChange,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                child: _buildCoinInformation()
               ),
               Expanded(
                 child: Column(
@@ -151,40 +111,8 @@ class _DetailsView extends State<DetailsView> {
                         ],
                       ),
                     ),
-                    Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.all(0.0),
-                        alignment: Alignment.center,
-                        child: isRefresh ?
-                        CircularProgressIndicator() :
-                        charts.TimeSeriesChart(
-                          _createHistCostData(histData),
-                          animate: true,
-                          primaryMeasureAxis: charts.NumericAxisSpec(
-                            tickProviderSpec: charts.BasicNumericTickProviderSpec(zeroBound: false),
-                          ),
-                          behaviors: [
-                            charts.Slider(
-                              initialDomainValue: histData[0].time,
-                              onChangeCallback: _onSliderChange,
-                              snapToDatum: true,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    Container(
-                      height: 100.0,
-                      alignment: Alignment.center,
-                      child: isRefresh ?
-                        CircularProgressIndicator() :
-                        charts.TimeSeriesChart(
-                          _createHistVolumeData(histData),
-                          animate: true,
-                          domainAxis: charts.DateTimeAxisSpec(usingBarRenderer: true),
-                          defaultRenderer: charts.BarRendererConfig<DateTime>(),
-                        ),
-                    ),
+                    _buildCoinCostChart(),
+                    _buildCoinVolumeChart(),
                   ],
                 ),
               ),
@@ -221,6 +149,90 @@ class _DetailsView extends State<DetailsView> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildCoinVolumeChart() {
+    return Container(
+      height: 100.0,
+      alignment: Alignment.center,
+      child: isRefresh ?
+      CircularProgressIndicator() :
+      charts.TimeSeriesChart(
+        _createHistVolumeData(histData),
+        animate: true,
+        domainAxis: charts.DateTimeAxisSpec(usingBarRenderer: true),
+        defaultRenderer: charts.BarRendererConfig<DateTime>(),
+      ),
+    );
+  }
+
+  Widget _buildCoinCostChart() {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.all(0.0),
+        alignment: Alignment.center,
+        child: isRefresh ?
+        CircularProgressIndicator() :
+        charts.TimeSeriesChart(
+          _createHistCostData(histData),
+          animate: true,
+          primaryMeasureAxis: charts.NumericAxisSpec(
+            tickProviderSpec: charts.BasicNumericTickProviderSpec(zeroBound: false),
+          ),
+          behaviors: [
+            charts.Slider(
+              initialDomainValue: histData[0].time,
+              onChangeCallback: _onSliderChange,
+              snapToDatum: true,
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCoinInformation() {
+    final data = widget.data.coinInformation;
+    return Row(
+      children: <Widget>[
+        Column(
+          children: <Widget>[
+            CachedNetworkImage(
+              placeholder: CircularProgressIndicator(),
+              imageUrl: data.imageUrl,
+              height: 100.0,
+            ),
+            Text(data.fullName),
+          ],
+        ),
+        Column(
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                Text(
+                  '1 ${data.name} = ',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 20.0),
+                ),
+                Text(
+                  '${data.formattedPrice}',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 20.0),
+                ),
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                PriceChange(
+                  change: data.priceChange,
+                  price: data.formattedPriceChange,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
     );
   }
 
