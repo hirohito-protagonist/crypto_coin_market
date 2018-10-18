@@ -65,10 +65,11 @@ class _DetailsView extends State<DetailsView> {
 
   @override
   Widget build(BuildContext context) {
+    final data = widget.data.coinInformation;
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(data.fullName),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -93,7 +94,6 @@ class _DetailsView extends State<DetailsView> {
                 padding: const EdgeInsets.all(0.0),
                 alignment: Alignment.center,
                 width: 1.7976931348623157e+308,
-                height: 150.0,
                 child: _buildCoinInformation()
               ),
               Expanded(
@@ -198,32 +198,23 @@ class _DetailsView extends State<DetailsView> {
       children: <Widget>[
         Column(
           children: <Widget>[
-            CachedNetworkImage(
-              placeholder: CircularProgressIndicator(),
-              imageUrl: data.imageUrl,
-              height: 100.0,
-            ),
-            Text(data.fullName),
-          ],
-        ),
-        Column(
-          children: <Widget>[
             Row(
               children: <Widget>[
+                CachedNetworkImage(
+                  placeholder: CircularProgressIndicator(),
+                  imageUrl: data.imageUrl,
+                  height: 30.0,
+                ),
                 Text(
                   '1 ${data.name} = ',
                   style: TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 20.0),
+                      fontWeight: FontWeight.bold, fontSize: 15.0),
                 ),
                 Text(
                   '${data.formattedPrice}',
                   style: TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 20.0),
+                      fontWeight: FontWeight.bold, fontSize: 15.0),
                 ),
-              ],
-            ),
-            Row(
-              children: <Widget>[
                 PriceChange(
                   change: data.priceChange,
                   price: data.formattedPriceChange,
