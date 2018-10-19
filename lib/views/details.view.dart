@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:crypto_coin_market/model/currency.model.dart';
 import 'package:crypto_coin_market/model/details_view.model.dart';
+import 'package:crypto_coin_market/model/histogram_data.model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:crypto_coin_market/widgets/price_change.widget.dart';
 import 'package:crypto_coin_market/crypto_compare.service.dart';
@@ -26,7 +27,7 @@ class _DetailsView extends State<DetailsView> {
   final GlobalKey<RefreshIndicatorState> _refreshKey =
       GlobalKey<RefreshIndicatorState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  List<_HistogramDataModel> histData = [];
+  List<HistogramDataModel> histData = [];
   String activeHistogramRange = '1D';
   _SliderValueModel sliderModel = _SliderValueModel(close: '', date: '');
   bool isRefresh = true;
@@ -37,7 +38,7 @@ class _DetailsView extends State<DetailsView> {
     final histOHLCV = await resolveHistOHLCV(activeHistogramRange, widget.data.currency, currency);
 
     setState(() {
-      histData = List.of(histOHLCV['Data']).map((raw) => _HistogramDataModel.fromJson(raw)).toList();
+      histData = histOHLCV;
       final displayPriceNode = prices.display.containsKey(currency) ? prices.display[currency] : null;
       final rawPriceNode = prices.raw.containsKey(currency) ? prices.raw[currency] : null;
       final coinModel = new DetailsCoinInformation(
@@ -253,7 +254,7 @@ class _DetailsView extends State<DetailsView> {
     }
   }
 
-  static List<charts.Series<LinearTime, DateTime>> _createHistCostData(List<_HistogramDataModel> histData)  {
+  static List<charts.Series<LinearTime, DateTime>> _createHistCostData(List<HistogramDataModel> histData)  {
     final data = histData.map((d) => LinearTime(d.close, d.time, d.high, 0, d.volumeTo)).toList();
 
     return [
@@ -267,7 +268,7 @@ class _DetailsView extends State<DetailsView> {
     ];
   }
 
-  static List<charts.Series<LinearTime, DateTime>> _createHistVolumeData(List<_HistogramDataModel> histData)  {
+  static List<charts.Series<LinearTime, DateTime>> _createHistVolumeData(List<HistogramDataModel> histData)  {
 
     final data = histData.map((d) => LinearTime(d.close, d.time, d.high, 0, d.volumeTo)).toList();
 
@@ -293,32 +294,6 @@ class LinearTime {
   LinearTime(this.close, this.time, this.high, this.low, this.volumeTo);
 }
 
-class _HistogramDataModel {
-
-  final DateTime time;
-  final num close;
-  final num high;
-  final num low;
-  final num open;
-  final num volumeFrom;
-  final num volumeTo;
-
-  _HistogramDataModel({this.time, this.close, this.high, this.low, this.open,
-      this.volumeFrom, this.volumeTo});
-
-
-  factory _HistogramDataModel.fromJson(dynamic json) {
-    return _HistogramDataModel(
-      close: json['close'],
-      high: json['high'],
-      low: json['low'],
-      open: json['open'],
-      time: DateTime.fromMillisecondsSinceEpoch(json['time'] * 1000),
-      volumeFrom: json['volumefrom'],
-      volumeTo: json['volumeto'],
-    );
-  }
-}
 
 class _SliderValueModel {
   final String date;

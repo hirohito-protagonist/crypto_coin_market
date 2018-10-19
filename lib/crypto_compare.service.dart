@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'model/total_volume.model.dart';
 import 'model/multiple_sybmols.model.dart';
 import 'model/currency.model.dart';
+import 'model/histogram_data.model.dart';
 
 const ENDPOINT = 'https://min-api.cryptocompare.com/';
 
@@ -30,7 +31,7 @@ Future<List<TotalVolume>> volumeData(http.Client client, Currency currency, { in
       .toList();
 }
 
-Future<Map<String, dynamic>> _historyOHLCV(http.Client client, String historyType, Currency currency, String coin, int limit, int aggregate) async {
+Future<List<HistogramDataModel>> _historyOHLCV(http.Client client, String historyType, Currency currency, String coin, int limit, int aggregate) async {
 
   final response = await client.get('${ENDPOINT}data/his${historyType}?fsym=${coin}&tsym=${currency.currencyCode()}&limit=${limit}&aggregate=${aggregate}');
   final Map<String, dynamic> defaultModel = {
@@ -38,21 +39,24 @@ Future<Map<String, dynamic>> _historyOHLCV(http.Client client, String historyTyp
   };
 
   return response.statusCode != 200 ? defaultModel :
-    parsedOrDefault(response.body, defaultModel);
+    parsedOrDefault(response.body, defaultModel)
+    ['Data']
+    .map<HistogramDataModel>((item) => HistogramDataModel.fromJson(item))
+    .toList();
 }
 
 
-Future<Map<String, dynamic>> dailyHistoryOHLCV(http.Client client, Currency currency, String coin, int limit, int aggregate) async {
+Future<List<HistogramDataModel>> dailyHistoryOHLCV(http.Client client, Currency currency, String coin, int limit, int aggregate) async {
 
   return await _historyOHLCV(client, 'today', currency, coin, limit, aggregate);
 }
 
-Future<Map<String, dynamic>> hourlyHistoryOHLCV(http.Client client, Currency currency, String coin, int limit, int aggregate) async {
+Future<List<HistogramDataModel>> hourlyHistoryOHLCV(http.Client client, Currency currency, String coin, int limit, int aggregate) async {
 
   return await _historyOHLCV(client, 'tohour', currency, coin, limit, aggregate);
 }
 
-Future<Map<String, dynamic>> minuteHistoryOHLCV(http.Client client, Currency currency, String coin, int limit, int aggregate) async {
+Future<List<HistogramDataModel>> minuteHistoryOHLCV(http.Client client, Currency currency, String coin, int limit, int aggregate) async {
 
   return await _historyOHLCV(client, 'tominute', currency, coin, limit, aggregate);
 }
