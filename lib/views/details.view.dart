@@ -106,13 +106,22 @@ class _DetailsView extends State<DetailsView> {
                     SizedBox(
                       height: 15.0,
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Text(sliderModel.date == '' ? '' : 'Date: ${sliderModel.date}'),
-                          Text(sliderModel.close == '' ?  '' : ' Close: ${sliderModel.close}'),
+                          Text(sliderModel.close == '' ?  '' : 'Close: ${sliderModel.close}'),
                         ],
                       ),
                     ),
                     _buildCoinCostChart(),
+                    SizedBox(
+                      height: 15.0,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(sliderModel.date == '' ? '' : '${sliderModel.date}'),
+                        ],
+                      ),
+                    ),
                     _buildCoinVolumeChart(),
                   ],
                 ),
