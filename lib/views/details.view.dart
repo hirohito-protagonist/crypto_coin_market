@@ -39,6 +39,12 @@ class _DetailsView extends State<DetailsView> {
 
     setState(() {
       histData = histOHLCV;
+      sliderModel = _SliderValueModel(
+        close: histData[0].close.toString(),
+        date: histData[0].time.toString(),
+        high: histData[0].high.toString(),
+        low: histData[0].low.toString(),
+      );
       final displayPriceNode = prices.display.containsKey(currency) ? prices.display[currency] : null;
       final rawPriceNode = prices.raw.containsKey(currency) ? prices.raw[currency] : null;
       final coinModel = new DetailsCoinInformation(
@@ -109,6 +115,8 @@ class _DetailsView extends State<DetailsView> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Text(sliderModel.close == '' ?  '' : 'Close: ${sliderModel.close}'),
+                          Text(sliderModel.low == '' ?  '' : ' Low: ${sliderModel.low}'),
+                          Text(sliderModel.high == '' ?  '' : ' High: ${sliderModel.high}'),
                         ],
                       ),
                     ),
@@ -253,7 +261,12 @@ class _DetailsView extends State<DetailsView> {
 
           if (date.isAtSameMomentAs(domain)) {
             setState(() {
-              sliderModel = _SliderValueModel(date: domain.toString(), close: d.close.toString());
+              sliderModel = _SliderValueModel(
+                date: domain.toString(),
+                close: d.close.toString(),
+                high: d.high.toString(),
+                low: d.low.toString(),
+              );
             });
           }
         });
@@ -307,6 +320,8 @@ class LinearTime {
 class _SliderValueModel {
   final String date;
   final String close;
+  final String high;
+  final String low;
 
-  _SliderValueModel({this.date, this.close});
+  _SliderValueModel({this.date, this.close, this.high, this.low});
 }
