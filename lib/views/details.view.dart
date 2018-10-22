@@ -29,7 +29,12 @@ class _DetailsView extends State<DetailsView> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<HistogramDataModel> histData = [];
   String activeHistogramRange = '1D';
-  _SliderValueModel sliderModel = _SliderValueModel(close: '', date: '');
+  _SelectionChartSliderValue _selectionChartSliderValue = _SelectionChartSliderValue(
+    close: '',
+    date: '',
+    low: '',
+    high: ''
+  );
   bool isRefresh = true;
 
   Future<Null> updateData() async {
@@ -39,7 +44,7 @@ class _DetailsView extends State<DetailsView> {
 
     setState(() {
       histData = histOHLCV;
-      sliderModel = _SliderValueModel(
+      _selectionChartSliderValue = _SelectionChartSliderValue(
         close: histData[0].close.toString(),
         date: histData[0].time.toString(),
         high: histData[0].high.toString(),
@@ -114,9 +119,19 @@ class _DetailsView extends State<DetailsView> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Text(sliderModel.close == '' ?  '' : 'Close: ${sliderModel.close}'),
-                          Text(sliderModel.low == '' ?  '' : ' Low: ${sliderModel.low}'),
-                          Text(sliderModel.high == '' ?  '' : ' High: ${sliderModel.high}'),
+                          Text(_selectionChartSliderValue.close == '' ?  '' : 'Close: ${_selectionChartSliderValue.close}'),
+                          Text(
+                            _selectionChartSliderValue.low == '' ?  '' : ' Low: ${_selectionChartSliderValue.low}',
+                            style: TextStyle(
+                              color: Colors.red
+                            ),
+                          ),
+                          Text(
+                            _selectionChartSliderValue.high == '' ?  '' : ' High: ${_selectionChartSliderValue.high}',
+                            style: TextStyle(
+                              color: Colors.green
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -126,7 +141,7 @@ class _DetailsView extends State<DetailsView> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Text(sliderModel.date == '' ? '' : '${sliderModel.date}'),
+                          Text(_selectionChartSliderValue.date == '' ? '' : '${_selectionChartSliderValue.date}'),
                         ],
                       ),
                     ),
@@ -261,7 +276,7 @@ class _DetailsView extends State<DetailsView> {
 
           if (date.isAtSameMomentAs(domain)) {
             setState(() {
-              sliderModel = _SliderValueModel(
+              _selectionChartSliderValue = _SelectionChartSliderValue(
                 date: domain.toString(),
                 close: d.close.toString(),
                 high: d.high.toString(),
@@ -317,11 +332,11 @@ class LinearTime {
 }
 
 
-class _SliderValueModel {
+class _SelectionChartSliderValue {
   final String date;
   final String close;
   final String high;
   final String low;
 
-  _SliderValueModel({this.date, this.close, this.high, this.low});
+  _SelectionChartSliderValue({this.date, this.close, this.high, this.low});
 }
