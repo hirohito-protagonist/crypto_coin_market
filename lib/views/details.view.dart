@@ -114,38 +114,54 @@ class _DetailsView extends State<DetailsView> {
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
-                    SizedBox(
-                      height: 15.0,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                    Expanded(
+                      child: Card(
+                        margin: EdgeInsets.all(10.0),
+                        child: Column(
+                          children: <Widget>[
+                            SizedBox(
+                              height: 15.0,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(_selectionChartSliderValue.close == '' ?  '' : 'Close: ${_selectionChartSliderValue.close}'),
+                                  Text(
+                                    _selectionChartSliderValue.low == '' ?  '' : ' Low: ${_selectionChartSliderValue.low}',
+                                    style: TextStyle(
+                                        color: Colors.red
+                                    ),
+                                  ),
+                                  Text(
+                                    _selectionChartSliderValue.high == '' ?  '' : ' High: ${_selectionChartSliderValue.high}',
+                                    style: TextStyle(
+                                        color: Colors.green
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            _buildCoinCostChart(),
+                            SizedBox(
+                              height: 15.0,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(_selectionChartSliderValue.date == '' ? '' : '${_selectionChartSliderValue.date}'),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Card(
+                      margin: EdgeInsets.all(10.0),
+                      child: Column(
                         children: <Widget>[
-                          Text(_selectionChartSliderValue.close == '' ?  '' : 'Close: ${_selectionChartSliderValue.close}'),
-                          Text(
-                            _selectionChartSliderValue.low == '' ?  '' : ' Low: ${_selectionChartSliderValue.low}',
-                            style: TextStyle(
-                              color: Colors.red
-                            ),
-                          ),
-                          Text(
-                            _selectionChartSliderValue.high == '' ?  '' : ' High: ${_selectionChartSliderValue.high}',
-                            style: TextStyle(
-                              color: Colors.green
-                            ),
-                          ),
+                          _buildCoinVolumeChart(),
                         ],
                       ),
                     ),
-                    _buildCoinCostChart(),
-                    SizedBox(
-                      height: 15.0,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text(_selectionChartSliderValue.date == '' ? '' : '${_selectionChartSliderValue.date}'),
-                        ],
-                      ),
-                    ),
-                    _buildCoinVolumeChart(),
                   ],
                 ),
               ),
