@@ -119,35 +119,41 @@ class _DetailsView extends State<DetailsView> {
                         margin: EdgeInsets.all(10.0),
                         child: Column(
                           children: <Widget>[
-                            SizedBox(
-                              height: 15.0,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Text(_selectionChartSliderValue.close == '' ?  '' : 'Close: ${_selectionChartSliderValue.close}'),
-                                  Text(
-                                    _selectionChartSliderValue.low == '' ?  '' : ' Low: ${_selectionChartSliderValue.low}',
-                                    style: TextStyle(
-                                        color: Colors.red
+                            Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: SizedBox(
+                                height: 15.0,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Text(_selectionChartSliderValue.close == '' ?  '' : 'Close: ${_selectionChartSliderValue.close}'),
+                                    Text(
+                                      _selectionChartSliderValue.low == '' ?  '' : ' Low: ${_selectionChartSliderValue.low}',
+                                      style: TextStyle(
+                                          color: Colors.red
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    _selectionChartSliderValue.high == '' ?  '' : ' High: ${_selectionChartSliderValue.high}',
-                                    style: TextStyle(
-                                        color: Colors.green
+                                    Text(
+                                      _selectionChartSliderValue.high == '' ?  '' : ' High: ${_selectionChartSliderValue.high}',
+                                      style: TextStyle(
+                                          color: Colors.green
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                             _buildCoinCostChart(),
-                            SizedBox(
-                              height: 15.0,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Text(_selectionChartSliderValue.date == '' ? '' : '${_selectionChartSliderValue.date}'),
-                                ],
+                            Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: SizedBox(
+                                height: 15.0,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Text(_selectionChartSliderValue.date == '' ? '' : '${_selectionChartSliderValue.date}'),
+                                  ],
+                                ),
                               ),
                             ),
                           ],
@@ -158,7 +164,14 @@ class _DetailsView extends State<DetailsView> {
                       margin: EdgeInsets.all(10.0),
                       child: Column(
                         children: <Widget>[
-                          _buildCoinVolumeChart(),
+                          Padding(
+                            padding: EdgeInsets.all(5.0),
+                            child: Text('Volume'),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: _buildCoinVolumeChart(),
+                          ),
                         ],
                       ),
                     ),
@@ -218,24 +231,27 @@ class _DetailsView extends State<DetailsView> {
 
   Widget _buildCoinCostChart() {
     return Expanded(
-      child: Container(
-        padding: const EdgeInsets.all(0.0),
-        alignment: Alignment.center,
-        child: isRefresh ?
-        CircularProgressIndicator() :
-        charts.TimeSeriesChart(
-          _createHistCostData(histData),
-          animate: true,
-          primaryMeasureAxis: charts.NumericAxisSpec(
-            tickProviderSpec: charts.BasicNumericTickProviderSpec(zeroBound: false),
+      child: Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Container(
+          padding: const EdgeInsets.all(0.0),
+          alignment: Alignment.center,
+          child: isRefresh ?
+          CircularProgressIndicator() :
+          charts.TimeSeriesChart(
+            _createHistCostData(histData),
+            animate: true,
+            primaryMeasureAxis: charts.NumericAxisSpec(
+              tickProviderSpec: charts.BasicNumericTickProviderSpec(zeroBound: false),
+            ),
+            behaviors: [
+              charts.Slider(
+                initialDomainValue: histData[0].time,
+                onChangeCallback: _onSliderChange,
+                snapToDatum: true,
+              )
+            ],
           ),
-          behaviors: [
-            charts.Slider(
-              initialDomainValue: histData[0].time,
-              onChangeCallback: _onSliderChange,
-              snapToDatum: true,
-            )
-          ],
         ),
       ),
     );
