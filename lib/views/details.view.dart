@@ -259,36 +259,42 @@ class _DetailsView extends State<DetailsView> {
 
   Widget _buildCoinInformation() {
     final data = widget.data.coinInformation;
-    return Row(
-      children: <Widget>[
-        Column(
+    return Card(
+      margin: EdgeInsets.all(10.0),
+      child: Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Row(
           children: <Widget>[
-            Row(
+            Column(
               children: <Widget>[
-                CachedNetworkImage(
-                  placeholder: CircularProgressIndicator(),
-                  imageUrl: data.imageUrl,
-                  height: 30.0,
-                ),
-                Text(
-                  '1 ${data.name} = ',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 15.0),
-                ),
-                Text(
-                  '${data.formattedPrice}',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, fontSize: 15.0),
-                ),
-                PriceChange(
-                  change: data.priceChange,
-                  price: data.formattedPriceChange,
+                Row(
+                  children: <Widget>[
+                    CachedNetworkImage(
+                      placeholder: CircularProgressIndicator(),
+                      imageUrl: data.imageUrl,
+                      height: 30.0,
+                    ),
+                    Text(
+                      '1 ${data.name} = ',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 15.0),
+                    ),
+                    Text(
+                      '${data.formattedPrice}',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 15.0),
+                    ),
+                    PriceChange(
+                      change: data.priceChange,
+                      price: data.formattedPriceChange,
+                    ),
+                  ],
                 ),
               ],
             ),
           ],
         ),
-      ],
+      ),
     );
   }
 
