@@ -265,32 +265,31 @@ class _DetailsView extends State<DetailsView> {
         padding: EdgeInsets.all(8.0),
         child: Row(
           children: <Widget>[
-            Column(
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    CachedNetworkImage(
-                      placeholder: CircularProgressIndicator(),
-                      imageUrl: data.imageUrl,
-                      height: 30.0,
-                    ),
-                    Text(
-                      '1 ${data.name} = ',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 15.0),
-                    ),
-                    Text(
-                      '${data.formattedPrice}',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 15.0),
-                    ),
-                    PriceChange(
-                      change: data.priceChange,
-                      price: data.formattedPriceChange,
-                    ),
-                  ],
-                ),
-              ],
+            CachedNetworkImage(
+              placeholder: CircularProgressIndicator(),
+              imageUrl: data.imageUrl,
+              height: 30.0,
+            ),
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    '1 ${data.name} = ',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 15.0),
+                  ),
+                  Text(
+                    '${data.formattedPrice}',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 15.0),
+                  ),
+                ],
+              ),
+            ),
+            PriceChange(
+              change: data.priceChange,
+              price: data.formattedPriceChange,
             ),
           ],
         ),
