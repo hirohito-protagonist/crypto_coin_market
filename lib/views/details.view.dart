@@ -24,6 +24,10 @@ class DetailsView extends StatefulWidget {
 }
 
 class _DetailsView extends State<DetailsView> {
+
+  String activeCurrency = Currency.defaultSymbol;
+  List<String> availableCurrencyCodes = Currency.availableCurrencies();
+
   final GlobalKey<RefreshIndicatorState> _refreshKey =
       GlobalKey<RefreshIndicatorState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -39,8 +43,8 @@ class _DetailsView extends State<DetailsView> {
 
   Future<Null> updateData() async {
     final currency = widget.data.coinInformation.name;
-    final prices = await allPriceMultiFull(http.Client(), [currency], Currency.fromCurrencyCode(widget.data.currency));
-    final histOHLCV = await resolveHistOHLCV(activeHistogramRange, widget.data.currency, currency);
+    final prices = await allPriceMultiFull(http.Client(), [currency], Currency.fromCurrencyCode(activeCurrency));
+    final histOHLCV = await resolveHistOHLCV(activeHistogramRange, activeCurrency, currency);
 
     setState(() {
       histData = histOHLCV;
@@ -62,7 +66,7 @@ class _DetailsView extends State<DetailsView> {
       );
       widget.data = new DetailsViewModel(
         coinInformation: coinModel,
-        currency: widget.data.currency,
+        currency: activeCurrency,
       );
       isRefresh = false;
     });
@@ -72,6 +76,7 @@ class _DetailsView extends State<DetailsView> {
   @override
   void initState() {
     super.initState();
+    activeCurrency = widget.data.currency;
     updateData();
   }
 
@@ -146,6 +151,22 @@ class _DetailsView extends State<DetailsView> {
               onChanged: (String value) {
                 activeHistogramRange = value;
                 setState(() {
+                  _refreshKey.currentState.show();
+                });
+              },
+            ),
+            Padding(padding: EdgeInsets.symmetric(horizontal: 5.0)),
+            DropdownButton(
+              value: activeCurrency,
+              items: availableCurrencyCodes.map((String value) {
+                return new DropdownMenuItem<String>(
+                  value: value,
+                  child: new Text(value),
+                );
+              }).toList(),
+              onChanged: (String currency) {
+                activeCurrency = currency;
+                setState(()  {
                   _refreshKey.currentState.show();
                 });
               },
