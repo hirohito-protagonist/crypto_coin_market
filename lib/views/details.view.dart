@@ -30,15 +30,10 @@ class _DetailsView extends State<DetailsView> {
 
   final GlobalKey<RefreshIndicatorState> _refreshKey =
       GlobalKey<RefreshIndicatorState>();
+  final GlobalKey<_CoinCostState> _coinCostStateKey = GlobalKey<_CoinCostState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<HistogramDataModel> histData = [];
   String activeHistogramRange = '1D';
-  _SelectionChartSliderValue _selectionChartSliderValue = _SelectionChartSliderValue(
-    close: '',
-    date: '',
-    low: '',
-    high: ''
-  );
   bool isRefresh = true;
 
   Future<Null> updateData() async {
@@ -48,12 +43,6 @@ class _DetailsView extends State<DetailsView> {
 
     setState(() {
       histData = histOHLCV;
-      _selectionChartSliderValue = _SelectionChartSliderValue(
-        close: histData[0].close.toString(),
-        date: histData[0].time.toString(),
-        high: histData[0].high.toString(),
-        low: histData[0].low.toString(),
-      );
       final displayPriceNode = prices.display.containsKey(currency) ? prices.display[currency] : null;
       final rawPriceNode = prices.raw.containsKey(currency) ? prices.raw[currency] : null;
       final coinModel = new DetailsCoinInformation(
@@ -69,6 +58,7 @@ class _DetailsView extends State<DetailsView> {
         currency: activeCurrency,
       );
       isRefresh = false;
+      _coinCostStateKey.currentState.update(histData, isRefresh);
     });
     return null;
   }
@@ -120,7 +110,11 @@ class _DetailsView extends State<DetailsView> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     Expanded(
-                      child: _buildCoinCostCardInformation(),
+                      child: _CoinCostWidget(
+                        key: _coinCostStateKey,
+                        histData: histData,
+                        isRefresh: isRefresh,
+                      ),
                     ),
                     _buildCoinVolumeCardInformation(),
                   ],
@@ -132,6 +126,7 @@ class _DetailsView extends State<DetailsView> {
         onRefresh: () async {
           setState(() {
             isRefresh = true;
+            _coinCostStateKey.currentState.update(histData, isRefresh);
           });
           await updateData();
         },
@@ -178,53 +173,6 @@ class _DetailsView extends State<DetailsView> {
     );
   }
 
-  Widget _buildCoinCostCardInformation() {
-    return Card(
-      margin: EdgeInsets.all(10.0),
-      child: Column(
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: SizedBox(
-              height: 15.0,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(_selectionChartSliderValue.close == '' ?  '' : 'Close: ${_selectionChartSliderValue.close}'),
-                  Text(
-                    _selectionChartSliderValue.low == '' ?  '' : ' Low: ${_selectionChartSliderValue.low}',
-                    style: TextStyle(
-                        color: Colors.red
-                    ),
-                  ),
-                  Text(
-                    _selectionChartSliderValue.high == '' ?  '' : ' High: ${_selectionChartSliderValue.high}',
-                    style: TextStyle(
-                        color: Colors.green
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          _buildCoinCostChart(),
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: SizedBox(
-              height: 15.0,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(_selectionChartSliderValue.date == '' ? '' : '${_selectionChartSliderValue.date}'),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildCoinVolumeCardInformation() {
     return Card(
       margin: EdgeInsets.all(10.0),
@@ -258,33 +206,6 @@ class _DetailsView extends State<DetailsView> {
     );
   }
 
-  Widget _buildCoinCostChart() {
-    return Expanded(
-      child: Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Container(
-          padding: const EdgeInsets.all(0.0),
-          alignment: Alignment.center,
-          child: isRefresh ?
-          CircularProgressIndicator() :
-          charts.TimeSeriesChart(
-            _createHistCostData(histData),
-            animate: true,
-            primaryMeasureAxis: charts.NumericAxisSpec(
-              tickProviderSpec: charts.BasicNumericTickProviderSpec(zeroBound: false),
-            ),
-            behaviors: [
-              charts.Slider(
-                initialDomainValue: histData[0].time,
-                onChangeCallback: _onSliderChange,
-                snapToDatum: true,
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 
   Widget _buildCoinInformation() {
     final data = widget.data.coinInformation;
@@ -333,6 +254,171 @@ class _DetailsView extends State<DetailsView> {
     return await method(http.Client(), Currency.fromCurrencyCode(currency), cryptoCoin, limit, aggregate);
   }
 
+
+
+
+  static List<charts.Series<LinearTime, DateTime>> _createHistVolumeData(List<HistogramDataModel> histData)  {
+
+    final data = histData.map((d) => LinearTime(d.close, d.time, d.high, 0, d.volumeTo)).toList();
+
+    return [
+      charts.Series<LinearTime, DateTime>(
+        id: 'TimeSeriesOfVolume',
+        colorFn: (_, __) => charts.MaterialPalette.purple.shadeDefault,
+        domainFn: (LinearTime f, _) => f.time,
+        measureFn: (LinearTime f, _) => f.volumeTo,
+        data: data,
+      )
+    ];
+  }
+}
+
+class _CoinCostWidget extends StatefulWidget {
+
+  List<HistogramDataModel> histData = [];
+  bool isRefresh = false;
+
+  _CoinCostWidget({Key key, this.histData, this.isRefresh}): super(key: key);
+
+  @override
+  State<StatefulWidget> createState() {
+    return _CoinCostState(
+      isRefresh: isRefresh,
+      histData: histData,
+    );
+  }
+
+}
+
+class _CoinCostState extends State<_CoinCostWidget> {
+
+  List<HistogramDataModel> histData = [];
+  _SelectionChartSliderValue _selectionChartSliderValue = _SelectionChartSliderValue(
+      close: '',
+      date: '',
+      low: '',
+      high: ''
+  );
+  bool isRefresh;
+
+  _CoinCostState({this.histData, this.isRefresh});
+
+  @override
+  void initState() {
+    super.initState();
+    if (histData.length > 0) {
+      _selectionChartSliderValue = _SelectionChartSliderValue(
+        close: histData[0].close.toString(),
+        date: histData[0].time.toString(),
+        high: histData[0].high.toString(),
+        low: histData[0].low.toString(),
+      );
+    }
+  }
+
+  void update(histData, isRefresh) {
+    setState(() {
+      this.histData = histData;
+      this.isRefresh = isRefresh;
+      _selectionChartSliderValue = _SelectionChartSliderValue(
+        close: histData[0].close.toString(),
+        date: histData[0].time.toString(),
+        high: histData[0].high.toString(),
+        low: histData[0].low.toString(),
+      );
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.all(10.0),
+      child: Column(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.all(8.0),
+            child: SizedBox(
+              height: 15.0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(_selectionChartSliderValue.close == '' ?  '' : 'Close: ${_selectionChartSliderValue.close}'),
+                  Text(
+                    _selectionChartSliderValue.low == '' ?  '' : ' Low: ${_selectionChartSliderValue.low}',
+                    style: TextStyle(
+                        color: Colors.red
+                    ),
+                  ),
+                  Text(
+                    _selectionChartSliderValue.high == '' ?  '' : ' High: ${_selectionChartSliderValue.high}',
+                    style: TextStyle(
+                        color: Colors.green
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          _buildCoinCostChart(),
+          Padding(
+            padding: EdgeInsets.all(8.0),
+            child: SizedBox(
+              height: 15.0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(_selectionChartSliderValue.date == '' ? '' : '${_selectionChartSliderValue.date}'),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCoinCostChart() {
+    return Expanded(
+      child: Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Container(
+          padding: const EdgeInsets.all(0.0),
+          alignment: Alignment.center,
+          child: isRefresh ?
+          CircularProgressIndicator() :
+          charts.TimeSeriesChart(
+            _createHistCostData(histData),
+            animate: true,
+            primaryMeasureAxis: charts.NumericAxisSpec(
+              tickProviderSpec: charts.BasicNumericTickProviderSpec(zeroBound: false),
+            ),
+            behaviors: [
+              charts.Slider(
+                initialDomainValue: histData[0].time,
+                onChangeCallback: _onSliderChange,
+                snapToDatum: true,
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  static List<charts.Series<LinearTime, DateTime>> _createHistCostData(List<HistogramDataModel> histData)  {
+    final data = histData.map((d) => LinearTime(d.close, d.time, d.high, 0, d.volumeTo)).toList();
+
+    return [
+      charts.Series<LinearTime, DateTime>(
+        id: 'TimeSeriesOfClosePrice',
+        colorFn: (_, __) => charts.MaterialPalette.purple.shadeDefault,
+        domainFn: (LinearTime f, _) => f.time,
+        measureFn: (LinearTime f, _) => f.close,
+        data: data,
+      )
+    ];
+  }
+
   _onSliderChange(point, dynamic domain, charts.SliderListenerDragState dragState) {
     if (dragState == charts.SliderListenerDragState.end) {
       void rebuild(_) {
@@ -355,35 +441,6 @@ class _DetailsView extends State<DetailsView> {
 
       SchedulerBinding.instance.addPostFrameCallback(rebuild);
     }
-  }
-
-  static List<charts.Series<LinearTime, DateTime>> _createHistCostData(List<HistogramDataModel> histData)  {
-    final data = histData.map((d) => LinearTime(d.close, d.time, d.high, 0, d.volumeTo)).toList();
-
-    return [
-      charts.Series<LinearTime, DateTime>(
-        id: 'TimeSeriesOfClosePrice',
-        colorFn: (_, __) => charts.MaterialPalette.purple.shadeDefault,
-        domainFn: (LinearTime f, _) => f.time,
-        measureFn: (LinearTime f, _) => f.close,
-        data: data,
-      )
-    ];
-  }
-
-  static List<charts.Series<LinearTime, DateTime>> _createHistVolumeData(List<HistogramDataModel> histData)  {
-
-    final data = histData.map((d) => LinearTime(d.close, d.time, d.high, 0, d.volumeTo)).toList();
-
-    return [
-      charts.Series<LinearTime, DateTime>(
-        id: 'TimeSeriesOfVolume',
-        colorFn: (_, __) => charts.MaterialPalette.purple.shadeDefault,
-        domainFn: (LinearTime f, _) => f.time,
-        measureFn: (LinearTime f, _) => f.volumeTo,
-        data: data,
-      )
-    ];
   }
 }
 
