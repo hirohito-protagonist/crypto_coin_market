@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:http/http.dart' as http;
-import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:crypto_coin_market/model/currency.model.dart';
@@ -9,6 +8,7 @@ import 'package:crypto_coin_market/model/histogram_data.model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:crypto_coin_market/widgets/price_change.widget.dart';
 import 'package:crypto_coin_market/widgets/coin_cost.widget.dart';
+import 'package:crypto_coin_market/widgets/coin_volume.widget.dart';
 import 'package:crypto_coin_market/crypto_compare.service.dart';
 
 
@@ -31,6 +31,7 @@ class _DetailsView extends State<DetailsView> {
   final GlobalKey<RefreshIndicatorState> _refreshKey =
       GlobalKey<RefreshIndicatorState>();
   final GlobalKey<CoinCostState> _coinCostStateKey = GlobalKey<CoinCostState>();
+  final GlobalKey<CoinVolumeState> _coinVolumeStateKey = GlobalKey<CoinVolumeState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<HistogramDataModel> histData = [];
   String activeHistogramRange = '1D';
@@ -59,6 +60,7 @@ class _DetailsView extends State<DetailsView> {
       );
       isRefresh = false;
       _coinCostStateKey.currentState.update(histData, isRefresh);
+      _coinVolumeStateKey.currentState.update(histData, isRefresh);
     });
     return null;
   }
@@ -116,7 +118,11 @@ class _DetailsView extends State<DetailsView> {
                         isRefresh: isRefresh,
                       ),
                     ),
-                    _buildCoinVolumeCardInformation(),
+                    CoinVolumeWidget(
+                      key: _coinVolumeStateKey,
+                      histData: histData,
+                      isRefresh: isRefresh,
+                    ),
                   ],
                 ),
               ),
@@ -127,6 +133,7 @@ class _DetailsView extends State<DetailsView> {
           setState(() {
             isRefresh = true;
             _coinCostStateKey.currentState.update(histData, isRefresh);
+            _coinVolumeStateKey.currentState.update(histData, isRefresh);
           });
           await updateData();
         },
@@ -169,39 +176,6 @@ class _DetailsView extends State<DetailsView> {
             Padding(padding: EdgeInsets.symmetric(horizontal: 5.0)),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildCoinVolumeCardInformation() {
-    return Card(
-      margin: EdgeInsets.all(10.0),
-      child: Column(
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.all(5.0),
-            child: Text('Volume'),
-          ),
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: _buildCoinVolumeChart(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCoinVolumeChart() {
-    return Container(
-      height: 100.0,
-      alignment: Alignment.center,
-      child: isRefresh ?
-      CircularProgressIndicator() :
-      charts.TimeSeriesChart(
-        _createHistVolumeData(histData),
-        animate: true,
-        domainAxis: charts.DateTimeAxisSpec(usingBarRenderer: true),
-        defaultRenderer: charts.BarRendererConfig<DateTime>(),
       ),
     );
   }
@@ -253,32 +227,7 @@ class _DetailsView extends State<DetailsView> {
     var aggregate = range == '1H' ? 1 : range == '1D' ? 10 : range == '1W' ? 1 : 6;
     return await method(http.Client(), Currency.fromCurrencyCode(currency), cryptoCoin, limit, aggregate);
   }
-
-  static List<charts.Series<LinearTime, DateTime>> _createHistVolumeData(List<HistogramDataModel> histData)  {
-
-    final data = histData.map((d) => LinearTime(d.close, d.time, d.high, 0, d.volumeTo)).toList();
-
-    return [
-      charts.Series<LinearTime, DateTime>(
-        id: 'TimeSeriesOfVolume',
-        colorFn: (_, __) => charts.MaterialPalette.purple.shadeDefault,
-        domainFn: (LinearTime f, _) => f.time,
-        measureFn: (LinearTime f, _) => f.volumeTo,
-        data: data,
-      )
-    ];
-  }
 }
 
-
-class LinearTime {
-  final num close;
-  final num high;
-  final num low;
-  final DateTime time;
-  final num volumeTo;
-
-  LinearTime(this.close, this.time, this.high, this.low, this.volumeTo);
-}
 
 
