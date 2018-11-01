@@ -26,6 +26,13 @@ class DetailsView extends StatefulWidget {
 class _DetailsView extends State<DetailsView> {
 
   String activeCurrency = Currency.defaultSymbol;
+  List<TimeRange> histogramTimeRange = [TimeRange.OneHour, TimeRange.OneDay, TimeRange.OneWeek, TimeRange.OneMonth];
+  Map<TimeRange, String> timeRangeTranslation = {
+    TimeRange.OneHour: '1H',
+    TimeRange.OneDay: '1D',
+    TimeRange.OneWeek: '1W',
+    TimeRange.OneMonth: '1M'
+  };
   List<String> availableCurrencyCodes = Currency.availableCurrencies();
 
   final GlobalKey<RefreshIndicatorState> _refreshKey =
@@ -34,7 +41,7 @@ class _DetailsView extends State<DetailsView> {
   final GlobalKey<CoinVolumeState> _coinVolumeStateKey = GlobalKey<CoinVolumeState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<HistogramDataModel> histData = [];
-  String activeHistogramRange = '1D';
+  TimeRange activeHistogramRange = TimeRange.OneDay;
   bool isRefresh = true;
 
   Future<Null> updateData() async {
@@ -144,14 +151,14 @@ class _DetailsView extends State<DetailsView> {
           children: <Widget>[
             DropdownButton(
               value: activeHistogramRange,
-              items: ['1H', '1D', '1W', '1M'].map((String value) {
-                return new DropdownMenuItem<String>(
+              items: histogramTimeRange.map((TimeRange value) {
+                return DropdownMenuItem<TimeRange>(
                   value: value,
-                  child: new Text(value),
+                  child: Text(timeRangeTranslation[value]),
                 );
               }).toList(),
-              onChanged: (String value) {
-                activeHistogramRange = value;
+              onChanged: (TimeRange value) {
+//                activeHistogramRange = value;
                 setState(() {
                   _refreshKey.currentState.show();
                 });
@@ -161,9 +168,9 @@ class _DetailsView extends State<DetailsView> {
             DropdownButton(
               value: activeCurrency,
               items: availableCurrencyCodes.map((String value) {
-                return new DropdownMenuItem<String>(
+                return DropdownMenuItem<String>(
                   value: value,
-                  child: new Text(value),
+                  child: Text(value),
                 );
               }).toList(),
               onChanged: (String currency) {
@@ -221,13 +228,15 @@ class _DetailsView extends State<DetailsView> {
     );
   }
 
-  resolveHistOHLCV(String range, String currency, String cryptoCoin) async {
-    var method = range == '1H' || range == '1D' ? minuteHistoryOHLCV : hourlyHistoryOHLCV;
-    var limit = range == '1H' ? 60 : range == '1D' ? 144 : range == '1W' ? 168 : 120;
-    var aggregate = range == '1H' ? 1 : range == '1D' ? 10 : range == '1W' ? 1 : 6;
+  resolveHistOHLCV(TimeRange range, String currency, String cryptoCoin) async {
+    var method = range == TimeRange.OneHour || range == TimeRange.OneDay ? minuteHistoryOHLCV : hourlyHistoryOHLCV;
+    var limit = range == TimeRange.OneHour ? 60 : range == TimeRange.OneDay ? 144 : range == TimeRange.OneWeek ? 168 : 120;
+    var aggregate = range == TimeRange.OneHour ? 1 : range == TimeRange.OneDay ? 10 : range == TimeRange.OneWeek ? 1 : 6;
     return await method(http.Client(), Currency.fromCurrencyCode(currency), cryptoCoin, limit, aggregate);
   }
 }
+
+enum TimeRange { OneHour, OneDay, OneWeek, OneMonth }
 
 
 
