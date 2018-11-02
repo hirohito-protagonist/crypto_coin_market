@@ -47,7 +47,7 @@ class _DetailsView extends State<DetailsView> {
   Future<Null> updateData() async {
     final currency = widget.data.coinInformation.name;
     final prices = await allPriceMultiFull(http.Client(), [currency], Currency.fromCurrencyCode(activeCurrency));
-    final histOHLCV = await resolveHistOHLCV(activeHistogramRange, activeCurrency, currency);
+    final histOHLCV = await createHistOHLCV(activeHistogramRange, activeCurrency, currency);
 
     setState(() {
       histData = histOHLCV;
@@ -227,16 +227,8 @@ class _DetailsView extends State<DetailsView> {
       ),
     );
   }
-
-  resolveHistOHLCV(TimeRange range, String currency, String cryptoCoin) async {
-    var method = range == TimeRange.OneHour || range == TimeRange.OneDay ? minuteHistoryOHLCV : hourlyHistoryOHLCV;
-    var limit = range == TimeRange.OneHour ? 60 : range == TimeRange.OneDay ? 144 : range == TimeRange.OneWeek ? 168 : 120;
-    var aggregate = range == TimeRange.OneHour ? 1 : range == TimeRange.OneDay ? 10 : range == TimeRange.OneWeek ? 1 : 6;
-    return await method(http.Client(), Currency.fromCurrencyCode(currency), cryptoCoin, limit, aggregate);
-  }
 }
 
-enum TimeRange { OneHour, OneDay, OneWeek, OneMonth }
 
 
 
