@@ -158,7 +158,7 @@ class _DetailsView extends State<DetailsView> {
                 );
               }).toList(),
               onChanged: (TimeRange value) {
-//                activeHistogramRange = value;
+                activeHistogramRange = value;
                 setState(() {
                   _refreshKey.currentState.show();
                 });
