@@ -145,45 +145,7 @@ class _DetailsView extends State<DetailsView> {
           await updateData();
         },
       ),
-      bottomNavigationBar: BottomAppBar(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            DropdownButton(
-              value: activeHistogramRange,
-              items: histogramTimeRange.map((TimeRange value) {
-                return DropdownMenuItem<TimeRange>(
-                  value: value,
-                  child: Text(timeRangeTranslation[value]),
-                );
-              }).toList(),
-              onChanged: (TimeRange value) {
-                activeHistogramRange = value;
-                setState(() {
-                  _refreshKey.currentState.show();
-                });
-              },
-            ),
-            Padding(padding: EdgeInsets.symmetric(horizontal: 5.0)),
-            DropdownButton(
-              value: activeCurrency,
-              items: availableCurrencyCodes.map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              onChanged: (String currency) {
-                activeCurrency = currency;
-                setState(()  {
-                  _refreshKey.currentState.show();
-                });
-              },
-            ),
-            Padding(padding: EdgeInsets.symmetric(horizontal: 5.0)),
-          ],
-        ),
-      ),
+      bottomNavigationBar: _buildNavigationBar(),
     );
   }
 
@@ -224,6 +186,48 @@ class _DetailsView extends State<DetailsView> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildNavigationBar() {
+    return BottomAppBar(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          DropdownButton(
+            value: activeHistogramRange,
+            items: histogramTimeRange.map((TimeRange value) {
+              return DropdownMenuItem<TimeRange>(
+                value: value,
+                child: Text(timeRangeTranslation[value]),
+              );
+            }).toList(),
+            onChanged: (TimeRange value) {
+              activeHistogramRange = value;
+              setState(() {
+                _refreshKey.currentState.show();
+              });
+            },
+          ),
+          Padding(padding: EdgeInsets.symmetric(horizontal: 5.0)),
+          DropdownButton(
+            value: activeCurrency,
+            items: availableCurrencyCodes.map((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+            onChanged: (String currency) {
+              activeCurrency = currency;
+              setState(()  {
+                _refreshKey.currentState.show();
+              });
+            },
+          ),
+          Padding(padding: EdgeInsets.symmetric(horizontal: 5.0)),
+        ],
       ),
     );
   }
