@@ -61,12 +61,14 @@ Future<List<HistogramDataModel>> minuteHistoryOHLCV(http.Client client, Currency
   return await _historyOHLCV(client, 'tominute', currency, coin, limit, aggregate);
 }
 
-enum TimeRange { OneHour, OneDay, OneWeek, OneMonth }
+enum TimeRange { OneHour, OneDay, OneWeek, OneMonth, ThreeMonth, SixMonth, OneYear }
 
 Future<List<HistogramDataModel>> createHistOHLCV(TimeRange range, String currency, String cryptoCoin) async {
-  var method = range == TimeRange.OneHour || range == TimeRange.OneDay ? minuteHistoryOHLCV : hourlyHistoryOHLCV;
-  var limit = range == TimeRange.OneHour ? 60 : range == TimeRange.OneDay ? 144 : range == TimeRange.OneWeek ? 168 : 120;
-  var aggregate = range == TimeRange.OneHour ? 1 : range == TimeRange.OneDay ? 10 : range == TimeRange.OneWeek ? 1 : 6;
+  var method = range == TimeRange.OneHour || range == TimeRange.OneDay ? minuteHistoryOHLCV :
+    range == TimeRange.ThreeMonth || range == TimeRange.SixMonth || range == TimeRange.OneYear ? dailyHistoryOHLCV : hourlyHistoryOHLCV;
+  var limit = range == TimeRange.OneHour ? 60 : range == TimeRange.OneDay ? 720 : range == TimeRange.OneWeek ? 168 :
+    range == TimeRange.OneMonth ? 720 : range == TimeRange.ThreeMonth ? 90 : range == TimeRange.SixMonth ? 180 : 365;
+  var aggregate = range == TimeRange.OneDay ? 2 : 1;
   return await method(http.Client(), Currency.fromCurrencyCode(currency), cryptoCoin, limit, aggregate);
 }
 

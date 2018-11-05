@@ -26,12 +26,18 @@ class DetailsView extends StatefulWidget {
 class _DetailsView extends State<DetailsView> {
 
   String activeCurrency = Currency.defaultSymbol;
-  List<TimeRange> histogramTimeRange = [TimeRange.OneHour, TimeRange.OneDay, TimeRange.OneWeek, TimeRange.OneMonth];
+  List<TimeRange> histogramTimeRange = [
+    TimeRange.OneHour, TimeRange.OneDay, TimeRange.OneWeek, TimeRange.OneMonth,
+    TimeRange.ThreeMonth, TimeRange.SixMonth, TimeRange.OneYear
+  ];
   Map<TimeRange, String> timeRangeTranslation = {
     TimeRange.OneHour: '1H',
     TimeRange.OneDay: '1D',
     TimeRange.OneWeek: '1W',
-    TimeRange.OneMonth: '1M'
+    TimeRange.OneMonth: '1M',
+    TimeRange.ThreeMonth: '3M',
+    TimeRange.SixMonth: '6M',
+    TimeRange.OneYear: '1Y'
   };
   List<String> availableCurrencyCodes = Currency.availableCurrencies();
 
