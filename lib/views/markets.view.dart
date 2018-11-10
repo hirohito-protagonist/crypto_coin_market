@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:crypto_coin_market/crypto_compare.service.dart';
 import 'package:crypto_coin_market/model/total_volume.model.dart';
 import 'package:crypto_coin_market/model/markets_view.model.dart';
 import 'package:crypto_coin_market/model/details_view.model.dart';
@@ -9,12 +8,13 @@ import 'package:crypto_coin_market/model/multiple_sybmols.model.dart';
 import 'package:crypto_coin_market/model/currency.model.dart';
 import 'package:crypto_coin_market/widgets/coin_list_tile.widget.dart';
 import 'package:crypto_coin_market/services/toplists.service.dart';
+import 'package:crypto_coin_market/services/price.service.dart';
 
 Future<MarketsViewModel> marketData(Currency currency, num page) async {
 
   final volume =  await TopListsService(client: http.Client()).totalVolume(currency, page: page);
   final coins = volume.map((TotalVolume tv) => tv.coinInfo.name).toList();
-  final prices = await allPriceMultiFull(http.Client(), coins, currency);
+  final prices = await PriceService(client: http.Client()).multipleSymbolsFullData(coins, currency);
 
   return MarketsViewModel(
     prices: prices,
