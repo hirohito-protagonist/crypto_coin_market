@@ -1,9 +1,9 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import 'package:crypto_coin_market/model/currency.model.dart';
 import 'package:crypto_coin_market/model/histogram_data.model.dart';
+import 'package:crypto_coin_market/services/util.service.dart';
 
 class HistogramService {
 
@@ -29,7 +29,7 @@ class HistogramService {
     };
 
     return response.statusCode != 200 ? defaultModel :
-    parsedOrDefault(response.body, defaultModel)
+    UtilService.parsedOrDefault(response.body, defaultModel)
     ['Data']
         .map<HistogramDataModel>((item) => HistogramDataModel.fromJson(item))
         .toList();
@@ -48,16 +48,6 @@ class HistogramService {
   Future<List<HistogramDataModel>> minute(Currency currency, String coin, int limit, int aggregate) async {
 
     return await _ohlcv('tominute', currency, coin, limit, aggregate);
-  }
-
-  dynamic parsedOrDefault(String input, dynamic defaultValue) {
-    dynamic output = defaultValue;
-    try {
-      output = json.decode(input);
-    } catch(e) {
-      output = defaultValue;
-    }
-    return output;
   }
 
   _HistogramConfigurationParameters configuration(TimeRange range) {
