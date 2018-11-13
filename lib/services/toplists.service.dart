@@ -16,7 +16,7 @@ class TopListsService {
   Future<List<TotalVolume>> totalVolume(Currency currency, { int page = 0 }) async {
 
     final response = await client.get('${endpoint}data/top/totalvol?limit=100&tsym=${currency.currencyCode()}&page=${page}');
-    print(response.body);
+
     return response.statusCode != 200 ? [] :
     UtilService.parsedOrDefault(response.body, { 'Data': [] })
     ['Data']
