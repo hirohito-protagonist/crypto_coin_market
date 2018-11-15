@@ -9,8 +9,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:crypto_coin_market/widgets/price_change.widget.dart';
 import 'package:crypto_coin_market/widgets/coin_cost.widget.dart';
 import 'package:crypto_coin_market/widgets/coin_volume.widget.dart';
-import 'package:crypto_coin_market/crypto_compare.service.dart';
 import 'package:crypto_coin_market/services/histogram.service.dart';
+import 'package:crypto_coin_market/services/price.service.dart';
 
 
 class DetailsView extends StatefulWidget {
@@ -53,7 +53,8 @@ class _DetailsView extends State<DetailsView> {
 
   Future<Null> updateData() async {
     final currency = widget.data.coinInformation.name;
-    final prices = await allPriceMultiFull(http.Client(), [currency], Currency.fromCurrencyCode(activeCurrency));
+    final prices = await PriceService(client: http.Client())
+        .multipleSymbolsFullData([currency], Currency.fromCurrencyCode(activeCurrency));
     final histOHLCV = await HistogramService.OHLCV(activeHistogramRange, activeCurrency, currency);
 
     setState(() {
