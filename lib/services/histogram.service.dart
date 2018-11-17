@@ -57,6 +57,16 @@ class HistogramService {
         limit: 60,
         aggregate: 1,
       ),
+      TimeRange.SixHour: _HistogramConfigurationParameters(
+        method: minute,
+        limit: 360,
+        aggregate: 1,
+      ),
+      TimeRange.TwelveHour: _HistogramConfigurationParameters(
+        method: minute,
+        limit: 720,
+        aggregate: 1,
+      ),
       TimeRange.OneDay: _HistogramConfigurationParameters(
         method: minute,
         limit: 144,
@@ -92,7 +102,17 @@ class HistogramService {
   }
 }
 
-enum TimeRange { OneHour, OneDay, OneWeek, OneMonth, ThreeMonth, SixMonth, OneYear }
+enum TimeRange {
+  OneHour,
+  SixHour,
+  TwelveHour,
+  OneDay,
+  OneWeek,
+  OneMonth,
+  ThreeMonth,
+  SixMonth,
+  OneYear
+}
 
 class _HistogramConfigurationParameters {
   final Function method;
