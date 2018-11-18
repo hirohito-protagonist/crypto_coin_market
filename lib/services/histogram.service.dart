@@ -28,7 +28,7 @@ class HistogramService {
       'Data': []
     };
 
-    return response.statusCode != 200 ? defaultModel :
+    return response.statusCode != 200 ? [] :
     UtilService.parsedOrDefault(response.body, defaultModel)
     ['Data']
         .map<HistogramDataModel>((item) => HistogramDataModel.fromJson(item))
