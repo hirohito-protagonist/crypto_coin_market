@@ -7,39 +7,50 @@ import 'package:http/http.dart' as http;
 
 class MockClient extends Mock implements http.Client {}
 
+class HistogramServiceTestData {
+
+  final String name;
+  final String url;
+
+  HistogramServiceTestData({this.name, this.url});
+
+  resolveMethod(HistogramService service) {
+    final methods = {
+      'daily': service.daily,
+      'hourly': service.hourly,
+      'minute': service.minute
+    };
+    return methods[name];
+  }
+}
+
 void main() {
 
   final testData = [
-    {
-      'groupName': 'daily',
-      'url': 'https://min-api.cryptocompare.com/data/histoday?fsym=BTC&tsym=USD&limit=100&aggregate=2',
-      'serviceMethodName': 'daily',
-    },
-    {
-      'groupName': 'hourly',
-      'url': 'https://min-api.cryptocompare.com/data/histohour?fsym=BTC&tsym=USD&limit=100&aggregate=2',
-      'serviceMethodName': 'hourly',
-    },
-    {
-      'groupName': 'minute',
-      'url': 'https://min-api.cryptocompare.com/data/histominute?fsym=BTC&tsym=USD&limit=100&aggregate=2',
-      'serviceMethodName': 'minute',
-    }
+    HistogramServiceTestData(
+      name: 'daily',
+      url: 'https://min-api.cryptocompare.com/data/histoday?fsym=BTC&tsym=USD&limit=100&aggregate=2'
+    ),
+    HistogramServiceTestData(
+      name: 'hourly',
+      url: 'https://min-api.cryptocompare.com/data/histohour?fsym=BTC&tsym=USD&limit=100&aggregate=2'
+    ),
+    HistogramServiceTestData(
+      name: 'minute',
+      url: 'https://min-api.cryptocompare.com/data/histominute?fsym=BTC&tsym=USD&limit=100&aggregate=2'
+    )
   ];
 
   testData.forEach((tData) {
 
-    group(tData['groupName'], () {
+    group(tData.name, () {
 
       test('success response should map to model', () async {
 
         // Given
         final client = MockClient();
         final service = HistogramService(client: client);
-        final serviceMethod = tData['serviceMethodName'] == 'daily' ? service.daily :
-          tData['serviceMethodName'] == 'hourly' ? service.hourly :
-          tData['serviceMethodName'] == 'minute' ? service.minute :
-          () => {};
+        final serviceMethod = tData.resolveMethod(service);
         final response = {
           'Data': [
             { 'close': 1, 'high': 1, 'low': 1, 'open': 1, 'time': 1542555162, 'volumefrom': 1, 'volumeto': 1 },
@@ -48,7 +59,7 @@ void main() {
         };
 
         // When
-        when(client.get(tData['url']))
+        when(client.get(tData.url))
             .thenAnswer((_) async => http.Response(json.encode(response), 200));
         final result = await serviceMethod(Currency.fromCurrencyCode('USD'), 'BTC', 100, 2);
 
@@ -68,12 +79,9 @@ void main() {
         // Given
         final client = MockClient();
         final service = HistogramService(client: client);
-        final serviceMethod = tData['serviceMethodName'] == 'daily' ? service.daily :
-          tData['serviceMethodName'] == 'hourly' ? service.hourly :
-          tData['serviceMethodName'] == 'minute' ? service.minute :
-          () => {};
+        final serviceMethod = tData.resolveMethod(service);
         // When
-        when(client.get(tData['url']))
+        when(client.get(tData.url))
             .thenAnswer((_) async => http.Response('test', 200));
         final result = await serviceMethod(Currency.fromCurrencyCode('USD'), 'BTC', 100, 2);
 
@@ -86,13 +94,10 @@ void main() {
         // Given
         final client = MockClient();
         final service = HistogramService(client: client);
-        final serviceMethod = tData['serviceMethodName'] == 'daily' ? service.daily :
-          tData['serviceMethodName'] == 'hourly' ? service.hourly :
-          tData['serviceMethodName'] == 'minute' ? service.minute :
-          () => {};
+        final serviceMethod = tData.resolveMethod(service);
 
         // When
-        when(client.get(tData['url']))
+        when(client.get(tData.url))
             .thenAnswer((_) async => http.Response(json.encode({}), 500));
         final result = await serviceMethod(Currency.fromCurrencyCode('USD'), 'BTC', 100, 2);
 
