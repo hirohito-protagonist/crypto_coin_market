@@ -8,14 +8,17 @@ import 'package:crypto_coin_market/services/util.service.dart';
 
 class PriceService {
 
-  final String endpoint = 'https://min-api.cryptocompare.com/';
+  final String authority = 'min-api.cryptocompare.com';
   final http.Client client;
 
   PriceService({this.client});
 
   Future<MultipleSymbols> _priceMultiFull(List<dynamic> coins, Currency currency) async {
-
-    final response = await client.get('${endpoint}data/pricemultifull?fsyms=${coins.join(',')}&tsyms=${currency.currencyCode()}');
+    final queryParameters = {
+      'fsyms' : coins.join(','),
+      'tsyms': currency.currencyCode()
+    };
+    final response = await client.get(Uri.https(authority, 'data/pricemultifull', queryParameters));
     final defaultModel = {
       'RAW': {},
       'DISPLAY': {}

@@ -9,6 +9,12 @@ class MockClient extends Mock implements http.Client {}
 
 void main() {
 
+  final priceMultiUri = Uri.https(
+    'min-api.cryptocompare.com',
+    'data/pricemultifull',
+    { 'fsyms': 'BTC,ETC', 'tsyms': 'USD' }
+  );
+
   group('multipleSymbolsFullData', () {
 
     var response;
@@ -42,7 +48,7 @@ void main() {
       final service = PriceService(client: client);
 
       // When
-      when(client.get('https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,ETC&tsyms=USD'))
+      when(client.get(priceMultiUri))
           .thenAnswer((_) async => http.Response(json.encode(response), 200));
 
       final data = await service.multipleSymbolsFullData(['BTC', 'ETC'], Currency.fromCurrencyCode('USD'));
@@ -58,7 +64,7 @@ void main() {
       final service = PriceService(client: client);
 
       // When
-      when(client.get('https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,ETC&tsyms=USD'))
+      when(client.get(priceMultiUri))
           .thenAnswer((_) async => http.Response('test', 200));
 
       final data = await service.multipleSymbolsFullData(['BTC', 'ETC'], Currency.fromCurrencyCode('usd'));
@@ -74,7 +80,7 @@ void main() {
       final service = PriceService(client: client);
 
       // When
-      when(client.get('https://min-api.cryptocompare.com/data/pricemultifull?fsyms=BTC,ETC&tsyms=USD'))
+      when(client.get(priceMultiUri))
           .thenAnswer((_) async => http.Response(json.encode(response), 500));
 
       final data = await service.multipleSymbolsFullData(['BTC', 'ETC'], Currency.fromCurrencyCode('USD'));
