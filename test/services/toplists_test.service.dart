@@ -9,6 +9,16 @@ class MockClient extends Mock implements http.Client {}
 
 void main() {
 
+  final topListUrl = Uri.https(
+    'min-api.cryptocompare.com',
+    'data/top/totalvol',
+    {
+      'limit': '100',
+      'tsym': 'USD',
+      'page': '0'
+    }
+  );
+
   group('totalVolume', () {
 
     test('success response should be map to TotalVolume collection model', () async {
@@ -28,7 +38,7 @@ void main() {
       final service = TopListsService(client: client);
 
       // When
-      when(client.get('https://min-api.cryptocompare.com/data/top/totalvol?limit=100&tsym=USD&page=0'))
+      when(client.get(topListUrl))
           .thenAnswer((_) async => http.Response(json.encode(response), 200));
 
       final data = await service.totalVolume(Currency.fromCurrencyCode('USD'));
@@ -46,7 +56,7 @@ void main() {
       final service = TopListsService(client: client);
 
       // When
-      when(client.get('https://min-api.cryptocompare.com/data/top/totalvol?limit=100&tsym=USD&page=0'))
+      when(client.get(topListUrl))
           .thenAnswer((_) async => http.Response('', 500));
 
       final data = await service.totalVolume(Currency.fromCurrencyCode('USD'));
@@ -62,7 +72,7 @@ void main() {
       final service = TopListsService(client: client);
 
       // When
-      when(client.get('https://min-api.cryptocompare.com/data/top/totalvol?limit=100&tsym=USD&page=0'))
+      when(client.get(topListUrl))
           .thenAnswer((_) async => http.Response('', 200));
       final data = await service.totalVolume(Currency.fromCurrencyCode('USD'));
 
