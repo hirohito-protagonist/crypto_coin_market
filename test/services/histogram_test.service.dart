@@ -10,7 +10,7 @@ class MockClient extends Mock implements http.Client {}
 class HistogramServiceTestData {
 
   final String name;
-  final String url;
+  final Uri url;
 
   HistogramServiceTestData({this.name, this.url});
 
@@ -29,15 +29,30 @@ void main() {
   final testData = [
     HistogramServiceTestData(
       name: 'daily',
-      url: 'https://min-api.cryptocompare.com/data/histoday?fsym=BTC&tsym=USD&limit=100&aggregate=2'
+      url: Uri.https('min-api.cryptocompare.com', 'data/histoday', {
+        'fsym': 'BTC',
+        'tsym': 'USD',
+        'limit': '100',
+        'aggregate': '2'
+      })
     ),
     HistogramServiceTestData(
       name: 'hourly',
-      url: 'https://min-api.cryptocompare.com/data/histohour?fsym=BTC&tsym=USD&limit=100&aggregate=2'
+      url: Uri.https('min-api.cryptocompare.com', 'data/histohour', {
+        'fsym': 'BTC',
+        'tsym': 'USD',
+        'limit': '100',
+        'aggregate': '2'
+      })
     ),
     HistogramServiceTestData(
       name: 'minute',
-      url: 'https://min-api.cryptocompare.com/data/histominute?fsym=BTC&tsym=USD&limit=100&aggregate=2'
+      url: Uri.https('min-api.cryptocompare.com', 'data/histominute', {
+        'fsym': 'BTC',
+        'tsym': 'USD',
+        'limit': '100',
+        'aggregate': '2'
+      })
     )
   ];
 

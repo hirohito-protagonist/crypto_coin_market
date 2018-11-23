@@ -7,7 +7,7 @@ import 'package:crypto_coin_market/services/util.service.dart';
 
 class HistogramService {
 
-  final String endpoint = 'https://min-api.cryptocompare.com/';
+  final String authority = 'min-api.cryptocompare.com';
   final http.Client client;
 
   HistogramService({this.client});
@@ -23,7 +23,14 @@ class HistogramService {
 
   Future<List<HistogramDataModel>> _ohlcv(String historyType, Currency currency, String coin, int limit, int aggregate) async {
 
-    final response = await client.get('${endpoint}data/his${historyType}?fsym=${coin}&tsym=${currency.currencyCode()}&limit=${limit}&aggregate=${aggregate}');
+    final queryParameters = {
+      'fsym': coin,
+      'tsym': currency.currencyCode(),
+      'limit': limit.toString(),
+      'aggregate': aggregate.toString()
+    };
+
+    final response = await client.get(Uri.https(authority, 'data/his${historyType}', queryParameters));
     final Map<String, dynamic> defaultModel = {
       'Data': []
     };
