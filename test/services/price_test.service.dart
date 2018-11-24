@@ -1,6 +1,7 @@
 import 'package:test/test.dart';
 import 'dart:convert';
 import 'package:crypto_coin_market/services/price.service.dart';
+import 'package:crypto_coin_market/services/uri.service.dart';
 import 'package:crypto_coin_market/model/currency.model.dart';
 import 'package:mockito/mockito.dart';
 import 'package:http/http.dart' as http;
@@ -9,11 +10,10 @@ class MockClient extends Mock implements http.Client {}
 
 void main() {
 
-  final priceMultiUri = Uri.https(
-    'min-api.cryptocompare.com',
-    'data/pricemultifull',
-    { 'fsyms': 'BTC,ETC', 'tsyms': 'USD' }
-  );
+  final priceMultiUri = UriService().priceMultiFull({
+    'fsyms': 'BTC,ETC',
+    'tsyms': 'USD'
+  });
 
   group('multipleSymbolsFullData', () {
 

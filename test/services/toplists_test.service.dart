@@ -2,6 +2,7 @@ import 'package:test/test.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:crypto_coin_market/services/toplists.service.dart';
+import 'package:crypto_coin_market/services/uri.service.dart';
 import 'package:crypto_coin_market/model/currency.model.dart';
 import 'package:mockito/mockito.dart';
 
@@ -9,15 +10,11 @@ class MockClient extends Mock implements http.Client {}
 
 void main() {
 
-  final topListUrl = Uri.https(
-    'min-api.cryptocompare.com',
-    'data/top/totalvol',
-    {
-      'limit': '100',
-      'tsym': 'USD',
-      'page': '0'
-    }
-  );
+  final topListUrl = UriService().totalVolume({
+    'limit': '100',
+    'tsym': 'USD',
+    'page': '0'
+  });
 
   group('totalVolume', () {
 

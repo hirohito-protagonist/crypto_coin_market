@@ -5,10 +5,11 @@ import 'package:http/http.dart' as http;
 import 'package:crypto_coin_market/model/total_volume.model.dart';
 import 'package:crypto_coin_market/model/currency.model.dart';
 import 'package:crypto_coin_market/services/util.service.dart';
+import 'package:crypto_coin_market/services/uri.service.dart';
 
 class TopListsService {
 
-  final String authority = 'min-api.cryptocompare.com';
+  final UriService uriService = UriService();
   final http.Client client;
 
   TopListsService({this.client});
@@ -21,7 +22,7 @@ class TopListsService {
       'page': page.toString()
     };
 
-    final response = await client.get(Uri.https(authority, 'data/top/totalvol', queryParameters));
+    final response = await client.get(uriService.totalVolume(queryParameters));
 
     return response.statusCode != 200 ? [] :
     UtilService.parsedOrDefault(response.body, { 'Data': [] })

@@ -5,10 +5,11 @@ import 'package:http/http.dart' as http;
 import 'package:crypto_coin_market/model/multiple_sybmols.model.dart';
 import 'package:crypto_coin_market/model/currency.model.dart';
 import 'package:crypto_coin_market/services/util.service.dart';
+import 'package:crypto_coin_market/services/uri.service.dart';
 
 class PriceService {
 
-  final String authority = 'min-api.cryptocompare.com';
+  final UriService uriService = UriService();
   final http.Client client;
 
   PriceService({this.client});
@@ -18,7 +19,7 @@ class PriceService {
       'fsyms' : coins.join(','),
       'tsyms': currency.currencyCode()
     };
-    final response = await client.get(Uri.https(authority, 'data/pricemultifull', queryParameters));
+    final response = await client.get(uriService.priceMultiFull(queryParameters));
     final defaultModel = {
       'RAW': {},
       'DISPLAY': {}
