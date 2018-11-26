@@ -4,10 +4,11 @@ import 'package:http/http.dart' as http;
 import 'package:crypto_coin_market/model/currency.model.dart';
 import 'package:crypto_coin_market/model/histogram_data.model.dart';
 import 'package:crypto_coin_market/services/util.service.dart';
+import 'package:crypto_coin_market/services/uri.service.dart';
 
 class HistogramService {
 
-  final String authority = 'min-api.cryptocompare.com';
+  final UriService uriService = UriService();
   final http.Client client;
 
   HistogramService({this.client});
@@ -21,7 +22,7 @@ class HistogramService {
     return await method(Currency.fromCurrencyCode(currency), cryptoCoin, limit, aggregate);
   }
 
-  Future<List<HistogramDataModel>> _ohlcv(ServiceType serviceType, Currency currency, String coin, int limit, int aggregate) async {
+  Future<List<HistogramDataModel>> _ohlcv(HistogramServiceType serviceType, Currency currency, String coin, int limit, int aggregate) async {
 
     final queryParameters = {
       'fsym': coin,
@@ -30,13 +31,7 @@ class HistogramService {
       'aggregate': aggregate.toString()
     };
 
-    final histogramType = {
-      ServiceType.Day: 'day',
-      ServiceType.Hour: 'hour',
-      ServiceType.Minute: 'minute'
-    }[serviceType];
-
-    final response = await client.get(Uri.https(authority, 'data/histo${histogramType}', queryParameters));
+    final response = await client.get(uriService.histogram(serviceType, queryParameters));
     final Map<String, dynamic> defaultModel = {
       'Data': []
     };
@@ -50,17 +45,17 @@ class HistogramService {
 
   Future<List<HistogramDataModel>> daily(Currency currency, String coin, int limit, int aggregate) async {
 
-    return await _ohlcv(ServiceType.Day, currency, coin, limit, aggregate);
+    return await _ohlcv(HistogramServiceType.Day, currency, coin, limit, aggregate);
   }
 
   Future<List<HistogramDataModel>> hourly(Currency currency, String coin, int limit, int aggregate) async {
 
-    return await _ohlcv(ServiceType.Hour, currency, coin, limit, aggregate);
+    return await _ohlcv(HistogramServiceType.Hour, currency, coin, limit, aggregate);
   }
 
   Future<List<HistogramDataModel>> minute(Currency currency, String coin, int limit, int aggregate) async {
 
-    return await _ohlcv(ServiceType.Minute, currency, coin, limit, aggregate);
+    return await _ohlcv(HistogramServiceType.Minute, currency, coin, limit, aggregate);
   }
 
   _HistogramConfigurationParameters configuration(TimeRange range) {
@@ -125,12 +120,6 @@ enum TimeRange {
   ThreeMonth,
   SixMonth,
   OneYear
-}
-
-enum ServiceType {
-  Day,
-  Hour,
-  Minute
 }
 
 class _HistogramConfigurationParameters {

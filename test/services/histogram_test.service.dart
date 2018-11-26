@@ -2,6 +2,7 @@ import 'package:test/test.dart';
 import 'dart:convert';
 import 'package:crypto_coin_market/model/currency.model.dart';
 import 'package:crypto_coin_market/services/histogram.service.dart';
+import 'package:crypto_coin_market/services/uri.service.dart';
 import 'package:mockito/mockito.dart';
 import 'package:http/http.dart' as http;
 
@@ -29,7 +30,7 @@ void main() {
   final testData = [
     HistogramServiceTestData(
       name: 'daily',
-      url: Uri.https('min-api.cryptocompare.com', 'data/histoday', {
+      url: UriService().histogram(HistogramServiceType.Day,  {
         'fsym': 'BTC',
         'tsym': 'USD',
         'limit': '100',
@@ -38,7 +39,7 @@ void main() {
     ),
     HistogramServiceTestData(
       name: 'hourly',
-      url: Uri.https('min-api.cryptocompare.com', 'data/histohour', {
+      url: UriService().histogram(HistogramServiceType.Hour, {
         'fsym': 'BTC',
         'tsym': 'USD',
         'limit': '100',
@@ -47,7 +48,7 @@ void main() {
     ),
     HistogramServiceTestData(
       name: 'minute',
-      url: Uri.https('min-api.cryptocompare.com', 'data/histominute', {
+      url: UriService().histogram(HistogramServiceType.Minute, {
         'fsym': 'BTC',
         'tsym': 'USD',
         'limit': '100',
