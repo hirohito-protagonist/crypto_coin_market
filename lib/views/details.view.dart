@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:crypto_coin_market/model/currency.model.dart';
 import 'package:crypto_coin_market/model/details_view.model.dart';
 import 'package:crypto_coin_market/model/histogram_data.model.dart';
+import 'package:crypto_coin_market/model/multiple_sybmols.model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:crypto_coin_market/widgets/price_change.widget.dart';
 import 'package:crypto_coin_market/widgets/coin_cost.widget.dart';
@@ -58,25 +59,31 @@ class _DetailsView extends State<DetailsView> {
 
     setState(() {
       histData = histOHLCV;
-      final displayPriceNode = prices.display.containsKey(currency) ? prices.display[currency] : null;
-      final rawPriceNode = prices.raw.containsKey(currency) ? prices.raw[currency] : null;
-      final coinModel = new DetailsCoinInformation(
+      widget.data = viewModel(prices, currency);
+      isRefresh = false;
+      _coinCostStateKey.currentState.update(histData, isRefresh);
+      _coinVolumeStateKey.currentState.update(histData, isRefresh);
+    });
+    return null;
+  }
+
+  DetailsViewModel viewModel(MultipleSymbols prices, String currency) {
+
+    final displayPriceNode = prices.display.containsKey(currency) ? prices.display[currency] : null;
+    final rawPriceNode = prices.raw.containsKey(currency) ? prices.raw[currency] : null;
+    final coinModel = DetailsCoinInformation(
         formattedPriceChange: displayPriceNode != null ? Map.of(displayPriceNode).values.toList()[0]['CHANGEPCT24HOUR'] : '',
         priceChange: rawPriceNode != null ? Map.of(rawPriceNode).values.toList()[0]['CHANGEPCT24HOUR'] : 0,
         formattedPrice: displayPriceNode != null ? Map.of(displayPriceNode).values.toList()[0]['PRICE'] : '',
         name: widget.data.coinInformation.name,
         imageUrl: widget.data.coinInformation.imageUrl,
         fullName: widget.data.coinInformation.fullName
-      );
-      widget.data = new DetailsViewModel(
-        coinInformation: coinModel,
-        currency: activeCurrency,
-      );
-      isRefresh = false;
-      _coinCostStateKey.currentState.update(histData, isRefresh);
-      _coinVolumeStateKey.currentState.update(histData, isRefresh);
-    });
-    return null;
+    );
+
+    return DetailsViewModel(
+      coinInformation: coinModel,
+      currency: activeCurrency,
+    );
   }
 
   @override
