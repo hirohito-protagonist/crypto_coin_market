@@ -47,6 +47,7 @@ class _DetailsView extends State<DetailsView> {
   final GlobalKey<CoinCostState> _coinCostStateKey = GlobalKey<CoinCostState>();
   final GlobalKey<CoinVolumeState> _coinVolumeStateKey = GlobalKey<CoinVolumeState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<_CoinInformationState> _coinInformationStateKey = GlobalKey<_CoinInformationState>();
   List<HistogramDataModel> histData = [];
   TimeRange activeHistogramRange = TimeRange.OneDay;
   bool isRefresh = true;
@@ -63,6 +64,7 @@ class _DetailsView extends State<DetailsView> {
       isRefresh = false;
       _coinCostStateKey.currentState.update(histData, isRefresh);
       _coinVolumeStateKey.currentState.update(histData, isRefresh);
+      _coinInformationStateKey.currentState.update(widget.data.coinInformation);
     });
     return null;
   }
@@ -124,7 +126,10 @@ class _DetailsView extends State<DetailsView> {
                 padding: const EdgeInsets.all(0.0),
                 alignment: Alignment.center,
                 width: 1.7976931348623157e+308,
-                child: _buildCoinInformation()
+                child: _CoinInformation(
+                  key: _coinInformationStateKey,
+                  information: data,
+                ),
               ),
               Expanded(
                 child: Column(
@@ -160,47 +165,6 @@ class _DetailsView extends State<DetailsView> {
         },
       ),
       bottomNavigationBar: _buildNavigationBar(),
-    );
-  }
-
-
-  Widget _buildCoinInformation() {
-    final data = widget.data.coinInformation;
-    return Card(
-      margin: EdgeInsets.all(10.0),
-      child: Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Row(
-          children: <Widget>[
-            CachedNetworkImage(
-              placeholder: CircularProgressIndicator(),
-              imageUrl: data.imageUrl,
-              height: 30.0,
-            ),
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    '1 ${data.name} = ',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 15.0),
-                  ),
-                  Text(
-                    '${data.formattedPrice}',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 15.0),
-                  ),
-                ],
-              ),
-            ),
-            PriceChange(
-              change: data.priceChange,
-              price: data.formattedPriceChange,
-            ),
-          ],
-        ),
-      ),
     );
   }
 
@@ -248,5 +212,67 @@ class _DetailsView extends State<DetailsView> {
 }
 
 
+class _CoinInformation extends StatefulWidget {
 
+  final DetailsCoinInformation information;
 
+  _CoinInformation({Key key, this.information}):super(key: key);
+  @override
+  State<StatefulWidget> createState() {
+    return _CoinInformationState(information: information);
+  }
+
+}
+
+class _CoinInformationState extends State<_CoinInformation> {
+
+  DetailsCoinInformation information;
+
+  _CoinInformationState({this.information});
+
+  update(DetailsCoinInformation information) {
+    setState(() {
+      this.information = information;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.all(10.0),
+      child: Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Row(
+          children: <Widget>[
+            CachedNetworkImage(
+              placeholder: CircularProgressIndicator(),
+              imageUrl: information.imageUrl,
+              height: 30.0,
+            ),
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    '1 ${information.name} = ',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 15.0),
+                  ),
+                  Text(
+                    '${information.formattedPrice}',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 15.0),
+                  ),
+                ],
+              ),
+            ),
+            PriceChange(
+              change: information.priceChange,
+              price: information.formattedPriceChange,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
