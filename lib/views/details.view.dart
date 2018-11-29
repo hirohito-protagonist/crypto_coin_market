@@ -44,8 +44,7 @@ class _DetailsView extends State<DetailsView> {
   String activeCurrency = Currency.defaultSymbol;
   final GlobalKey<RefreshIndicatorState> _refreshKey =
       GlobalKey<RefreshIndicatorState>();
-  final GlobalKey<CoinCostState> _coinCostStateKey = GlobalKey<CoinCostState>();
-  final GlobalKey<CoinVolumeState> _coinVolumeStateKey = GlobalKey<CoinVolumeState>();
+  final GlobalKey<_HistogramViewState> _histogramViewStateKey = GlobalKey<_HistogramViewState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<_CoinInformationState> _coinInformationStateKey = GlobalKey<_CoinInformationState>();
   List<HistogramDataModel> histData = [];
@@ -56,14 +55,11 @@ class _DetailsView extends State<DetailsView> {
     final currency = widget.data.coinInformation.name;
     final prices = await PriceService(client: http.Client())
         .multipleSymbolsFullData([currency], Currency.fromCurrencyCode(activeCurrency));
-    final histOHLCV = await HistogramService.OHLCV(activeHistogramRange, activeCurrency, currency);
+    _histogramViewStateKey.currentState.update(activeHistogramRange, activeCurrency, currency);
 
     setState(() {
-      histData = histOHLCV;
       widget.data = viewModel(prices, currency);
       isRefresh = false;
-      _coinCostStateKey.currentState.update(histData, isRefresh);
-      _coinVolumeStateKey.currentState.update(histData, isRefresh);
       _coinInformationStateKey.currentState.update(widget.data.coinInformation);
     });
     return null;
@@ -132,24 +128,8 @@ class _DetailsView extends State<DetailsView> {
                 ),
               ),
               Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    Expanded(
-                      child: CoinCostWidget(
-                        key: _coinCostStateKey,
-                        histData: histData,
-                        isRefresh: isRefresh,
-                      ),
-                    ),
-                    CoinVolumeWidget(
-                      key: _coinVolumeStateKey,
-                      histData: histData,
-                      isRefresh: isRefresh,
-                    ),
-                  ],
+                child: _HistogramView(
+                  key: _histogramViewStateKey,
                 ),
               ),
             ],
@@ -158,8 +138,6 @@ class _DetailsView extends State<DetailsView> {
         onRefresh: () async {
           setState(() {
             isRefresh = true;
-            _coinCostStateKey.currentState.update(histData, isRefresh);
-            _coinVolumeStateKey.currentState.update(histData, isRefresh);
           });
           await updateData();
         },
@@ -275,4 +253,60 @@ class _CoinInformationState extends State<_CoinInformation> {
       ),
     );
   }
+}
+
+
+class _HistogramView extends StatefulWidget {
+
+  _HistogramView({Key key}):super(key: key);
+
+  @override
+  State<StatefulWidget> createState() {
+    return _HistogramViewState();
+  }
+
+}
+
+class _HistogramViewState extends State<_HistogramView> {
+
+  final GlobalKey<CoinCostState> _coinCostStateKey = GlobalKey<CoinCostState>();
+  final GlobalKey<CoinVolumeState> _coinVolumeStateKey = GlobalKey<CoinVolumeState>();
+  List<HistogramDataModel> histData = [];
+  bool isRefresh = true;
+
+
+  update(TimeRange range, String currency, String cryptoCoin) async {
+
+    final histOHLCV = await HistogramService.OHLCV(range, currency, cryptoCoin);
+    setState(() {
+      histData = histOHLCV;
+      isRefresh = false;
+      _coinCostStateKey.currentState.update(histData, isRefresh);
+      _coinVolumeStateKey.currentState.update(histData, isRefresh);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        Expanded(
+          child: CoinCostWidget(
+            key: _coinCostStateKey,
+            histData: histData,
+            isRefresh: isRefresh,
+          ),
+        ),
+        CoinVolumeWidget(
+          key: _coinVolumeStateKey,
+          histData: histData,
+          isRefresh: isRefresh,
+        ),
+      ],
+    );
+  }
+
 }
