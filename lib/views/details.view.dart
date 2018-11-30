@@ -8,10 +8,9 @@ import 'package:crypto_coin_market/model/histogram_data.model.dart';
 import 'package:crypto_coin_market/model/multiple_sybmols.model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:crypto_coin_market/widgets/price_change.widget.dart';
-import 'package:crypto_coin_market/widgets/coin_cost.widget.dart';
-import 'package:crypto_coin_market/widgets/coin_volume.widget.dart';
 import 'package:crypto_coin_market/services/histogram.service.dart';
 import 'package:crypto_coin_market/services/price.service.dart';
+import 'package:crypto_coin_market/views/histogram.view.dart';
 
 
 class DetailsView extends StatefulWidget {
@@ -44,7 +43,7 @@ class _DetailsView extends State<DetailsView> {
   String activeCurrency = Currency.defaultSymbol;
   final GlobalKey<RefreshIndicatorState> _refreshKey =
       GlobalKey<RefreshIndicatorState>();
-  final GlobalKey<_HistogramViewState> _histogramViewStateKey = GlobalKey<_HistogramViewState>();
+  final GlobalKey<HistogramViewState> _histogramViewStateKey = GlobalKey<HistogramViewState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<_CoinInformationState> _coinInformationStateKey = GlobalKey<_CoinInformationState>();
   List<HistogramDataModel> histData = [];
@@ -128,7 +127,7 @@ class _DetailsView extends State<DetailsView> {
                 ),
               ),
               Expanded(
-                child: _HistogramView(
+                child: HistogramView(
                   key: _histogramViewStateKey,
                 ),
               ),
@@ -253,60 +252,4 @@ class _CoinInformationState extends State<_CoinInformation> {
       ),
     );
   }
-}
-
-
-class _HistogramView extends StatefulWidget {
-
-  _HistogramView({Key key}):super(key: key);
-
-  @override
-  State<StatefulWidget> createState() {
-    return _HistogramViewState();
-  }
-
-}
-
-class _HistogramViewState extends State<_HistogramView> {
-
-  final GlobalKey<CoinCostState> _coinCostStateKey = GlobalKey<CoinCostState>();
-  final GlobalKey<CoinVolumeState> _coinVolumeStateKey = GlobalKey<CoinVolumeState>();
-  List<HistogramDataModel> histData = [];
-  bool isRefresh = true;
-
-
-  update(TimeRange range, String currency, String cryptoCoin) async {
-
-    final histOHLCV = await HistogramService.OHLCV(range, currency, cryptoCoin);
-    setState(() {
-      histData = histOHLCV;
-      isRefresh = false;
-      _coinCostStateKey.currentState.update(histData, isRefresh);
-      _coinVolumeStateKey.currentState.update(histData, isRefresh);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      mainAxisSize: MainAxisSize.max,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: <Widget>[
-        Expanded(
-          child: CoinCostWidget(
-            key: _coinCostStateKey,
-            histData: histData,
-            isRefresh: isRefresh,
-          ),
-        ),
-        CoinVolumeWidget(
-          key: _coinVolumeStateKey,
-          histData: histData,
-          isRefresh: isRefresh,
-        ),
-      ],
-    );
-  }
-
 }
