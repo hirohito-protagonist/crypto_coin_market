@@ -23,12 +23,8 @@ class PriceChange extends StatelessWidget {
           Column(
             children: <Widget>[
               Icon(
-                Icons.arrow_drop_up,
-                color: change == 0 ? Colors.black : change > 0 ? Colors.green : Colors.black,
-              ),
-              Icon(
-                Icons.arrow_drop_down,
-                color: change == 0 ? Colors.black : change > 0 ? Colors.black : Colors.red,
+                change == 0 ? Icons.trending_flat : change > 0 ? Icons.trending_up : Icons.trending_down,
+                color: change == 0 ? Colors.black : change > 0 ? Colors.green : Colors.red,
               ),
             ],
           ),
