@@ -231,14 +231,9 @@ class _CoinInformationState extends State<_CoinInformation> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    '1 ${information.name} = ',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 15.0),
-                  ),
-                  Text(
                     '${information.formattedPrice}',
                     style: TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 15.0),
+                        fontWeight: FontWeight.bold, fontSize: 20.0),
                   ),
                 ],
               ),

@@ -66,33 +66,61 @@ class CoinCostState extends State<CoinCostWidget> {
       margin: EdgeInsets.all(10.0),
       child: Column(
         children: <Widget>[
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: SizedBox(
-              height: 15.0,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(_selectionChartSliderValue.close == '' ?  '' : 'Close: ${_selectionChartSliderValue.close}'),
-                  Text(
-                    _selectionChartSliderValue.low == '' ?  '' : ' Low: ${_selectionChartSliderValue.low}',
-                    style: TextStyle(
-                        color: Colors.red
+          SizedBox(
+            height: 35.0,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(_selectionChartSliderValue.close == '' ?  '' : 'Close: '),
+                    Text(
+                      _selectionChartSliderValue.close == '' ?  '' : '${_selectionChartSliderValue.close}',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18.0,
+                      ),
                     ),
-                  ),
-                  Text(
-                    _selectionChartSliderValue.high == '' ?  '' : ' High: ${_selectionChartSliderValue.high}',
-                    style: TextStyle(
-                        color: Colors.green
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      _selectionChartSliderValue.low == '' ?  '' : ' Low: ',
+                      style: TextStyle(
+                        fontSize: 12.0,
+                      ),
                     ),
-                  ),
-                ],
-              ),
+                    Text(
+                      _selectionChartSliderValue.low == '' ?  '' : '${_selectionChartSliderValue.low}',
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 12.0,
+                      ),
+                    ),
+                    Text(
+                      _selectionChartSliderValue.high == '' ?  '' : ' High: ',
+                      style: TextStyle(
+                        fontSize: 12.0,
+                      ),
+                    ),
+                    Text(
+                      _selectionChartSliderValue.high == '' ?  '' : ' ${_selectionChartSliderValue.high}',
+                      style: TextStyle(
+                        color: Colors.green,
+                        fontSize: 12.0,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
           _buildCoinCostChart(),
           Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
             child: SizedBox(
               height: 15.0,
               child: Row(
@@ -111,7 +139,7 @@ class CoinCostState extends State<CoinCostWidget> {
   Widget _buildCoinCostChart() {
     return Expanded(
       child: Padding(
-        padding: EdgeInsets.all(8.0),
+        padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 8.0),
         child: Container(
           padding: const EdgeInsets.all(0.0),
           alignment: Alignment.center,
