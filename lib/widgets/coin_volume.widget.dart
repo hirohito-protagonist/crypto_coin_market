@@ -28,7 +28,6 @@ class CoinVolumeState extends State<CoinVolumeWidget> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.all(10.0),
       child: Column(
         children: <Widget>[
           Padding(

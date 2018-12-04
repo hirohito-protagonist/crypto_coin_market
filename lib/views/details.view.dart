@@ -216,7 +216,6 @@ class _CoinInformationState extends State<_CoinInformation> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.all(10.0),
       child: Padding(
         padding: EdgeInsets.all(8.0),
         child: Row(

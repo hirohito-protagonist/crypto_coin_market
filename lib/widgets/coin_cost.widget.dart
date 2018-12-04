@@ -63,7 +63,6 @@ class CoinCostState extends State<CoinCostWidget> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.all(10.0),
       child: Column(
         children: <Widget>[
           SizedBox(
