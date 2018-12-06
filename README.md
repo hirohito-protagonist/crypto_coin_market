@@ -2,6 +2,9 @@
 Crypto currency mobile app explorer build with flutter.
 The data is from [CryptoCompare](https://www.cryptocompare.com/) API.
 
+![](/screenshots/coin_list.png)
+![](/screenshots/coin_details.png)
+
 ## Getting started
 
 #### 1. [Setup Flutter](https://flutter.io/setup/)
