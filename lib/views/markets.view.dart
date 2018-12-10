@@ -98,21 +98,16 @@ class _MarketsViewState extends State<MarketsView> {
           itemCount: data.volume.length,
           itemBuilder: (context, i) {
 
-            final currency = data.volume[i]?.coinInfo?.name;
-            final displayPriceNode = data.prices.display.containsKey(currency) ? data.prices.display[currency] : null;
-            final rawPriceNode = data.prices.raw.containsKey(currency) ? data.prices.raw[currency] : null;
-            final price = displayPriceNode != null ? Map.of(displayPriceNode).values.toList()[0]['PRICE'] : '';
-            final priceChangeDisplay = displayPriceNode != null ? Map.of(displayPriceNode).values.toList()[0]['CHANGEPCT24HOUR'] : '';
-            final priceChange = rawPriceNode != null ? Map.of(rawPriceNode).values.toList()[0]['CHANGEPCT24HOUR'] : 0;
+            final item = data.volumeItem(i);
 
             return new CoinListTile(
               key: Key("coin-list-tile-${i}"),
-              imageUrl: data.volume[i]?.coinInfo?.imageUrl,
-              name: currency,
-              fullName: data.volume[i]?.coinInfo?.fullName,
-              formattedPrice: price,
-              formattedPriceChange: priceChangeDisplay,
-              priceChange: priceChange,
+              imageUrl: item.imageUrl,
+              name: item.name,
+              fullName: item.fullName,
+              formattedPrice: item.price,
+              formattedPriceChange: item.priceChangeDisplay,
+              priceChange: item.priceChange,
               onSelect: (SelectedCoinTile data) {
 
                 this.onSelect(context, new DetailsViewModel(
