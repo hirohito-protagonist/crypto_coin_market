@@ -6,11 +6,10 @@ import 'package:crypto_coin_market/model/currency.model.dart';
 import 'package:crypto_coin_market/model/details_view.model.dart';
 import 'package:crypto_coin_market/model/histogram_data.model.dart';
 import 'package:crypto_coin_market/model/multiple_sybmols.model.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:crypto_coin_market/widgets/price_change.widget.dart';
 import 'package:crypto_coin_market/services/histogram.service.dart';
 import 'package:crypto_coin_market/services/price.service.dart';
 import 'package:crypto_coin_market/views/histogram.view.dart';
+import 'package:crypto_coin_market/views/coin_information.view.dart';
 
 
 class DetailsView extends StatefulWidget {
@@ -45,7 +44,7 @@ class _DetailsView extends State<DetailsView> {
       GlobalKey<RefreshIndicatorState>();
   final GlobalKey<HistogramViewState> _histogramViewStateKey = GlobalKey<HistogramViewState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  final GlobalKey<_CoinInformationState> _coinInformationStateKey = GlobalKey<_CoinInformationState>();
+  final GlobalKey<CoinInformationState> _coinInformationStateKey = GlobalKey<CoinInformationState>();
   List<HistogramDataModel> histData = [];
   TimeRange activeHistogramRange = TimeRange.OneDay;
   bool isRefresh = true;
@@ -121,7 +120,7 @@ class _DetailsView extends State<DetailsView> {
                 padding: const EdgeInsets.all(0.0),
                 alignment: Alignment.center,
                 width: 1.7976931348623157e+308,
-                child: _CoinInformation(
+                child: CoinInformation(
                   key: _coinInformationStateKey,
                   information: data,
                 ),
@@ -183,66 +182,6 @@ class _DetailsView extends State<DetailsView> {
           ),
           Padding(padding: EdgeInsets.symmetric(horizontal: 5.0)),
         ],
-      ),
-    );
-  }
-}
-
-
-class _CoinInformation extends StatefulWidget {
-
-  final DetailsCoinInformation information;
-
-  _CoinInformation({Key key, this.information}):super(key: key);
-  @override
-  State<StatefulWidget> createState() {
-    return _CoinInformationState(information: information);
-  }
-
-}
-
-class _CoinInformationState extends State<_CoinInformation> {
-
-  DetailsCoinInformation information;
-
-  _CoinInformationState({this.information});
-
-  update(DetailsCoinInformation information) {
-    setState(() {
-      this.information = information;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Row(
-          children: <Widget>[
-            CachedNetworkImage(
-              placeholder: CircularProgressIndicator(),
-              imageUrl: information.imageUrl,
-              height: 30.0,
-            ),
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    '${information.formattedPrice}',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 20.0),
-                  ),
-                ],
-              ),
-            ),
-            PriceChange(
-              change: information.priceChange,
-              price: information.formattedPriceChange,
-            ),
-          ],
-        ),
       ),
     );
   }
