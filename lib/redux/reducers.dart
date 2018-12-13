@@ -1,6 +1,20 @@
+import 'package:redux/redux.dart';
 import 'package:flutter/foundation.dart';
 import 'package:crypto_coin_market/model/markets_view.model.dart';
 import 'package:crypto_coin_market/model/multiple_sybmols.model.dart';
+
+import 'package:crypto_coin_market/services/toplists.service.dart';
+import 'package:crypto_coin_market/services/price.service.dart';
+import 'package:crypto_coin_market/model/currency.model.dart';
+import 'package:http/http.dart' as http;
+import 'package:crypto_coin_market/model/total_volume.model.dart';
+
+class MarketsDataAction {}
+class LoadMarketsDataAction {
+  final MarketsViewModel data;
+
+  LoadMarketsDataAction({this.data});
+}
 
 class AppState {
   final String activeCurrency;
@@ -28,5 +42,28 @@ AppState appStateReducer(AppState state, action) {
 
 MarketsViewModel marketsReducer(MarketsViewModel state, action) {
 
+  if (action is LoadMarketsDataAction) {
+
+    return action.data;
+  }
   return state;
+}
+
+
+void appStateMiddleware(Store<AppState> store, action, NextDispatcher next) async {
+  next(action);
+
+  if (action is MarketsDataAction) {
+    final currency = Currency.fromCurrencyCode(store.state.activeCurrency);
+    final volume =  await TopListsService(client: http.Client()).totalVolume(currency, page: 1);
+    final coins = volume.map((TotalVolume tv) => tv.coinInfo.name).toList();
+    final prices = await PriceService(client: http.Client()).multipleSymbolsFullData(coins, currency);
+
+    store.dispatch(LoadMarketsDataAction(
+        data: MarketsViewModel(
+          volume: volume,
+          prices: prices,
+        ),
+    ));
+  }
 }

@@ -6,9 +6,10 @@ import 'package:crypto_coin_market/model/details_view.model.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:crypto_coin_market/redux/reducers.dart';
+import 'package:crypto_coin_market/model/markets_view.model.dart';
 
-//void main() => runApp(CoinMarketApp());
-void main() => runApp(MarketsPage());
+void main() => runApp(CoinMarketApp());
+//void main() => runApp(MarketsPage());
 
 class MarketsPage extends StatelessWidget {
   @override
@@ -42,6 +43,7 @@ class CoinMarketApp extends StatelessWidget {
     final Store<AppState> store = Store<AppState>(
       appStateReducer,
       initialState: AppState.initialState(),
+      middleware: [appStateMiddleware],
     );
 
     return StoreProvider<AppState>(
@@ -51,7 +53,11 @@ class CoinMarketApp extends StatelessWidget {
         theme: new ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: MarketsViewPage(),
+        home: StoreBuilder<AppState>(
+          onInit: (store) => store.dispatch(MarketsDataAction()),
+          builder: (BuildContext context, Store<AppState> store) =>
+              MarketsViewPage(),
+        ),
       )
     );
   }
@@ -67,13 +73,25 @@ class MarketsViewPage extends StatelessWidget {
         actions: <Widget>[
         ],
       ),
-      body: StoreConnector<AppState, String>(
-        converter: (Store<AppState> store) => store.state.activeCurrency,
-        builder: (BuildContext context, String currency) {
-          return Container(
-            child: Text('${currency}'),
-          );
-        },
+      body: Column(
+        children: <Widget>[
+          StoreConnector<AppState, String>(
+            converter: (Store<AppState> store) => store.state.activeCurrency,
+            builder: (BuildContext context, String currency) {
+              return Container(
+                child: Text('${currency}'),
+              );
+            },
+          ),
+          StoreConnector<AppState, MarketsViewModel>(
+            converter: (Store<AppState> store) => store.state.markets,
+            builder: (BuildContext context, MarketsViewModel markets) {
+              return Container(
+                child: Text('${markets.volume.length}'),
+              );
+            },
+          ),
+        ],
       ),
     );
   }
