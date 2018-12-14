@@ -55,7 +55,7 @@ void appStateMiddleware(Store<AppState> store, action, NextDispatcher next) asyn
 
   if (action is MarketsDataAction) {
     final currency = Currency.fromCurrencyCode(store.state.activeCurrency);
-    final volume =  await TopListsService(client: http.Client()).totalVolume(currency, page: 1);
+    final volume =  await TopListsService(client: http.Client()).totalVolume(currency, page: 0);
     final coins = volume.map((TotalVolume tv) => tv.coinInfo.name).toList();
     final prices = await PriceService(client: http.Client()).multipleSymbolsFullData(coins, currency);
 
