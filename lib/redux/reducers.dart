@@ -16,13 +16,20 @@ class LoadMarketsDataAction {
   LoadMarketsDataAction({this.data});
 }
 
+class ChangePageAction {
+  final int page;
+  ChangePageAction({this.page});
+}
+
 class AppState {
   final String activeCurrency;
+  final int activePage;
   final MarketsViewModel markets;
 
   AppState({
     @required this.activeCurrency,
-    @required this.markets
+    @required this.markets,
+    @required this.activePage
   });
 
   AppState.initialState():
@@ -30,13 +37,15 @@ class AppState {
         markets = MarketsViewModel(
           prices: MultipleSymbols(display: {},raw: {}),
           volume: List.unmodifiable([]),
-        );
+        ),
+        activePage = 0;
 }
 
 AppState appStateReducer(AppState state, action) {
   return AppState(
     activeCurrency: 'USD',
     markets: marketsReducer(state.markets, action),
+    activePage: pageReducer(state.activePage, action)
   );
 }
 
@@ -49,13 +58,21 @@ MarketsViewModel marketsReducer(MarketsViewModel state, action) {
   return state;
 }
 
+int pageReducer(int state, action) {
+
+  if (action is ChangePageAction) {
+    return action.page;
+  }
+  return state;
+}
+
 
 void appStateMiddleware(Store<AppState> store, action, NextDispatcher next) async {
   next(action);
 
-  if (action is MarketsDataAction) {
+  if (action is MarketsDataAction || action is ChangePageAction) {
     final currency = Currency.fromCurrencyCode(store.state.activeCurrency);
-    final volume =  await TopListsService(client: http.Client()).totalVolume(currency, page: 0);
+    final volume =  await TopListsService(client: http.Client()).totalVolume(currency, page: store.state.activePage);
     final coins = volume.map((TotalVolume tv) => tv.coinInfo.name).toList();
     final prices = await PriceService(client: http.Client()).multipleSymbolsFullData(coins, currency);
 

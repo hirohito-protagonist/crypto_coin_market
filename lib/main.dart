@@ -9,8 +9,8 @@ import 'package:crypto_coin_market/redux/reducers.dart';
 import 'package:crypto_coin_market/model/markets_view.model.dart';
 import 'package:crypto_coin_market/widgets/coin_list_tile.widget.dart';
 
-//void main() => runApp(CoinMarketApp());
-void main() => runApp(MarketsPage());
+void main() => runApp(CoinMarketApp());
+//void main() => runApp(MarketsPage());
 
 class MarketsPage extends StatelessWidget {
   @override
@@ -110,6 +110,32 @@ class MarketsViewPage extends StatelessWidget {
           );
         },
       ),
+      bottomNavigationBar: BottomAppBar(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            StoreConnector<AppState, Store<AppState>>(
+              converter: (Store<AppState> store) => store,
+              builder: (BuildContext context, Store<AppState> store) {
+//                return Text('${page}');
+                return DropdownButton(
+                  value: store.state.activePage + 1,
+                  items: List.generate(26, (i) => i + 1).map((int value) {
+                    return new DropdownMenuItem<num>(
+                      value: value,
+                      child: new Text(value.toString()),
+                    );
+                  }).toList(),
+                  onChanged: (page) {
+                    store.dispatch(ChangePageAction(page: page - 1,));
+                  },
+                );
+              },
+            ),
+            Padding(padding: EdgeInsets.symmetric(horizontal: 5.0)),
+          ],
+        ),
+      )
     );
   }
 }
