@@ -117,7 +117,7 @@ class MarketsViewPage extends StatelessWidget {
             StoreConnector<AppState, Store<AppState>>(
               converter: (Store<AppState> store) => store,
               builder: (BuildContext context, Store<AppState> store) {
-//                return Text('${page}');
+
                 return DropdownButton(
                   value: store.state.activePage + 1,
                   items: List.generate(26, (i) => i + 1).map((int value) {
@@ -131,6 +131,23 @@ class MarketsViewPage extends StatelessWidget {
                   },
                 );
               },
+            ),
+            Padding(padding: EdgeInsets.symmetric(horizontal: 5.0)),
+            StoreConnector<AppState, Store<AppState>>(
+              converter: (Store<AppState> store) => store,
+              builder: (BuildContext context, Store<AppState> store) {
+                return DropdownButton(
+                  value: store.state.activeCurrency,
+                  items: store.state.availableCurrencies.map((String value) {
+                    return new DropdownMenuItem<String>(
+                      value: value,
+                      child: new Text(value),
+                    );
+                  }).toList(),
+                  onChanged: (String currency) {
+                  },
+                );
+              }
             ),
             Padding(padding: EdgeInsets.symmetric(horizontal: 5.0)),
           ],

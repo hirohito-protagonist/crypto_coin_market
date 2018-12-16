@@ -23,13 +23,15 @@ class ChangePageAction {
 
 class AppState {
   final String activeCurrency;
+  final List<String> availableCurrencies;
   final int activePage;
   final MarketsViewModel markets;
 
   AppState({
     @required this.activeCurrency,
     @required this.markets,
-    @required this.activePage
+    @required this.activePage,
+    @required this.availableCurrencies
   });
 
   AppState.initialState():
@@ -38,12 +40,14 @@ class AppState {
           prices: MultipleSymbols(display: {},raw: {}),
           volume: List.unmodifiable([]),
         ),
-        activePage = 0;
+        activePage = 0,
+        availableCurrencies = Currency.availableCurrencies();
 }
 
 AppState appStateReducer(AppState state, action) {
   return AppState(
     activeCurrency: 'USD',
+    availableCurrencies: Currency.availableCurrencies(),
     markets: marketsReducer(state.markets, action),
     activePage: pageReducer(state.activePage, action)
   );
