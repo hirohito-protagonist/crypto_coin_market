@@ -21,6 +21,11 @@ class ChangePageAction {
   ChangePageAction({this.page});
 }
 
+class ChangeCurrencyAction {
+  final String currency;
+  ChangeCurrencyAction({this.currency});
+}
+
 class AppState {
   final String activeCurrency;
   final List<String> availableCurrencies;
@@ -46,7 +51,7 @@ class AppState {
 
 AppState appStateReducer(AppState state, action) {
   return AppState(
-    activeCurrency: 'USD',
+    activeCurrency: currencyReducer(state.activeCurrency, action),
     availableCurrencies: Currency.availableCurrencies(),
     markets: marketsReducer(state.markets, action),
     activePage: pageReducer(state.activePage, action)
@@ -58,6 +63,15 @@ MarketsViewModel marketsReducer(MarketsViewModel state, action) {
   if (action is LoadMarketsDataAction) {
 
     return action.data;
+  }
+  return state;
+}
+
+
+String currencyReducer(String state, action) {
+
+  if (action is ChangeCurrencyAction) {
+    return action.currency;
   }
   return state;
 }
@@ -74,7 +88,11 @@ int pageReducer(int state, action) {
 void appStateMiddleware(Store<AppState> store, action, NextDispatcher next) async {
   next(action);
 
-  if (action is MarketsDataAction || action is ChangePageAction) {
+  if (
+    action is MarketsDataAction ||
+    action is ChangePageAction ||
+    action is ChangeCurrencyAction
+  ) {
     final currency = Currency.fromCurrencyCode(store.state.activeCurrency);
     final volume =  await TopListsService(client: http.Client()).totalVolume(currency, page: store.state.activePage);
     final coins = volume.map((TotalVolume tv) => tv.coinInfo.name).toList();

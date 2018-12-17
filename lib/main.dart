@@ -145,6 +145,7 @@ class MarketsViewPage extends StatelessWidget {
                     );
                   }).toList(),
                   onChanged: (String currency) {
+                    store.dispatch(ChangeCurrencyAction(currency: currency));
                   },
                 );
               }
