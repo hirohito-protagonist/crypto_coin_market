@@ -1,5 +1,6 @@
 import 'package:redux/redux.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:crypto_coin_market/model/markets_view.model.dart';
 import 'package:crypto_coin_market/model/multiple_sybmols.model.dart';
 
@@ -8,6 +9,13 @@ import 'package:crypto_coin_market/services/price.service.dart';
 import 'package:crypto_coin_market/model/currency.model.dart';
 import 'package:http/http.dart' as http;
 import 'package:crypto_coin_market/model/total_volume.model.dart';
+
+
+class Keys{
+  static final navKey = new GlobalKey<NavigatorState>();
+}
+
+class DetailsChangePageAction {}
 
 class MarketsDataAction {}
 class LoadMarketsDataAction {
@@ -87,6 +95,10 @@ int pageReducer(int state, action) {
 
 void appStateMiddleware(Store<AppState> store, action, NextDispatcher next) async {
   next(action);
+
+  if (action is DetailsChangePageAction) {
+    await Keys.navKey.currentState.pushNamed('/details');
+  }
 
   if (
     action is MarketsDataAction ||

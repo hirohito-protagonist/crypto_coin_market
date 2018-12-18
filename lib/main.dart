@@ -6,7 +6,6 @@ import 'package:crypto_coin_market/model/details_view.model.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:crypto_coin_market/redux/reducers.dart';
-import 'package:crypto_coin_market/model/markets_view.model.dart';
 import 'package:crypto_coin_market/widgets/coin_list_tile.widget.dart';
 
 void main() => runApp(CoinMarketApp());
@@ -54,11 +53,15 @@ class CoinMarketApp extends StatelessWidget {
         theme: new ThemeData(
           primarySwatch: Colors.blue,
         ),
+        navigatorKey: Keys.navKey,
         home: StoreBuilder<AppState>(
           onInit: (store) => store.dispatch(MarketsDataAction()),
           builder: (BuildContext context, Store<AppState> store) =>
               MarketsViewPage(),
         ),
+        routes: <String, WidgetBuilder>{
+          '/details': (BuildContext context) => DetailsViewPage()
+        },
       )
     );
   }
@@ -75,11 +78,11 @@ class MarketsViewPage extends StatelessWidget {
         actions: <Widget>[
         ],
       ),
-      body: StoreConnector<AppState, MarketsViewModel>(
-        converter: (Store<AppState> store) => store.state.markets,
-        builder: (BuildContext context, MarketsViewModel markets) {
+      body: StoreConnector<AppState, Store<AppState>>(
+        converter: (Store<AppState> store) => store,
+        builder: (BuildContext context, Store<AppState> store) {
 
-          return markets.volume.length == 0 ?
+          return store.state.markets.volume.length == 0 ?
             Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -93,10 +96,10 @@ class MarketsViewPage extends StatelessWidget {
               ),
             ) :
             ListView.builder(
-              itemCount: markets.volume.length,
+              itemCount: store.state.markets.volume.length,
               itemBuilder: (context, i) {
 
-                final item = markets.volumeItem(i);
+                final item = store.state.markets.volumeItem(i);
                 return CoinListTile(
                   imageUrl: item.imageUrl,
                   name: item.name,
@@ -104,7 +107,9 @@ class MarketsViewPage extends StatelessWidget {
                   formattedPrice: item.price,
                   formattedPriceChange: item.priceChangeDisplay,
                   priceChange: item.priceChange,
-                  onSelect: (SelectedCoinTile data) {}
+                  onSelect: (SelectedCoinTile data) {
+                    store.dispatch(DetailsChangePageAction());
+                  }
                 );
             },
           );
@@ -156,4 +161,18 @@ class MarketsViewPage extends StatelessWidget {
       )
     );
   }
+}
+
+
+class DetailsViewPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Details'),
+      ),
+      body: Text('Welcome to details')
+    );
+  }
+
 }
