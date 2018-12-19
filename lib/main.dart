@@ -108,7 +108,19 @@ class MarketsViewPage extends StatelessWidget {
                   formattedPriceChange: item.priceChangeDisplay,
                   priceChange: item.priceChange,
                   onSelect: (SelectedCoinTile data) {
-                    store.dispatch(DetailsChangePageAction());
+                    store.dispatch(DetailsChangePageAction(
+                      data: DetailsViewModel(
+                        currency: store.state.activeCurrency,
+                        coinInformation: DetailsCoinInformation(
+                          priceChange: data.priceChange,
+                          fullName: data.fullName,
+                          imageUrl: data.imageUrl,
+                          name: data.name,
+                          formattedPriceChange: data.formattedPriceChange,
+                          formattedPrice: data.formattedPrice,
+                        ),
+                      )
+                    ));
                   }
                 );
             },
@@ -169,9 +181,27 @@ class DetailsViewPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Details'),
+        title: StoreConnector<AppState, Store<AppState>>(
+          converter: (Store<AppState> store) => store,
+          builder: (BuildContext context, Store<AppState> store) => Text(store.state.details.coinInformation.fullName)
+        ),
       ),
-      body: Text('Welcome to details')
+      body: Container(
+        padding: EdgeInsets.all(10.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Container(
+              padding: const EdgeInsets.all(0.0),
+              alignment: Alignment.center,
+              width: 1.7976931348623157e+308,
+              child: Text('Coin Information here'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

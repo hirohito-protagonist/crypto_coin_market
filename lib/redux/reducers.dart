@@ -9,13 +9,17 @@ import 'package:crypto_coin_market/services/price.service.dart';
 import 'package:crypto_coin_market/model/currency.model.dart';
 import 'package:http/http.dart' as http;
 import 'package:crypto_coin_market/model/total_volume.model.dart';
+import 'package:crypto_coin_market/model/details_view.model.dart';
 
 
 class Keys{
   static final navKey = new GlobalKey<NavigatorState>();
 }
 
-class DetailsChangePageAction {}
+class DetailsChangePageAction {
+  final DetailsViewModel data;
+  DetailsChangePageAction({this.data});
+}
 
 class MarketsDataAction {}
 class LoadMarketsDataAction {
@@ -39,12 +43,14 @@ class AppState {
   final List<String> availableCurrencies;
   final int activePage;
   final MarketsViewModel markets;
+  final DetailsViewModel details;
 
   AppState({
     @required this.activeCurrency,
     @required this.markets,
     @required this.activePage,
-    @required this.availableCurrencies
+    @required this.availableCurrencies,
+    @required this.details
   });
 
   AppState.initialState():
@@ -52,6 +58,17 @@ class AppState {
         markets = MarketsViewModel(
           prices: MultipleSymbols(display: {},raw: {}),
           volume: List.unmodifiable([]),
+        ),
+        details = DetailsViewModel(
+          coinInformation: DetailsCoinInformation(
+              formattedPriceChange: '',
+              priceChange: 0,
+              formattedPrice: '',
+              name: '',
+              imageUrl: '',
+              fullName: ''
+          ),
+          currency: 'USD'
         ),
         activePage = 0,
         availableCurrencies = Currency.availableCurrencies();
@@ -62,6 +79,7 @@ AppState appStateReducer(AppState state, action) {
     activeCurrency: currencyReducer(state.activeCurrency, action),
     availableCurrencies: Currency.availableCurrencies(),
     markets: marketsReducer(state.markets, action),
+    details: detailsReducer(state.details, action),
     activePage: pageReducer(state.activePage, action)
   );
 }
@@ -69,6 +87,15 @@ AppState appStateReducer(AppState state, action) {
 MarketsViewModel marketsReducer(MarketsViewModel state, action) {
 
   if (action is LoadMarketsDataAction) {
+
+    return action.data;
+  }
+  return state;
+}
+
+DetailsViewModel detailsReducer(DetailsViewModel state, action) {
+
+  if (action is DetailsChangePageAction) {
 
     return action.data;
   }
