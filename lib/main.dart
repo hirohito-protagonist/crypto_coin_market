@@ -7,6 +7,8 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:crypto_coin_market/redux/reducers.dart';
 import 'package:crypto_coin_market/widgets/coin_list_tile.widget.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:crypto_coin_market/widgets/price_change.widget.dart';
 
 void main() => runApp(CoinMarketApp());
 //void main() => runApp(MarketsPage());
@@ -197,7 +199,64 @@ class DetailsViewPage extends StatelessWidget {
               padding: const EdgeInsets.all(0.0),
               alignment: Alignment.center,
               width: 1.7976931348623157e+308,
-              child: Text('Coin Information here'),
+              child: StoreConnector<AppState, Store<AppState>>(
+                  converter: (Store<AppState> store) => store,
+                  builder: (BuildContext context, Store<AppState> store) {
+                    return _CoinInformationWidget(
+                      imageUrl: store.state.details.coinInformation.imageUrl,
+                      priceChange: store.state.details.coinInformation.priceChange,
+                      formattedPriceChange: store.state.details.coinInformation.formattedPriceChange,
+                      formattedPrice: store.state.details.coinInformation.formattedPrice,
+                    );
+                  },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+}
+
+class _CoinInformationWidget extends StatelessWidget {
+
+  final String imageUrl;
+  final String formattedPrice;
+  final num priceChange;
+  final String formattedPriceChange;
+
+
+  _CoinInformationWidget({this.imageUrl, this.formattedPrice, this.priceChange,
+      this.formattedPriceChange});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Row(
+          children: <Widget>[
+            CachedNetworkImage(
+              placeholder: CircularProgressIndicator(),
+              imageUrl: imageUrl,
+              height: 30.0,
+            ),
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    '${formattedPrice}',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 20.0),
+                  ),
+                ],
+              ),
+            ),
+            PriceChange(
+              change: priceChange,
+              price: formattedPriceChange,
             ),
           ],
         ),
