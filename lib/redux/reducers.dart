@@ -10,7 +10,8 @@ import 'package:crypto_coin_market/model/currency.model.dart';
 import 'package:http/http.dart' as http;
 import 'package:crypto_coin_market/model/total_volume.model.dart';
 import 'package:crypto_coin_market/model/details_view.model.dart';
-
+import 'package:crypto_coin_market/model/histogram_data.model.dart';
+import 'package:crypto_coin_market/services/histogram.service.dart';
 
 class Keys{
   static final navKey = new GlobalKey<NavigatorState>();
@@ -19,6 +20,12 @@ class Keys{
 class DetailsChangePageAction {
   final DetailsViewModel data;
   DetailsChangePageAction({this.data});
+}
+
+class LoadHistogramAction {
+  List<HistogramDataModel> data;
+
+  LoadHistogramAction({this.data});
 }
 
 class MarketsDataAction {}
@@ -44,13 +51,15 @@ class AppState {
   final int activePage;
   final MarketsViewModel markets;
   final DetailsViewModel details;
+  final List<HistogramDataModel> histogramData;
 
   AppState({
     @required this.activeCurrency,
     @required this.markets,
     @required this.activePage,
     @required this.availableCurrencies,
-    @required this.details
+    @required this.details,
+    @required this.histogramData
   });
 
   AppState.initialState():
@@ -71,6 +80,7 @@ class AppState {
           currency: 'USD'
         ),
         activePage = 0,
+        histogramData = [],
         availableCurrencies = Currency.availableCurrencies();
 }
 
@@ -80,7 +90,8 @@ AppState appStateReducer(AppState state, action) {
     availableCurrencies: Currency.availableCurrencies(),
     markets: marketsReducer(state.markets, action),
     details: detailsReducer(state.details, action),
-    activePage: pageReducer(state.activePage, action)
+    activePage: pageReducer(state.activePage, action),
+    histogramData: histogramReducer(state.histogramData, action)
   );
 }
 
@@ -89,6 +100,14 @@ MarketsViewModel marketsReducer(MarketsViewModel state, action) {
   if (action is LoadMarketsDataAction) {
 
     return action.data;
+  }
+  return state;
+}
+
+List<HistogramDataModel> histogramReducer(List<HistogramDataModel> state, action) {
+
+  if (action is LoadHistogramAction) {
+    return List.unmodifiable(action.data);
   }
   return state;
 }
@@ -125,6 +144,8 @@ void appStateMiddleware(Store<AppState> store, action, NextDispatcher next) asyn
 
   if (action is DetailsChangePageAction) {
     await Keys.navKey.currentState.pushNamed('/details');
+    final histData = await HistogramService.OHLCV(TimeRange.OneDay, store.state.activeCurrency, store.state.details.coinInformation.name);
+    store.dispatch(LoadHistogramAction(data: histData));
   }
 
   if (
