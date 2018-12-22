@@ -9,6 +9,8 @@ import 'package:crypto_coin_market/redux/reducers.dart';
 import 'package:crypto_coin_market/widgets/coin_list_tile.widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:crypto_coin_market/widgets/price_change.widget.dart';
+import 'package:crypto_coin_market/widgets/coin_cost.widget.dart';
+import 'package:crypto_coin_market/widgets/coin_volume.widget.dart';
 
 void main() => runApp(CoinMarketApp());
 //void main() => runApp(MarketsPage());
@@ -123,6 +125,7 @@ class MarketsViewPage extends StatelessWidget {
                         ),
                       )
                     ));
+                    store.dispatch(RequestHistogramAction());
                   }
                 );
             },
@@ -179,6 +182,7 @@ class MarketsViewPage extends StatelessWidget {
 
 
 class DetailsViewPage extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -209,6 +213,26 @@ class DetailsViewPage extends StatelessWidget {
                       formattedPrice: store.state.details.coinInformation.formattedPrice,
                     );
                   },
+              ),
+            ),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  Expanded(
+                    child: StoreConnector<AppState, Store<AppState>>(
+                      converter: (Store<AppState> store) => store,
+                      builder: (BuildContext context, Store<AppState> store) {
+                        return store.state.histogramData.length > 0 ? CoinCostWidget(
+                          histData: store.state.histogramData,
+                          isRefresh:false,
+                        ) : Text('Loading');
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
           ],

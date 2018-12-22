@@ -22,6 +22,8 @@ class DetailsChangePageAction {
   DetailsChangePageAction({this.data});
 }
 
+class RequestHistogramAction {}
+
 class LoadHistogramAction {
   List<HistogramDataModel> data;
 
@@ -144,6 +146,9 @@ void appStateMiddleware(Store<AppState> store, action, NextDispatcher next) asyn
 
   if (action is DetailsChangePageAction) {
     await Keys.navKey.currentState.pushNamed('/details');
+  }
+
+  if (action is RequestHistogramAction) {
     final histData = await HistogramService.OHLCV(TimeRange.OneDay, store.state.activeCurrency, store.state.details.coinInformation.name);
     store.dispatch(LoadHistogramAction(data: histData));
   }
