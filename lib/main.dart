@@ -227,13 +227,22 @@ class DetailsViewPage extends StatelessWidget {
                       builder: (BuildContext context, Store<AppState> store) {
                         return store.state.histogramData.length > 0 ? CoinCostWidget(
                           histData: store.state.histogramData,
-                          isRefresh:false,
+                          isRefresh: false,
                         ) : Text('Loading');
                       },
                     ),
                   ),
                 ],
               ),
+            ),
+            StoreConnector<AppState, Store<AppState>>(
+              converter: (Store<AppState> store) => store,
+              builder: (BuildContext context, Store<AppState> store) {
+                return store.state.histogramData.length > 0 ?             CoinVolumeWidget(
+                  histData: store.state.histogramData,
+                  isRefresh: false,
+                ): Text('Loading');
+              },
             ),
           ],
         ),
