@@ -11,6 +11,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:crypto_coin_market/widgets/price_change.widget.dart';
 import 'package:crypto_coin_market/widgets/coin_cost.widget.dart';
 import 'package:crypto_coin_market/widgets/coin_volume.widget.dart';
+import 'package:crypto_coin_market/actions/markets.action.dart';
 
 void main() => runApp(CoinMarketApp());
 //void main() => runApp(MarketsPage());
@@ -59,7 +60,7 @@ class CoinMarketApp extends StatelessWidget {
         ),
         navigatorKey: Keys.navKey,
         home: StoreBuilder<AppState>(
-          onInit: (store) => store.dispatch(MarketsDataAction()),
+          onInit: (store) => store.dispatch(MarketsRequestDataAction()),
           builder: (BuildContext context, Store<AppState> store) =>
               MarketsViewPage(),
         ),
@@ -149,7 +150,7 @@ class MarketsViewPage extends StatelessWidget {
                     );
                   }).toList(),
                   onChanged: (page) {
-                    store.dispatch(ChangePageAction(page: page - 1,));
+                    store.dispatch(MarketsChangePageAction(page: page - 1,));
                   },
                 );
               },
@@ -167,7 +168,7 @@ class MarketsViewPage extends StatelessWidget {
                     );
                   }).toList(),
                   onChanged: (String currency) {
-                    store.dispatch(ChangeCurrencyAction(currency: currency));
+                    store.dispatch(MarketsChangeCurrencyAction(currency: currency));
                   },
                 );
               }

@@ -13,6 +13,8 @@ import 'package:crypto_coin_market/model/details_view.model.dart';
 import 'package:crypto_coin_market/model/histogram_data.model.dart';
 import 'package:crypto_coin_market/services/histogram.service.dart';
 
+import 'package:crypto_coin_market/actions/markets.action.dart';
+
 class Keys{
   static final navKey = new GlobalKey<NavigatorState>();
 }
@@ -28,23 +30,6 @@ class LoadHistogramAction {
   List<HistogramDataModel> data;
 
   LoadHistogramAction({this.data});
-}
-
-class MarketsDataAction {}
-class LoadMarketsDataAction {
-  final MarketsViewModel data;
-
-  LoadMarketsDataAction({this.data});
-}
-
-class ChangePageAction {
-  final int page;
-  ChangePageAction({this.page});
-}
-
-class ChangeCurrencyAction {
-  final String currency;
-  ChangeCurrencyAction({this.currency});
 }
 
 class AppState {
@@ -99,7 +84,7 @@ AppState appStateReducer(AppState state, action) {
 
 MarketsViewModel marketsReducer(MarketsViewModel state, action) {
 
-  if (action is LoadMarketsDataAction) {
+  if (action is MarketsResponseDataAction) {
 
     return action.data;
   }
@@ -126,7 +111,7 @@ DetailsViewModel detailsReducer(DetailsViewModel state, action) {
 
 String currencyReducer(String state, action) {
 
-  if (action is ChangeCurrencyAction) {
+  if (action is MarketsChangeCurrencyAction) {
     return action.currency;
   }
   return state;
@@ -134,7 +119,7 @@ String currencyReducer(String state, action) {
 
 int pageReducer(int state, action) {
 
-  if (action is ChangePageAction) {
+  if (action is MarketsChangePageAction) {
     return action.page;
   }
   return state;
@@ -154,16 +139,16 @@ void appStateMiddleware(Store<AppState> store, action, NextDispatcher next) asyn
   }
 
   if (
-    action is MarketsDataAction ||
-    action is ChangePageAction ||
-    action is ChangeCurrencyAction
+    action is MarketsRequestDataAction ||
+    action is MarketsChangePageAction ||
+    action is MarketsChangeCurrencyAction
   ) {
     final currency = Currency.fromCurrencyCode(store.state.activeCurrency);
     final volume =  await TopListsService(client: http.Client()).totalVolume(currency, page: store.state.activePage);
     final coins = volume.map((TotalVolume tv) => tv.coinInfo.name).toList();
     final prices = await PriceService(client: http.Client()).multipleSymbolsFullData(coins, currency);
 
-    store.dispatch(LoadMarketsDataAction(
+    store.dispatch(MarketsResponseDataAction(
         data: MarketsViewModel(
           volume: volume,
           prices: prices,
