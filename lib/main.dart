@@ -12,6 +12,7 @@ import 'package:crypto_coin_market/widgets/price_change.widget.dart';
 import 'package:crypto_coin_market/widgets/coin_cost.widget.dart';
 import 'package:crypto_coin_market/widgets/coin_volume.widget.dart';
 import 'package:crypto_coin_market/actions/markets.action.dart';
+import 'package:crypto_coin_market/actions/details.action.dart';
 
 void main() => runApp(CoinMarketApp());
 //void main() => runApp(MarketsPage());
@@ -126,7 +127,7 @@ class MarketsViewPage extends StatelessWidget {
                         ),
                       )
                     ));
-                    store.dispatch(RequestHistogramAction());
+                    store.dispatch(DetailsRequestHistogramDataAction());
                   }
                 );
             },

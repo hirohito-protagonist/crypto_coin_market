@@ -14,6 +14,7 @@ import 'package:crypto_coin_market/model/histogram_data.model.dart';
 import 'package:crypto_coin_market/services/histogram.service.dart';
 
 import 'package:crypto_coin_market/actions/markets.action.dart';
+import 'package:crypto_coin_market/actions/details.action.dart';
 
 class Keys{
   static final navKey = new GlobalKey<NavigatorState>();
@@ -22,14 +23,6 @@ class Keys{
 class DetailsChangePageAction {
   final DetailsViewModel data;
   DetailsChangePageAction({this.data});
-}
-
-class RequestHistogramAction {}
-
-class LoadHistogramAction {
-  List<HistogramDataModel> data;
-
-  LoadHistogramAction({this.data});
 }
 
 class AppState {
@@ -93,7 +86,7 @@ MarketsViewModel marketsReducer(MarketsViewModel state, action) {
 
 List<HistogramDataModel> histogramReducer(List<HistogramDataModel> state, action) {
 
-  if (action is LoadHistogramAction) {
+  if (action is DetailsResponseHistogramDataAction) {
     return List.unmodifiable(action.data);
   }
   return state;
@@ -133,9 +126,9 @@ void appStateMiddleware(Store<AppState> store, action, NextDispatcher next) asyn
     await Keys.navKey.currentState.pushNamed('/details');
   }
 
-  if (action is RequestHistogramAction) {
+  if (action is DetailsRequestHistogramDataAction) {
     final histData = await HistogramService.OHLCV(TimeRange.OneDay, store.state.activeCurrency, store.state.details.coinInformation.name);
-    store.dispatch(LoadHistogramAction(data: histData));
+    store.dispatch(DetailsResponseHistogramDataAction(data: histData));
   }
 
   if (
