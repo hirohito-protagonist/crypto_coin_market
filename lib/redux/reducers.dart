@@ -15,15 +15,7 @@ import 'package:crypto_coin_market/services/histogram.service.dart';
 
 import 'package:crypto_coin_market/actions/markets.action.dart';
 import 'package:crypto_coin_market/actions/details.action.dart';
-
-class Keys{
-  static final navKey = new GlobalKey<NavigatorState>();
-}
-
-class DetailsChangePageAction {
-  final DetailsViewModel data;
-  DetailsChangePageAction({this.data});
-}
+import 'package:crypto_coin_market/actions/navigation.action.dart';
 
 class AppState {
   final String activeCurrency;
@@ -94,7 +86,7 @@ List<HistogramDataModel> histogramReducer(List<HistogramDataModel> state, action
 
 DetailsViewModel detailsReducer(DetailsViewModel state, action) {
 
-  if (action is DetailsChangePageAction) {
+  if (action is NavigationChangeToDetailsPageAction) {
 
     return action.data;
   }
@@ -122,8 +114,8 @@ int pageReducer(int state, action) {
 void appStateMiddleware(Store<AppState> store, action, NextDispatcher next) async {
   next(action);
 
-  if (action is DetailsChangePageAction) {
-    await Keys.navKey.currentState.pushNamed('/details');
+  if (action is NavigationChangeToDetailsPageAction) {
+    await NavigationKeys.navigationState.currentState.pushNamed('/details');
   }
 
   if (action is DetailsRequestHistogramDataAction) {

@@ -13,6 +13,7 @@ import 'package:crypto_coin_market/widgets/coin_cost.widget.dart';
 import 'package:crypto_coin_market/widgets/coin_volume.widget.dart';
 import 'package:crypto_coin_market/actions/markets.action.dart';
 import 'package:crypto_coin_market/actions/details.action.dart';
+import 'package:crypto_coin_market/actions/navigation.action.dart';
 
 void main() => runApp(CoinMarketApp());
 //void main() => runApp(MarketsPage());
@@ -59,7 +60,7 @@ class CoinMarketApp extends StatelessWidget {
         theme: new ThemeData(
           primarySwatch: Colors.blue,
         ),
-        navigatorKey: Keys.navKey,
+        navigatorKey: NavigationKeys.navigationState,
         home: StoreBuilder<AppState>(
           onInit: (store) => store.dispatch(MarketsRequestDataAction()),
           builder: (BuildContext context, Store<AppState> store) =>
@@ -114,7 +115,7 @@ class MarketsViewPage extends StatelessWidget {
                   formattedPriceChange: item.priceChangeDisplay,
                   priceChange: item.priceChange,
                   onSelect: (SelectedCoinTile data) {
-                    store.dispatch(DetailsChangePageAction(
+                    store.dispatch(NavigationChangeToDetailsPageAction(
                       data: DetailsViewModel(
                         currency: store.state.activeCurrency,
                         coinInformation: DetailsCoinInformation(
