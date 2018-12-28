@@ -7,6 +7,7 @@ import 'package:crypto_coin_market/actions/details.action.dart';
 import 'package:crypto_coin_market/actions/markets.action.dart';
 import 'package:crypto_coin_market/actions/navigation.action.dart';
 import 'package:crypto_coin_market/model/details_view.model.dart';
+import 'package:crypto_coin_market/model/markets_view.model.dart';
 
 
 class MarketsPage extends StatelessWidget {
@@ -19,11 +20,11 @@ class MarketsPage extends StatelessWidget {
           actions: <Widget>[
           ],
         ),
-        body: StoreConnector<AppState, Store<AppState>>(
-          converter: (Store<AppState> store) => store,
-          builder: (BuildContext context, Store<AppState> store) {
+        body: StoreConnector<AppState, _ViewModel>(
+          converter: (Store<AppState> store) => _ViewModel.create(store),
+          builder: (BuildContext context, _ViewModel model) {
 
-            return store.state.markets.volume.length == 0 ?
+            return model.markets.volume.length == 0 ?
             Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -37,10 +38,10 @@ class MarketsPage extends StatelessWidget {
               ),
             ) :
             ListView.builder(
-              itemCount: store.state.markets.volume.length,
+              itemCount: model.markets.volume.length,
               itemBuilder: (context, i) {
 
-                final item = store.state.markets.volumeItem(i);
+                final item = model.markets.volumeItem(i);
                 return CoinListTile(
                     imageUrl: item.imageUrl,
                     name: item.name,
@@ -49,20 +50,18 @@ class MarketsPage extends StatelessWidget {
                     formattedPriceChange: item.priceChangeDisplay,
                     priceChange: item.priceChange,
                     onSelect: (SelectedCoinTile data) {
-                      store.dispatch(NavigationChangeToDetailsPageAction(
-                          data: DetailsViewModel(
-                            currency: store.state.activeCurrency,
-                            coinInformation: DetailsCoinInformation(
-                              priceChange: data.priceChange,
-                              fullName: data.fullName,
-                              imageUrl: data.imageUrl,
-                              name: data.name,
-                              formattedPriceChange: data.formattedPriceChange,
-                              formattedPrice: data.formattedPrice,
-                            ),
-                          )
+                      model.onNavigateToDetails(DetailsViewModel(
+                        currency: model.activeCurrency,
+                        coinInformation: DetailsCoinInformation(
+                          priceChange: data.priceChange,
+                          fullName: data.fullName,
+                          imageUrl: data.imageUrl,
+                          name: data.name,
+                          formattedPriceChange: data.formattedPriceChange,
+                          formattedPrice: data.formattedPrice,
+                        ),
                       ));
-                      store.dispatch(DetailsRequestHistogramDataAction());
+                      model.onRequestHistogramData();
                     }
                 );
               },
@@ -73,12 +72,12 @@ class MarketsPage extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              StoreConnector<AppState, Store<AppState>>(
-                converter: (Store<AppState> store) => store,
-                builder: (BuildContext context, Store<AppState> store) {
+              StoreConnector<AppState, _ViewModel>(
+                converter: (Store<AppState> store) => _ViewModel.create(store),
+                builder: (BuildContext context, _ViewModel model) {
 
                   return DropdownButton(
-                    value: store.state.activePage + 1,
+                    value: model.activePage + 1,
                     items: List.generate(26, (i) => i + 1).map((int value) {
                       return new DropdownMenuItem<num>(
                         value: value,
@@ -86,25 +85,25 @@ class MarketsPage extends StatelessWidget {
                       );
                     }).toList(),
                     onChanged: (page) {
-                      store.dispatch(MarketsChangePageAction(page: page - 1,));
+                      model.onPageChange(page - 1);
                     },
                   );
                 },
               ),
               Padding(padding: EdgeInsets.symmetric(horizontal: 5.0)),
-              StoreConnector<AppState, Store<AppState>>(
-                  converter: (Store<AppState> store) => store,
-                  builder: (BuildContext context, Store<AppState> store) {
+              StoreConnector<AppState, _ViewModel>(
+                  converter: (Store<AppState> store) => _ViewModel.create(store),
+                  builder: (BuildContext context, _ViewModel model) {
                     return DropdownButton(
-                      value: store.state.activeCurrency,
-                      items: store.state.availableCurrencies.map((String value) {
+                      value: model.activeCurrency,
+                      items: model.availableCurrencies.map((String value) {
                         return new DropdownMenuItem<String>(
                           value: value,
                           child: new Text(value),
                         );
                       }).toList(),
                       onChanged: (String currency) {
-                        store.dispatch(MarketsChangeCurrencyAction(currency: currency));
+                        model.onChangeCurrency(currency);
                       },
                     );
                   }
@@ -113,6 +112,42 @@ class MarketsPage extends StatelessWidget {
             ],
           ),
         )
+    );
+  }
+}
+
+class _ViewModel {
+  final MarketsViewModel markets;
+  final String activeCurrency;
+  final List<String> availableCurrencies;
+  final num activePage;
+  final Function(String) onChangeCurrency;
+  final Function(num) onPageChange;
+  final Function(DetailsViewModel) onNavigateToDetails;
+  final Function() onRequestHistogramData;
+
+  _ViewModel({
+    this.markets,
+    this.activeCurrency,
+    this.availableCurrencies,
+    this.activePage,
+    this.onChangeCurrency,
+    this.onPageChange,
+    this.onNavigateToDetails,
+    this.onRequestHistogramData
+  });
+
+  factory _ViewModel.create(Store<AppState> store) {
+
+    return _ViewModel(
+      activeCurrency: store.state.activeCurrency,
+      markets: store.state.markets,
+      availableCurrencies: store.state.availableCurrencies,
+      activePage: store.state.activePage,
+      onChangeCurrency: (String currency) => store.dispatch(MarketsChangeCurrencyAction(currency: currency)),
+      onNavigateToDetails: (DetailsViewModel model) => store.dispatch(NavigationChangeToDetailsPageAction(data: model)),
+      onPageChange: (num page) => store.dispatch(MarketsChangePageAction(page: page)),
+      onRequestHistogramData: () => store.dispatch(DetailsRequestHistogramDataAction()),
     );
   }
 }
