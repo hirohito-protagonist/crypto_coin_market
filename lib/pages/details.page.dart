@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:crypto_coin_market/redux/reducers.dart';
+import 'package:crypto_coin_market/model/details_view.model.dart';
+import 'package:crypto_coin_market/model/histogram_data.model.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:crypto_coin_market/widgets/price_change.widget.dart';
@@ -16,9 +18,9 @@ class DetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: StoreConnector<AppState, Store<AppState>>(
-            converter: (Store<AppState> store) => store,
-            builder: (BuildContext context, Store<AppState> store) => Text(store.state.details.coinInformation.fullName)
+        title: StoreConnector<AppState, _ViewModel>(
+            converter: (Store<AppState> store) => _ViewModel.create(store),
+            builder: (BuildContext context, _ViewModel model) => Text(model.details.coinInformation.fullName)
         ),
       ),
       body: Container(
@@ -32,14 +34,14 @@ class DetailsPage extends StatelessWidget {
               padding: const EdgeInsets.all(0.0),
               alignment: Alignment.center,
               width: 1.7976931348623157e+308,
-              child: StoreConnector<AppState, Store<AppState>>(
-                converter: (Store<AppState> store) => store,
-                builder: (BuildContext context, Store<AppState> store) {
+              child: StoreConnector<AppState, _ViewModel>(
+                converter: (Store<AppState> store) => _ViewModel.create(store),
+                builder: (BuildContext context, _ViewModel model) {
                   return _CoinInformationWidget(
-                    imageUrl: store.state.details.coinInformation.imageUrl,
-                    priceChange: store.state.details.coinInformation.priceChange,
-                    formattedPriceChange: store.state.details.coinInformation.formattedPriceChange,
-                    formattedPrice: store.state.details.coinInformation.formattedPrice,
+                    imageUrl: model.details.coinInformation.imageUrl,
+                    priceChange: model.details.coinInformation.priceChange,
+                    formattedPriceChange: model.details.coinInformation.formattedPriceChange,
+                    formattedPrice: model.details.coinInformation.formattedPrice,
                   );
                 },
               ),
@@ -51,11 +53,11 @@ class DetailsPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
                   Expanded(
-                    child: StoreConnector<AppState, Store<AppState>>(
-                      converter: (Store<AppState> store) => store,
-                      builder: (BuildContext context, Store<AppState> store) {
-                        return store.state.histogramData.length > 0 ? CoinCostWidget(
-                          histData: store.state.histogramData,
+                    child: StoreConnector<AppState, _ViewModel>(
+                      converter: (Store<AppState> store) => _ViewModel.create(store),
+                      builder: (BuildContext context, _ViewModel model) {
+                        return model.histogramData.length > 0 ? CoinCostWidget(
+                          histData: model.histogramData,
                           isRefresh: false,
                         ) : Text('Loading');
                       },
@@ -64,11 +66,11 @@ class DetailsPage extends StatelessWidget {
                 ],
               ),
             ),
-            StoreConnector<AppState, Store<AppState>>(
-              converter: (Store<AppState> store) => store,
-              builder: (BuildContext context, Store<AppState> store) {
-                return store.state.histogramData.length > 0 ?             CoinVolumeWidget(
-                  histData: store.state.histogramData,
+            StoreConnector<AppState, _ViewModel>(
+              converter: (Store<AppState> store) => _ViewModel.create(store),
+              builder: (BuildContext context, _ViewModel model) {
+                return model.histogramData.length > 0 ? CoinVolumeWidget(
+                  histData: model.histogramData,
                   isRefresh: false,
                 ): Text('Loading');
               },
@@ -126,4 +128,19 @@ class _CoinInformationWidget extends StatelessWidget {
     );
   }
 
+}
+
+class _ViewModel {
+  final DetailsViewModel details;
+  final List<HistogramDataModel> histogramData;
+
+  _ViewModel({this.details, this.histogramData});
+
+  factory _ViewModel.create(Store<AppState> store) {
+
+    return _ViewModel(
+      details: store.state.details,
+      histogramData: store.state.histogramData,
+    );
+  }
 }
