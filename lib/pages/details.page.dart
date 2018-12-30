@@ -59,7 +59,7 @@ class DetailsPage extends StatelessWidget {
                         return model.histogramData.length > 0 ? CoinCostWidget(
                           histData: model.histogramData,
                           isRefresh: false,
-                        ) : Text('Loading');
+                        ) : _Loading();
                       },
                     ),
                   ),
@@ -72,7 +72,7 @@ class DetailsPage extends StatelessWidget {
                 return model.histogramData.length > 0 ? CoinVolumeWidget(
                   histData: model.histogramData,
                   isRefresh: false,
-                ): Text('Loading');
+                ): _Loading();
               },
             ),
           ],
@@ -124,6 +124,26 @@ class _CoinInformationWidget extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+}
+
+class _Loading extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          SizedBox(
+            width: 20.0,
+            height: 20.0,
+            child: CircularProgressIndicator(),
+          ),
+        ],
       ),
     );
   }
