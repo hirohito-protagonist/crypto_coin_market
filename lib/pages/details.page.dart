@@ -5,7 +5,7 @@ import 'package:redux/redux.dart';
 import 'package:crypto_coin_market/redux/reducers.dart';
 import 'package:crypto_coin_market/model/details_view.model.dart';
 import 'package:crypto_coin_market/model/histogram_data.model.dart';
-
+import 'package:crypto_coin_market/actions/details.action.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:crypto_coin_market/widgets/price_change.widget.dart';
 import 'package:crypto_coin_market/widgets/coin_cost.widget.dart';
@@ -13,6 +13,13 @@ import 'package:crypto_coin_market/widgets/coin_volume.widget.dart';
 
 
 class DetailsPage extends StatelessWidget {
+
+  final Store<AppState> store;
+
+  DetailsPage({ this.store }) {
+    final model = _ViewModel.create(this.store);
+    model.onRequestHistogramData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -153,14 +160,20 @@ class _Loading extends StatelessWidget {
 class _ViewModel {
   final DetailsViewModel details;
   final List<HistogramDataModel> histogramData;
+  final Function() onRequestHistogramData;
 
-  _ViewModel({this.details, this.histogramData});
+  _ViewModel({
+    this.details,
+    this.histogramData,
+    this.onRequestHistogramData
+  });
 
   factory _ViewModel.create(Store<AppState> store) {
 
     return _ViewModel(
       details: store.state.details,
       histogramData: store.state.histogramData,
+      onRequestHistogramData: () => store.dispatch(DetailsRequestHistogramDataAction()),
     );
   }
 }

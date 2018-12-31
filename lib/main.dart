@@ -61,7 +61,7 @@ class CoinMarketApp extends StatelessWidget {
           builder: (BuildContext context, Store<AppState> store) => MarketsPage(),
         ),
         routes: <String, WidgetBuilder>{
-          '/details': (BuildContext context) => DetailsPage()
+          '/details': (BuildContext context) => DetailsPage(store: store,)
         },
       )
     );

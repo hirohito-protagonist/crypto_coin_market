@@ -3,7 +3,6 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:crypto_coin_market/redux/reducers.dart';
 import 'package:crypto_coin_market/widgets/coin_list_tile.widget.dart';
-import 'package:crypto_coin_market/actions/details.action.dart';
 import 'package:crypto_coin_market/actions/markets.action.dart';
 import 'package:crypto_coin_market/actions/navigation.action.dart';
 import 'package:crypto_coin_market/model/details_view.model.dart';
@@ -61,7 +60,6 @@ class MarketsPage extends StatelessWidget {
                           formattedPrice: data.formattedPrice,
                         ),
                       ));
-                      model.onRequestHistogramData();
                     }
                 );
               },
@@ -124,7 +122,6 @@ class _ViewModel {
   final Function(String) onChangeCurrency;
   final Function(num) onPageChange;
   final Function(DetailsViewModel) onNavigateToDetails;
-  final Function() onRequestHistogramData;
 
   _ViewModel({
     this.markets,
@@ -134,7 +131,6 @@ class _ViewModel {
     this.onChangeCurrency,
     this.onPageChange,
     this.onNavigateToDetails,
-    this.onRequestHistogramData
   });
 
   factory _ViewModel.create(Store<AppState> store) {
@@ -147,7 +143,6 @@ class _ViewModel {
       onChangeCurrency: (String currency) => store.dispatch(MarketsChangeCurrencyAction(currency: currency)),
       onNavigateToDetails: (DetailsViewModel model) => store.dispatch(NavigationChangeToDetailsPageAction(data: model)),
       onPageChange: (num page) => store.dispatch(MarketsChangePageAction(page: page)),
-      onRequestHistogramData: () => store.dispatch(DetailsRequestHistogramDataAction()),
     );
   }
 }

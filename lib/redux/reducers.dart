@@ -78,6 +78,10 @@ MarketsViewModel marketsReducer(MarketsViewModel state, action) {
 
 List<HistogramDataModel> histogramReducer(List<HistogramDataModel> state, action) {
 
+  if (action is DetailsRequestHistogramDataAction) {
+    return List.unmodifiable([]);
+  }
+
   if (action is DetailsResponseHistogramDataAction) {
     return List.unmodifiable(action.data);
   }
