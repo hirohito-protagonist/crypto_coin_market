@@ -136,10 +136,10 @@ class _ViewModel {
   factory _ViewModel.create(Store<AppState> store) {
 
     return _ViewModel(
-      activeCurrency: store.state.activeCurrency,
-      markets: store.state.markets,
-      availableCurrencies: store.state.availableCurrencies,
-      activePage: store.state.activePage,
+      activeCurrency: store.state.currency,
+      markets: store.state.marketsPageState.markets,
+      availableCurrencies: store.state.marketsPageState.availableCurrencies,
+      activePage: store.state.marketsPageState.page,
       onChangeCurrency: (String currency) => store.dispatch(MarketsChangeCurrencyAction(currency: currency)),
       onNavigateToDetails: (DetailsViewModel model) => store.dispatch(NavigationChangeToDetailsPageAction(data: model)),
       onPageChange: (num page) => store.dispatch(MarketsChangePageAction(page: page)),

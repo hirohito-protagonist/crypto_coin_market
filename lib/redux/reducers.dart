@@ -17,52 +17,65 @@ import 'package:crypto_coin_market/actions/markets.action.dart';
 import 'package:crypto_coin_market/actions/details.action.dart';
 import 'package:crypto_coin_market/actions/navigation.action.dart';
 
-class AppState {
-  final String activeCurrency;
+class MarketsPageState {
   final List<String> availableCurrencies;
-  final int activePage;
+  final int page;
   final MarketsViewModel markets;
+
+  MarketsPageState({
+    @required this.availableCurrencies,
+    @required this.page,
+    @required this.markets,
+  });
+
+  MarketsPageState.initialState():
+    markets = MarketsViewModel(
+      prices: MultipleSymbols(display: {},raw: {}),
+      volume: List.unmodifiable([]),
+    ),
+    page = 0,
+    availableCurrencies = Currency.availableCurrencies();
+}
+
+class AppState {
+  final String currency;
+  final MarketsPageState marketsPageState;
   final DetailsViewModel details;
   final List<HistogramDataModel> histogramData;
 
   AppState({
-    @required this.activeCurrency,
-    @required this.markets,
-    @required this.activePage,
-    @required this.availableCurrencies,
+    @required this.currency,
+    @required this.marketsPageState,
     @required this.details,
     @required this.histogramData
   });
 
   AppState.initialState():
-        activeCurrency = 'USD',
-        markets = MarketsViewModel(
-          prices: MultipleSymbols(display: {},raw: {}),
-          volume: List.unmodifiable([]),
-        ),
-        details = DetailsViewModel(
-          coinInformation: DetailsCoinInformation(
-              formattedPriceChange: '',
-              priceChange: 0,
-              formattedPrice: '',
-              name: '',
-              imageUrl: '',
-              fullName: ''
-          ),
-          currency: 'USD'
-        ),
-        activePage = 0,
-        histogramData = [],
-        availableCurrencies = Currency.availableCurrencies();
+    currency = 'USD',
+    marketsPageState = MarketsPageState.initialState(),
+    details = DetailsViewModel(
+      coinInformation: DetailsCoinInformation(
+        formattedPriceChange: '',
+        priceChange: 0,
+        formattedPrice: '',
+        name: '',
+        imageUrl: '',
+        fullName: ''
+      ),
+      currency: 'USD'
+    ),
+    histogramData = [];
 }
 
 AppState appStateReducer(AppState state, action) {
   return AppState(
-    activeCurrency: currencyReducer(state.activeCurrency, action),
-    availableCurrencies: Currency.availableCurrencies(),
-    markets: marketsReducer(state.markets, action),
+    currency: currencyReducer(state.currency, action),
+    marketsPageState: MarketsPageState(
+      availableCurrencies: Currency.availableCurrencies(),
+      page: pageReducer(state.marketsPageState.page, action),
+      markets: marketsReducer(state.marketsPageState.markets, action),
+    ),
     details: detailsReducer(state.details, action),
-    activePage: pageReducer(state.activePage, action),
     histogramData: histogramReducer(state.histogramData, action)
   );
 }
@@ -123,7 +136,7 @@ void appStateMiddleware(Store<AppState> store, action, NextDispatcher next) asyn
   }
 
   if (action is DetailsRequestHistogramDataAction) {
-    final histData = await HistogramService.OHLCV(TimeRange.OneDay, store.state.activeCurrency, store.state.details.coinInformation.name);
+    final histData = await HistogramService.OHLCV(TimeRange.OneDay, store.state.currency, store.state.details.coinInformation.name);
     store.dispatch(DetailsResponseHistogramDataAction(data: histData));
   }
 
@@ -132,8 +145,8 @@ void appStateMiddleware(Store<AppState> store, action, NextDispatcher next) asyn
     action is MarketsChangePageAction ||
     action is MarketsChangeCurrencyAction
   ) {
-    final currency = Currency.fromCurrencyCode(store.state.activeCurrency);
-    final volume =  await TopListsService(client: http.Client()).totalVolume(currency, page: store.state.activePage);
+    final currency = Currency.fromCurrencyCode(store.state.currency);
+    final volume =  await TopListsService(client: http.Client()).totalVolume(currency, page: store.state.marketsPageState.page);
     final coins = volume.map((TotalVolume tv) => tv.coinInfo.name).toList();
     final prices = await PriceService(client: http.Client()).multipleSymbolsFullData(coins, currency);
 
