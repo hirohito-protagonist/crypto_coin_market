@@ -37,34 +37,45 @@ class MarketsPageState {
     availableCurrencies = Currency.availableCurrencies();
 }
 
+class DetailsPageState {
+  final DetailsViewModel details;
+  final List<HistogramDataModel> histogramData;
+
+  DetailsPageState({
+      @required this.details,
+      @required this.histogramData,
+  });
+
+  DetailsPageState.initialState():
+      details = DetailsViewModel(
+          coinInformation: DetailsCoinInformation(
+              formattedPriceChange: '',
+              priceChange: 0,
+              formattedPrice: '',
+              name: '',
+              imageUrl: '',
+              fullName: ''
+          ),
+          currency: 'USD'
+      ),
+      histogramData = [];
+}
+
 class AppState {
   final String currency;
   final MarketsPageState marketsPageState;
-  final DetailsViewModel details;
-  final List<HistogramDataModel> histogramData;
+  final DetailsPageState detailsPageState;
 
   AppState({
     @required this.currency,
     @required this.marketsPageState,
-    @required this.details,
-    @required this.histogramData
+    @required this.detailsPageState,
   });
 
   AppState.initialState():
     currency = 'USD',
     marketsPageState = MarketsPageState.initialState(),
-    details = DetailsViewModel(
-      coinInformation: DetailsCoinInformation(
-        formattedPriceChange: '',
-        priceChange: 0,
-        formattedPrice: '',
-        name: '',
-        imageUrl: '',
-        fullName: ''
-      ),
-      currency: 'USD'
-    ),
-    histogramData = [];
+    detailsPageState = DetailsPageState.initialState();
 }
 
 AppState appStateReducer(AppState state, action) {
@@ -75,8 +86,10 @@ AppState appStateReducer(AppState state, action) {
       page: pageReducer(state.marketsPageState.page, action),
       markets: marketsReducer(state.marketsPageState.markets, action),
     ),
-    details: detailsReducer(state.details, action),
-    histogramData: histogramReducer(state.histogramData, action)
+    detailsPageState: DetailsPageState(
+        details: detailsReducer(state.detailsPageState.details, action),
+        histogramData: histogramReducer(state.detailsPageState.histogramData, action)
+    ),
   );
 }
 
@@ -136,7 +149,7 @@ void appStateMiddleware(Store<AppState> store, action, NextDispatcher next) asyn
   }
 
   if (action is DetailsRequestHistogramDataAction) {
-    final histData = await HistogramService.OHLCV(TimeRange.OneDay, store.state.currency, store.state.details.coinInformation.name);
+    final histData = await HistogramService.OHLCV(TimeRange.OneDay, store.state.currency, store.state.detailsPageState.details.coinInformation.name);
     store.dispatch(DetailsResponseHistogramDataAction(data: histData));
   }
 

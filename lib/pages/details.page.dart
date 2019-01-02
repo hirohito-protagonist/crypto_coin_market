@@ -171,8 +171,8 @@ class _ViewModel {
   factory _ViewModel.create(Store<AppState> store) {
 
     return _ViewModel(
-      details: store.state.details,
-      histogramData: store.state.histogramData,
+      details: store.state.detailsPageState.details,
+      histogramData: store.state.detailsPageState.histogramData,
       onRequestHistogramData: () => store.dispatch(DetailsRequestHistogramDataAction()),
     );
   }
