@@ -126,7 +126,7 @@ DetailsViewModel detailsReducer(DetailsViewModel state, action) {
 
 String currencyReducer(String state, action) {
 
-  if (action is MarketsChangeCurrencyAction) {
+  if (action is MarketsChangeCurrencyAction || action is DetailsChangeCurrencyAction) {
     return action.currency;
   }
   return state;
@@ -156,7 +156,8 @@ void appStateMiddleware(Store<AppState> store, action, NextDispatcher next) asyn
   if (
     action is MarketsRequestDataAction ||
     action is MarketsChangePageAction ||
-    action is MarketsChangeCurrencyAction
+    action is MarketsChangeCurrencyAction ||
+    action is DetailsChangeCurrencyAction
   ) {
     final currency = Currency.fromCurrencyCode(store.state.currency);
     final volume =  await TopListsService(client: http.Client()).totalVolume(currency, page: store.state.marketsPageState.page);
@@ -169,5 +170,9 @@ void appStateMiddleware(Store<AppState> store, action, NextDispatcher next) asyn
           prices: prices,
         ),
     ));
+  }
+
+  if (action is DetailsChangeCurrencyAction) {
+    // TODO: Implement action logic
   }
 }

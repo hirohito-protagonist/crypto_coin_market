@@ -7,3 +7,8 @@ class DetailsResponseHistogramDataAction {
 
   DetailsResponseHistogramDataAction({this.data});
 }
+
+class DetailsChangeCurrencyAction {
+  final String currency;
+  DetailsChangeCurrencyAction({this.currency});
+}

@@ -4,7 +4,6 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:crypto_coin_market/redux/reducers.dart';
 
-import 'package:crypto_coin_market/actions/markets.action.dart';
 import 'package:crypto_coin_market/actions/navigation.action.dart';
 
 import 'package:crypto_coin_market/pages/markets.page.dart';
@@ -56,9 +55,8 @@ class CoinMarketApp extends StatelessWidget {
           primarySwatch: Colors.blue,
         ),
         navigatorKey: NavigationKeys.navigationState,
-        home: StoreBuilder<AppState>(
-          onInit: (store) => store.dispatch(MarketsRequestDataAction()),
-          builder: (BuildContext context, Store<AppState> store) => MarketsPage(),
+        home: MarketsPage(
+          store: store,
         ),
         routes: <String, WidgetBuilder>{
           '/details': (BuildContext context) => DetailsPage(store: store,)

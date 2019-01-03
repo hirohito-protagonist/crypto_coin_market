@@ -85,6 +85,32 @@ class DetailsPage extends StatelessWidget {
           ],
         ),
       ),
+      bottomNavigationBar: BottomAppBar(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            Padding(padding: EdgeInsets.symmetric(horizontal: 5.0)),
+            StoreConnector<AppState, _ViewModel>(
+                converter: (Store<AppState> store) => _ViewModel.create(store),
+                builder: (BuildContext context, _ViewModel model) {
+                  return DropdownButton(
+                    value: model.activeCurrency,
+                    items: model.availableCurrencies.map((String value) {
+                      return new DropdownMenuItem<String>(
+                        value: value,
+                        child: new Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (String currency) {
+                      model.onChangeCurrency(currency);
+                    },
+                  );
+                }
+            ),
+            Padding(padding: EdgeInsets.symmetric(horizontal: 5.0)),
+          ],
+        ),
+      ),
     );
   }
 
@@ -158,22 +184,31 @@ class _Loading extends StatelessWidget {
 }
 
 class _ViewModel {
+  final String activeCurrency;
+  final List<String> availableCurrencies;
   final DetailsViewModel details;
   final List<HistogramDataModel> histogramData;
   final Function() onRequestHistogramData;
+  final Function(String) onChangeCurrency;
 
   _ViewModel({
     this.details,
+    this.activeCurrency,
+    this.availableCurrencies,
     this.histogramData,
-    this.onRequestHistogramData
+    this.onRequestHistogramData,
+    this.onChangeCurrency,
   });
 
   factory _ViewModel.create(Store<AppState> store) {
 
     return _ViewModel(
+      activeCurrency: store.state.currency,
+      availableCurrencies: store.state.marketsPageState.availableCurrencies,
       details: store.state.detailsPageState.details,
       histogramData: store.state.detailsPageState.histogramData,
       onRequestHistogramData: () => store.dispatch(DetailsRequestHistogramDataAction()),
+      onChangeCurrency: (String currency) => store.dispatch(DetailsChangeCurrencyAction(currency: currency)),
     );
   }
 }
