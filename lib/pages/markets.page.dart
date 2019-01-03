@@ -13,7 +13,10 @@ class MarketsPage extends StatelessWidget {
 
   final Store<AppState> store;
 
-  MarketsPage({ this.store }) {}
+  MarketsPage({ this.store }) {
+    final model = _ViewModel.create(this.store);
+    model.onRequestData();
+  }
 
   @override
   Widget build(BuildContext context) {
