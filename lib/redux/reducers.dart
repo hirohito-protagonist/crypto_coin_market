@@ -120,6 +120,10 @@ DetailsViewModel detailsReducer(DetailsViewModel state, action) {
 
     return action.data;
   }
+  if (action is DetailsUpdate) {
+
+    return action.details;
+  }
   return state;
 }
 
@@ -173,6 +177,26 @@ void appStateMiddleware(Store<AppState> store, action, NextDispatcher next) asyn
   }
 
   if (action is DetailsChangeCurrencyAction) {
-    // TODO: Implement action logic
+    final currency = store.state.currency;
+    final coinName = store.state.detailsPageState.details.coinInformation.name;
+    final prices = await PriceService(client: http.Client()).multipleSymbolsFullData([coinName], Currency.fromCurrencyCode(currency));
+
+    final displayPriceNode = prices.display.containsKey(coinName) ? prices.display[coinName] : null;
+    final rawPriceNode = prices.raw.containsKey(coinName) ? prices.raw[coinName] : null;
+    final coinModel = DetailsCoinInformation(
+        formattedPriceChange: displayPriceNode != null ? Map.of(displayPriceNode).values.toList()[0]['CHANGEPCT24HOUR'] : '',
+        priceChange: rawPriceNode != null ? Map.of(rawPriceNode).values.toList()[0]['CHANGEPCT24HOUR'] : 0,
+        formattedPrice: displayPriceNode != null ? Map.of(displayPriceNode).values.toList()[0]['PRICE'] : '',
+        name: store.state.detailsPageState.details.coinInformation.name,
+        imageUrl: store.state.detailsPageState.details.coinInformation.imageUrl,
+        fullName: store.state.detailsPageState.details.coinInformation.fullName
+    );
+
+    store.dispatch(DetailsUpdate(
+      details: DetailsViewModel(
+        coinInformation: coinModel,
+        currency: currency,
+      )
+    ));
   }
 }

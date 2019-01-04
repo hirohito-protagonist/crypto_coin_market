@@ -102,6 +102,7 @@ class DetailsPage extends StatelessWidget {
                       );
                     }).toList(),
                     onChanged: (String currency) {
+                      model.onRequestHistogramData();
                       model.onChangeCurrency(currency);
                     },
                   );
