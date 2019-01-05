@@ -38,12 +38,31 @@ class MarketsPageState {
 }
 
 class DetailsPageState {
+
+  static final Map<TimeRange, String> _timeRangeTranslation = {
+      TimeRange.OneHour: '1H',
+      TimeRange.SixHour: '6H',
+      TimeRange.TwelveHour: '12H',
+      TimeRange.OneDay: '1D',
+      TimeRange.OneWeek: '1W',
+      TimeRange.OneMonth: '1M',
+      TimeRange.ThreeMonth: '3M',
+      TimeRange.SixMonth: '6M',
+      TimeRange.OneYear: '1Y'
+  };
+
   final DetailsViewModel details;
   final List<HistogramDataModel> histogramData;
+  final Map<TimeRange, String> timeRangeTranslation;
+  final List<TimeRange> histogramTimeRange;
+  final TimeRange activeHistogramRange;
 
   DetailsPageState({
       @required this.details,
       @required this.histogramData,
+      @required this.timeRangeTranslation,
+      @required this.histogramTimeRange,
+      @required this.activeHistogramRange,
   });
 
   DetailsPageState.initialState():
@@ -58,7 +77,10 @@ class DetailsPageState {
           ),
           currency: 'USD'
       ),
-      histogramData = [];
+      histogramData = [],
+      timeRangeTranslation = Map.of(_timeRangeTranslation),
+      histogramTimeRange = Map.of(_timeRangeTranslation).keys.toList(),
+      activeHistogramRange = TimeRange.OneDay;
 }
 
 class AppState {
@@ -88,7 +110,10 @@ AppState appStateReducer(AppState state, action) {
     ),
     detailsPageState: DetailsPageState(
         details: detailsReducer(state.detailsPageState.details, action),
-        histogramData: histogramReducer(state.detailsPageState.histogramData, action)
+        histogramData: histogramReducer(state.detailsPageState.histogramData, action),
+        activeHistogramRange: state.detailsPageState.activeHistogramRange,
+        histogramTimeRange: state.detailsPageState.histogramTimeRange,
+        timeRangeTranslation: state.detailsPageState.timeRangeTranslation,
     ),
   );
 }
@@ -153,7 +178,7 @@ void appStateMiddleware(Store<AppState> store, action, NextDispatcher next) asyn
   }
 
   if (action is DetailsRequestHistogramDataAction) {
-    final histData = await HistogramService.OHLCV(TimeRange.OneDay, store.state.currency, store.state.detailsPageState.details.coinInformation.name);
+    final histData = await HistogramService.OHLCV(store.state.detailsPageState.activeHistogramRange, store.state.currency, store.state.detailsPageState.details.coinInformation.name);
     store.dispatch(DetailsResponseHistogramDataAction(data: histData));
   }
 

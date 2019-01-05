@@ -4,6 +4,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:crypto_coin_market/redux/reducers.dart';
 import 'package:crypto_coin_market/model/details_view.model.dart';
+import 'package:crypto_coin_market/services/histogram.service.dart';
 import 'package:crypto_coin_market/model/histogram_data.model.dart';
 import 'package:crypto_coin_market/actions/details.action.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -89,6 +90,23 @@ class DetailsPage extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
+            StoreConnector<AppState, _ViewModel>(
+              converter: (Store<AppState> store) => _ViewModel.create(store),
+              builder: (BuildContext context, _ViewModel model) {
+                return DropdownButton(
+                  value: model.activeHistogramRange,
+                  items: model.histogramTimeRange.map((TimeRange value) {
+                    return DropdownMenuItem<TimeRange>(
+                      value: value,
+                      child: Text(model.timeRangeTranslation[value]),
+                    );
+                  }).toList(),
+                  onChanged: (TimeRange value) {
+
+                  },
+                );
+              }
+            ),
             Padding(padding: EdgeInsets.symmetric(horizontal: 5.0)),
             StoreConnector<AppState, _ViewModel>(
                 converter: (Store<AppState> store) => _ViewModel.create(store),
@@ -188,6 +206,9 @@ class _ViewModel {
   final String activeCurrency;
   final List<String> availableCurrencies;
   final DetailsViewModel details;
+  final Map<TimeRange, String> timeRangeTranslation;
+  final List<TimeRange> histogramTimeRange;
+  final TimeRange activeHistogramRange;
   final List<HistogramDataModel> histogramData;
   final Function() onRequestHistogramData;
   final Function(String) onChangeCurrency;
@@ -197,6 +218,9 @@ class _ViewModel {
     this.activeCurrency,
     this.availableCurrencies,
     this.histogramData,
+    this.histogramTimeRange,
+    this.timeRangeTranslation,
+    this.activeHistogramRange,
     this.onRequestHistogramData,
     this.onChangeCurrency,
   });
@@ -208,6 +232,9 @@ class _ViewModel {
       availableCurrencies: store.state.marketsPageState.availableCurrencies,
       details: store.state.detailsPageState.details,
       histogramData: store.state.detailsPageState.histogramData,
+      activeHistogramRange: store.state.detailsPageState.activeHistogramRange,
+      histogramTimeRange: store.state.detailsPageState.histogramTimeRange,
+      timeRangeTranslation: store.state.detailsPageState.timeRangeTranslation,
       onRequestHistogramData: () => store.dispatch(DetailsRequestHistogramDataAction()),
       onChangeCurrency: (String currency) => store.dispatch(DetailsChangeCurrencyAction(currency: currency)),
     );
