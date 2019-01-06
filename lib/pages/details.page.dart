@@ -102,7 +102,8 @@ class DetailsPage extends StatelessWidget {
                     );
                   }).toList(),
                   onChanged: (TimeRange value) {
-
+                    model.onHistogramTimeRangeChange(value);
+                    model.onRequestHistogramData();
                   },
                 );
               }
@@ -212,6 +213,7 @@ class _ViewModel {
   final List<HistogramDataModel> histogramData;
   final Function() onRequestHistogramData;
   final Function(String) onChangeCurrency;
+  final Function(TimeRange) onHistogramTimeRangeChange;
 
   _ViewModel({
     this.details,
@@ -223,6 +225,7 @@ class _ViewModel {
     this.activeHistogramRange,
     this.onRequestHistogramData,
     this.onChangeCurrency,
+    this.onHistogramTimeRangeChange,
   });
 
   factory _ViewModel.create(Store<AppState> store) {
@@ -237,6 +240,7 @@ class _ViewModel {
       timeRangeTranslation: store.state.detailsPageState.timeRangeTranslation,
       onRequestHistogramData: () => store.dispatch(DetailsRequestHistogramDataAction()),
       onChangeCurrency: (String currency) => store.dispatch(DetailsChangeCurrencyAction(currency: currency)),
+      onHistogramTimeRangeChange: (TimeRange timeRange) => store.dispatch(DetailsHistogramTimeRange(timeRange: timeRange)),
     );
   }
 }

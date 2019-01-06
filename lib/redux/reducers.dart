@@ -111,11 +111,19 @@ AppState appStateReducer(AppState state, action) {
     detailsPageState: DetailsPageState(
         details: detailsReducer(state.detailsPageState.details, action),
         histogramData: histogramReducer(state.detailsPageState.histogramData, action),
-        activeHistogramRange: state.detailsPageState.activeHistogramRange,
+        activeHistogramRange: histogramTimeRangeReducer(state.detailsPageState.activeHistogramRange, action),
         histogramTimeRange: state.detailsPageState.histogramTimeRange,
         timeRangeTranslation: state.detailsPageState.timeRangeTranslation,
     ),
   );
+}
+
+TimeRange histogramTimeRangeReducer(TimeRange state, action) {
+
+  if (action is  DetailsHistogramTimeRange) {
+    return action.timeRange;
+  }
+  return state;
 }
 
 MarketsViewModel marketsReducer(MarketsViewModel state, action) {
