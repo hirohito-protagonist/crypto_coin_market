@@ -11,6 +11,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:crypto_coin_market/widgets/price_change.widget.dart';
 import 'package:crypto_coin_market/widgets/coin_cost.widget.dart';
 import 'package:crypto_coin_market/widgets/coin_volume.widget.dart';
+import 'package:crypto_coin_market/widgets/loading.widget.dart';
 
 
 class DetailsPage extends StatelessWidget {
@@ -67,7 +68,7 @@ class DetailsPage extends StatelessWidget {
                         return model.histogramData.length > 0 ? CoinCostWidget(
                           histData: model.histogramData,
                           isRefresh: false,
-                        ) : _Loading();
+                        ) : Loading();
                       },
                     ),
                   ),
@@ -80,7 +81,7 @@ class DetailsPage extends StatelessWidget {
                 return model.histogramData.length > 0 ? CoinVolumeWidget(
                   histData: model.histogramData,
                   isRefresh: false,
-                ): _Loading();
+                ): Loading();
               },
             ),
           ],
@@ -177,26 +178,6 @@ class _CoinInformationWidget extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-}
-
-class _Loading extends StatelessWidget {
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          SizedBox(
-            width: 20.0,
-            height: 20.0,
-            child: CircularProgressIndicator(),
-          ),
-        ],
       ),
     );
   }

@@ -3,6 +3,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:crypto_coin_market/redux/reducers.dart';
 import 'package:crypto_coin_market/widgets/coin_list_tile.widget.dart';
+import 'package:crypto_coin_market/widgets/loading.widget.dart';
 import 'package:crypto_coin_market/actions/markets.action.dart';
 import 'package:crypto_coin_market/actions/navigation.action.dart';
 import 'package:crypto_coin_market/model/details_view.model.dart';
@@ -32,18 +33,7 @@ class MarketsPage extends StatelessWidget {
           builder: (BuildContext context, _ViewModel model) {
 
             return model.markets.volume.length == 0 ?
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(
-                    width: 20.0,
-                    height: 20.0,
-                    child: CircularProgressIndicator(),
-                  ),
-                ],
-              ),
-            ) :
+            Loading() :
             ListView.builder(
               itemCount: model.markets.volume.length,
               itemBuilder: (context, i) {
