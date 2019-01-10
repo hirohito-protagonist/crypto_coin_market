@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
-import 'package:crypto_coin_market/redux/app.reducer.dart';
+import 'package:crypto_coin_market/reducers/app.reducer.dart';
 import 'package:crypto_coin_market/widgets/coin_list_tile.widget.dart';
 import 'package:crypto_coin_market/widgets/loading.widget.dart';
 import 'package:crypto_coin_market/actions/markets.action.dart';
