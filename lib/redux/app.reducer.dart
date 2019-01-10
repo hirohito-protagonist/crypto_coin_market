@@ -1,5 +1,10 @@
-import 'package:redux/redux.dart';
 import 'package:flutter/foundation.dart';
+import 'package:crypto_coin_market/redux/markets_page.reducer.dart';
+import 'package:crypto_coin_market/redux/details_page.reducer.dart';
+import 'package:crypto_coin_market/actions/markets.action.dart';
+import 'package:crypto_coin_market/actions/details.action.dart';
+import 'package:redux/redux.dart';
+
 import 'package:crypto_coin_market/model/markets_view.model.dart';
 
 import 'package:crypto_coin_market/services/toplists.service.dart';
@@ -10,15 +15,7 @@ import 'package:crypto_coin_market/model/total_volume.model.dart';
 import 'package:crypto_coin_market/model/details_view.model.dart';
 
 import 'package:crypto_coin_market/services/histogram.service.dart';
-
-import 'package:crypto_coin_market/actions/markets.action.dart';
-import 'package:crypto_coin_market/actions/details.action.dart';
 import 'package:crypto_coin_market/actions/navigation.action.dart';
-
-import 'package:crypto_coin_market/redux/markets_page.reducer.dart';
-import 'package:crypto_coin_market/redux/details_page.reducer.dart';
-
-
 
 class AppState {
   final String currency;
@@ -32,9 +29,9 @@ class AppState {
   });
 
   AppState.initialState():
-    currency = 'USD',
-    marketsPageState = MarketsPageState.initialState(),
-    detailsPageState = DetailsPageState.initialState();
+        currency = 'USD',
+        marketsPageState = MarketsPageState.initialState(),
+        detailsPageState = DetailsPageState.initialState();
 }
 
 AppState appStateReducer(AppState state, action) {
@@ -53,7 +50,6 @@ String currencyReducer(String state, action) {
   return state;
 }
 
-
 void appStateMiddleware(Store<AppState> store, action, NextDispatcher next) async {
   next(action);
 
@@ -67,10 +63,10 @@ void appStateMiddleware(Store<AppState> store, action, NextDispatcher next) asyn
   }
 
   if (
-    action is MarketsRequestDataAction ||
-    action is MarketsChangePageAction ||
-    action is MarketsChangeCurrencyAction ||
-    action is DetailsChangeCurrencyAction
+  action is MarketsRequestDataAction ||
+      action is MarketsChangePageAction ||
+      action is MarketsChangeCurrencyAction ||
+      action is DetailsChangeCurrencyAction
   ) {
     final currency = Currency.fromCurrencyCode(store.state.currency);
     final volume =  await TopListsService(client: http.Client()).totalVolume(currency, page: store.state.marketsPageState.page);
@@ -78,10 +74,10 @@ void appStateMiddleware(Store<AppState> store, action, NextDispatcher next) asyn
     final prices = await PriceService(client: http.Client()).multipleSymbolsFullData(coins, currency);
 
     store.dispatch(MarketsResponseDataAction(
-        data: MarketsViewModel(
-          volume: volume,
-          prices: prices,
-        ),
+      data: MarketsViewModel(
+        volume: volume,
+        prices: prices,
+      ),
     ));
   }
 
@@ -102,10 +98,10 @@ void appStateMiddleware(Store<AppState> store, action, NextDispatcher next) asyn
     );
 
     store.dispatch(DetailsUpdate(
-      details: DetailsViewModel(
-        coinInformation: coinModel,
-        currency: currency,
-      )
+        details: DetailsViewModel(
+          coinInformation: coinModel,
+          currency: currency,
+        )
     ));
   }
 }

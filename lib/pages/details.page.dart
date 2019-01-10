@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
-import 'package:crypto_coin_market/redux/reducers.dart';
+import 'package:crypto_coin_market/redux/app.reducer.dart';
 import 'package:crypto_coin_market/model/details_view.model.dart';
 import 'package:crypto_coin_market/services/histogram.service.dart';
 import 'package:crypto_coin_market/model/histogram_data.model.dart';
