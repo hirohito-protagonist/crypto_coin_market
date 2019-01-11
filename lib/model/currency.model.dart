@@ -21,7 +21,7 @@ class Currency {
   ];
 
   static List<String> availableCurrencies() {
-    final symbols = List.from<String>(Currency._codes);
+    final symbols = List.from(Currency._codes);
     symbols.sort((a, b) => a.compareTo(b));
     return symbols;
   }

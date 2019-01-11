@@ -19,7 +19,7 @@ class CoinMarketApp extends StatelessWidget {
     final Store<AppState> store = Store<AppState>(
       appStateReducer,
       initialState: AppState.initialState(),
-      middleware: [appStateMiddleware],
+      middleware: appStateMiddleware(),
     );
 
     return StoreProvider<AppState>(
