@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
-import 'package:crypto_coin_market/model/multiple_sybmols.model.dart';
-import 'package:crypto_coin_market/model/markets_view.model.dart';
-import 'package:crypto_coin_market/model/currency.model.dart';
-import 'package:crypto_coin_market/actions/markets.action.dart';
+
+import 'package:crypto_coin_market/model/model.dart';
+import 'package:crypto_coin_market/actions/actions.dart';
+
 
 class MarketsPageState {
   final List<String> availableCurrencies;

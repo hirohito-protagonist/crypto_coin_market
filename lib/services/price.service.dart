@@ -1,11 +1,10 @@
 import 'dart:async';
 
 import 'package:http/http.dart' as http;
+import 'package:crypto_coin_market/model/model.dart';
 
-import 'package:crypto_coin_market/model/multiple_sybmols.model.dart';
-import 'package:crypto_coin_market/model/currency.model.dart';
-import 'package:crypto_coin_market/services/util.service.dart';
-import 'package:crypto_coin_market/services/uri.service.dart';
+import './util.service.dart';
+import './uri.service.dart';
 
 class PriceService {
 

@@ -1,6 +1,5 @@
-import 'package:crypto_coin_market/model/histogram_data.model.dart';
-import 'package:crypto_coin_market/model/details_view.model.dart';
-import 'package:crypto_coin_market/services/histogram.service.dart';
+import 'package:crypto_coin_market/model/model.dart';
+import 'package:crypto_coin_market/services/services.dart';
 
 class DetailsRequestHistogramDataAction {}
 

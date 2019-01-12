@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
-import 'package:crypto_coin_market/reducers/app.reducer.dart';
+
+import 'package:crypto_coin_market/reducers/reducers.dart';
+import 'package:crypto_coin_market/actions/actions.dart';
+import 'package:crypto_coin_market/model/model.dart';
+
 import 'package:crypto_coin_market/widgets/coin_list_tile.widget.dart';
 import 'package:crypto_coin_market/widgets/loading.widget.dart';
-import 'package:crypto_coin_market/actions/markets.action.dart';
-import 'package:crypto_coin_market/actions/navigation.action.dart';
-import 'package:crypto_coin_market/model/details_view.model.dart';
-import 'package:crypto_coin_market/model/markets_view.model.dart';
-
 
 class MarketsPage extends StatelessWidget {
 

@@ -1,4 +1,4 @@
-import 'package:crypto_coin_market/model/markets_view.model.dart';
+import 'package:crypto_coin_market/model/model.dart';
 
 class MarketsRequestDataAction {}
 class MarketsResponseDataAction {

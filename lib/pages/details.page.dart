@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
-import 'package:crypto_coin_market/reducers/app.reducer.dart';
-import 'package:crypto_coin_market/model/details_view.model.dart';
-import 'package:crypto_coin_market/services/histogram.service.dart';
-import 'package:crypto_coin_market/model/histogram_data.model.dart';
-import 'package:crypto_coin_market/actions/details.action.dart';
+
+import 'package:crypto_coin_market/reducers/reducers.dart';
+import 'package:crypto_coin_market/services/services.dart';
+import 'package:crypto_coin_market/actions/actions.dart';
+import 'package:crypto_coin_market/model/model.dart';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:crypto_coin_market/widgets/price_change.widget.dart';
 import 'package:crypto_coin_market/widgets/coin_cost.widget.dart';

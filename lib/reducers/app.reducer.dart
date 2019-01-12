@@ -1,21 +1,13 @@
 import 'package:flutter/foundation.dart';
-import 'package:crypto_coin_market/reducers/markets_page.reducer.dart';
-import 'package:crypto_coin_market/reducers/details_page.reducer.dart';
-import 'package:crypto_coin_market/actions/markets.action.dart';
-import 'package:crypto_coin_market/actions/details.action.dart';
+import 'package:http/http.dart' as http;
 import 'package:redux/redux.dart';
 
-import 'package:crypto_coin_market/model/markets_view.model.dart';
+import 'package:crypto_coin_market/services/services.dart';
+import 'package:crypto_coin_market/model/model.dart';
+import 'package:crypto_coin_market/actions/actions.dart';
 
-import 'package:crypto_coin_market/services/toplists.service.dart';
-import 'package:crypto_coin_market/services/price.service.dart';
-import 'package:crypto_coin_market/model/currency.model.dart';
-import 'package:http/http.dart' as http;
-import 'package:crypto_coin_market/model/total_volume.model.dart';
-import 'package:crypto_coin_market/model/details_view.model.dart';
-
-import 'package:crypto_coin_market/services/histogram.service.dart';
-import 'package:crypto_coin_market/actions/navigation.action.dart';
+import './markets_page.reducer.dart';
+import './details_page.reducer.dart';
 
 class AppState {
   final String currency;
