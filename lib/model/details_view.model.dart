@@ -1,9 +1,13 @@
+import 'package:flutter/foundation.dart';
 
 class DetailsViewModel {
   final String currency;
   final DetailsCoinInformation coinInformation;
 
-  DetailsViewModel({this.currency, this.coinInformation});
+  DetailsViewModel({
+    @required this.currency,
+    @required this.coinInformation
+  });
 
 }
 
@@ -15,6 +19,12 @@ class DetailsCoinInformation {
   final num priceChange;
   final String formattedPriceChange;
 
-  DetailsCoinInformation({this.imageUrl, this.name, this.fullName, this.formattedPrice,
-    this.priceChange, this.formattedPriceChange});
+  DetailsCoinInformation({
+    @required this.imageUrl,
+    @required this.name,
+    @required this.fullName,
+    @required this.formattedPrice,
+    @required this.priceChange,
+    @required this.formattedPriceChange
+  });
 }

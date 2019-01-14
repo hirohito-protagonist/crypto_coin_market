@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import './total_volume.model.dart';
 import './multiple_sybmols.model.dart';
 
@@ -6,7 +8,10 @@ class MarketsViewModel {
   final List<TotalVolume> volume;
   final MultipleSymbols prices;
 
-  MarketsViewModel({ this.volume, this.prices });
+  MarketsViewModel({
+    @required this.volume,
+    @required this.prices
+  });
 
   _VolumeItemModel volumeItem(int index) {
 
@@ -37,6 +42,12 @@ class _VolumeItemModel {
   final String priceChangeDisplay;
   final num priceChange;
 
-  _VolumeItemModel({ this.name, this.imageUrl, this.fullName, this.price,
-      this.priceChangeDisplay, this.priceChange });
+  _VolumeItemModel({
+    @required this.name,
+    @required this.imageUrl,
+    @required this.fullName,
+    @required this.price,
+    @required this.priceChangeDisplay,
+    @required this.priceChange,
+  });
 }

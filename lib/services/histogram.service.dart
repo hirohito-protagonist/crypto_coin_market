@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:crypto_coin_market/model/model.dart';
@@ -11,7 +12,9 @@ class HistogramService {
   final UriService uriService = UriService();
   final http.Client client;
 
-  HistogramService({this.client});
+  HistogramService({
+    @required this.client
+  });
 
   static Future<List<HistogramDataModel>> OHLCV(TimeRange range, String currency, String cryptoCoin) async {
     var service = HistogramService(client: http.Client());
@@ -127,5 +130,9 @@ class _HistogramConfigurationParameters {
   final num limit;
   final num aggregate;
 
-  _HistogramConfigurationParameters({this.method, this.limit, this.aggregate});
+  _HistogramConfigurationParameters({
+    @required this.method,
+    @required this.limit,
+    @required this.aggregate,
+  });
 }

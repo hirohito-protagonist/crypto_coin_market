@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import 'package:crypto_coin_market/model/model.dart';
 import 'package:crypto_coin_market/services/services.dart';
 
@@ -6,23 +8,31 @@ class DetailsRequestHistogramDataAction {}
 class DetailsResponseHistogramDataAction {
   List<HistogramDataModel> data;
 
-  DetailsResponseHistogramDataAction({this.data});
+  DetailsResponseHistogramDataAction({
+    @required this.data
+  });
 }
 
 class DetailsChangeCurrencyAction {
   final String currency;
-  DetailsChangeCurrencyAction({this.currency});
+  DetailsChangeCurrencyAction({
+    @required this.currency
+  });
 }
 
 class DetailsUpdate {
 
   final DetailsViewModel details;
 
-  DetailsUpdate({ this.details });
+  DetailsUpdate({
+    @required this.details
+  });
 }
 
 class DetailsHistogramTimeRange {
   final TimeRange timeRange;
 
-  DetailsHistogramTimeRange({ this.timeRange });
+  DetailsHistogramTimeRange({
+    @required this.timeRange
+  });
 }

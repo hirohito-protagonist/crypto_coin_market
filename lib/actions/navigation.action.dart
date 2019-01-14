@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:crypto_coin_market/model/model.dart';
 
@@ -8,5 +9,7 @@ class NavigationKeys {
 
 class NavigationChangeToDetailsPageAction {
   final DetailsViewModel data;
-  NavigationChangeToDetailsPageAction({this.data});
+  NavigationChangeToDetailsPageAction({
+    @required this.data
+  });
 }

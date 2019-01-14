@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 
 class HistogramDataModel {
 
@@ -9,8 +10,15 @@ class HistogramDataModel {
   final num volumeFrom;
   final num volumeTo;
 
-  HistogramDataModel({this.time, this.close, this.high, this.low, this.open,
-    this.volumeFrom, this.volumeTo});
+  HistogramDataModel({
+    @required this.time,
+    @required this.close,
+    @required this.high,
+    @required this.low,
+    @required this.open,
+    @required this.volumeFrom,
+    @required this.volumeTo
+  });
 
 
   factory HistogramDataModel.fromJson(dynamic json) {

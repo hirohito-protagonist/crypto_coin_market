@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:crypto_coin_market/model/model.dart';
@@ -11,7 +12,9 @@ class TopListsService {
   final UriService uriService = UriService();
   final http.Client client;
 
-  TopListsService({this.client});
+  TopListsService({
+    @required this.client
+  });
 
   Future<List<TotalVolume>> totalVolume(Currency currency, { int page = 0 }) async {
 

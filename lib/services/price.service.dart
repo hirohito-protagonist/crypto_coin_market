@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:crypto_coin_market/model/model.dart';
@@ -11,7 +12,9 @@ class PriceService {
   final UriService uriService = UriService();
   final http.Client client;
 
-  PriceService({this.client});
+  PriceService({
+    @required this.client
+  });
 
   Future<MultipleSymbols> _priceMultiFull(List<dynamic> coins, Currency currency) async {
     final queryParameters = {

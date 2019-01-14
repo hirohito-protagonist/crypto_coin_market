@@ -1,11 +1,14 @@
-
+import 'package:flutter/foundation.dart';
 
 class MultipleSymbols {
 
   final Map<dynamic, dynamic> raw;
   final Map<dynamic, dynamic> display;
 
-  MultipleSymbols({ this.raw, this.display });
+  MultipleSymbols({
+    @required this.raw,
+    @required this.display,
+  });
 
   factory MultipleSymbols.fromJson(dynamic json) {
 

@@ -1,10 +1,15 @@
+import 'package:flutter/foundation.dart';
 
 class CoinInfo {
   final String name;
   final String fullName;
   final String imageUrl;
 
-  CoinInfo({ this.name, this.imageUrl, this.fullName });
+  CoinInfo({
+    @required this.name,
+    @required this.imageUrl,
+    @required this.fullName
+  });
 
 }
 

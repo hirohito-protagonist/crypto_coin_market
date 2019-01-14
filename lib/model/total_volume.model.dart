@@ -1,9 +1,13 @@
+import 'package:flutter/foundation.dart';
+
 import 'coin_info.model.dart';
 
 class TotalVolume {
   final CoinInfo coinInfo;
 
-  TotalVolume({ this.coinInfo });
+  TotalVolume({
+    @required this.coinInfo
+  });
 
   factory TotalVolume.fromJson(dynamic json) {
 
