@@ -10,103 +10,115 @@ import 'package:crypto_coin_market/widgets/coin_list_tile.widget.dart';
 import 'package:crypto_coin_market/widgets/loading.widget.dart';
 
 class MarketsPage extends StatelessWidget {
-
   final Store<AppState> store;
 
-  MarketsPage({ this.store }) {
+  MarketsPage({this.store}) {
     final model = _ViewModel.create(this.store);
     model.onRequestData();
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
         appBar: AppBar(
           title: Text('Markets'),
-          actions: <Widget>[
-          ],
+          actions: <Widget>[],
         ),
-        body: StoreConnector<AppState, _ViewModel>(
-          converter: (Store<AppState> store) => _ViewModel.create(store),
-          builder: (BuildContext context, _ViewModel model) {
-
-            return model.markets.volume.length == 0 ?
-            Loading() :
-            ListView.builder(
-              itemCount: model.markets.volume.length,
-              itemBuilder: (context, i) {
-
-                final item = model.markets.volumeItem(i);
-                return CoinListTile(
-                    imageUrl: item.imageUrl,
-                    name: item.name,
-                    fullName: item.fullName,
-                    formattedPrice: item.price,
-                    formattedPriceChange: item.priceChangeDisplay,
-                    priceChange: item.priceChange,
-                    onSelect: (SelectedCoinTile data) {
-                      model.onNavigateToDetails(DetailsViewModel(
-                        currency: model.activeCurrency,
-                        coinInformation: DetailsCoinInformation(
-                          priceChange: data.priceChange,
-                          fullName: data.fullName,
-                          imageUrl: data.imageUrl,
-                          name: data.name,
-                          formattedPriceChange: data.formattedPriceChange,
-                          formattedPrice: data.formattedPrice,
-                        ),
-                      ));
-                    }
-                );
-              },
-            );
-          },
-        ),
+        body: _VolumeListWidget(),
         bottomNavigationBar: BottomAppBar(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              StoreConnector<AppState, _ViewModel>(
-                converter: (Store<AppState> store) => _ViewModel.create(store),
-                builder: (BuildContext context, _ViewModel model) {
-
-                  return DropdownButton(
-                    value: model.activePage + 1,
-                    items: List.generate(26, (i) => i + 1).map((int value) {
-                      return new DropdownMenuItem<num>(
-                        value: value,
-                        child: new Text(value.toString()),
-                      );
-                    }).toList(),
-                    onChanged: (page) {
-                      model.onPageChange(page - 1);
-                    },
-                  );
-                },
-              ),
+              _VolumePageDropDownWidget(),
               Padding(padding: EdgeInsets.symmetric(horizontal: 5.0)),
-              StoreConnector<AppState, _ViewModel>(
-                  converter: (Store<AppState> store) => _ViewModel.create(store),
-                  builder: (BuildContext context, _ViewModel model) {
-                    return DropdownButton(
-                      value: model.activeCurrency,
-                      items: model.availableCurrencies.map((String value) {
-                        return new DropdownMenuItem<String>(
-                          value: value,
-                          child: new Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (String currency) {
-                        model.onChangeCurrency(currency);
-                      },
-                    );
-                  }
-              ),
+              _CurrencyDropDownWidget(),
               Padding(padding: EdgeInsets.symmetric(horizontal: 5.0)),
             ],
           ),
-        )
+        ));
+  }
+}
+
+class _VolumeListWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return StoreConnector<AppState, _ViewModel>(
+      converter: (Store<AppState> store) => _ViewModel.create(store),
+      builder: (BuildContext context, _ViewModel model) {
+        return model.markets.volume.length == 0
+            ? Loading()
+            : ListView.builder(
+                itemCount: model.markets.volume.length,
+                itemBuilder: (context, i) {
+                  final item = model.markets.volumeItem(i);
+                  return CoinListTile(
+                      imageUrl: item.imageUrl,
+                      name: item.name,
+                      fullName: item.fullName,
+                      formattedPrice: item.price,
+                      formattedPriceChange: item.priceChangeDisplay,
+                      priceChange: item.priceChange,
+                      onSelect: (SelectedCoinTile data) {
+                        model.onNavigateToDetails(DetailsViewModel(
+                          currency: model.activeCurrency,
+                          coinInformation: DetailsCoinInformation(
+                            priceChange: data.priceChange,
+                            fullName: data.fullName,
+                            imageUrl: data.imageUrl,
+                            name: data.name,
+                            formattedPriceChange: data.formattedPriceChange,
+                            formattedPrice: data.formattedPrice,
+                          ),
+                        ));
+                      });
+                },
+              );
+      },
+    );
+  }
+}
+
+class _CurrencyDropDownWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return StoreConnector<AppState, _ViewModel>(
+        converter: (Store<AppState> store) => _ViewModel.create(store),
+        builder: (BuildContext context, _ViewModel model) {
+          return DropdownButton(
+            value: model.activeCurrency,
+            items: model.availableCurrencies.map((String value) {
+              return new DropdownMenuItem<String>(
+                value: value,
+                child: new Text(value),
+              );
+            }).toList(),
+            onChanged: (String currency) {
+              model.onChangeCurrency(currency);
+            },
+          );
+        });
+  }
+}
+
+class _VolumePageDropDownWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return StoreConnector<AppState, _ViewModel>(
+      converter: (Store<AppState> store) => _ViewModel.create(store),
+      builder: (BuildContext context, _ViewModel model) {
+        return DropdownButton(
+          value: model.activePage + 1,
+          items: List.generate(26, (i) => i + 1).map((int value) {
+            return new DropdownMenuItem<num>(
+              value: value,
+              child: new Text(value.toString()),
+            );
+          }).toList(),
+          onChanged: (page) {
+            model.onPageChange(page - 1);
+          },
+        );
+      },
     );
   }
 }
@@ -133,15 +145,17 @@ class _ViewModel {
   });
 
   factory _ViewModel.create(Store<AppState> store) {
-
     return _ViewModel(
       activeCurrency: store.state.currency,
       markets: store.state.marketsPageState.markets,
       availableCurrencies: store.state.marketsPageState.availableCurrencies,
       activePage: store.state.marketsPageState.page,
-      onChangeCurrency: (String currency) => store.dispatch(MarketsChangeCurrencyAction(currency: currency)),
-      onNavigateToDetails: (DetailsViewModel model) => store.dispatch(NavigationChangeToDetailsPageAction(data: model)),
-      onPageChange: (num page) => store.dispatch(MarketsChangePageAction(page: page)),
+      onChangeCurrency: (String currency) =>
+          store.dispatch(MarketsChangeCurrencyAction(currency: currency)),
+      onNavigateToDetails: (DetailsViewModel model) =>
+          store.dispatch(NavigationChangeToDetailsPageAction(data: model)),
+      onPageChange: (num page) =>
+          store.dispatch(MarketsChangePageAction(page: page)),
       onRequestData: () => store.dispatch(MarketsRequestDataAction()),
     );
   }

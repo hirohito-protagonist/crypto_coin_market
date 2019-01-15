@@ -13,12 +13,10 @@ import 'package:crypto_coin_market/widgets/coin_cost.widget.dart';
 import 'package:crypto_coin_market/widgets/coin_volume.widget.dart';
 import 'package:crypto_coin_market/widgets/loading.widget.dart';
 
-
 class DetailsPage extends StatelessWidget {
-
   final Store<AppState> store;
 
-  DetailsPage({ this.store }) {
+  DetailsPage({this.store}) {
     final model = _ViewModel.create(this.store);
     model.onRequestHistogramData();
   }
@@ -29,8 +27,8 @@ class DetailsPage extends StatelessWidget {
       appBar: AppBar(
         title: StoreConnector<AppState, _ViewModel>(
             converter: (Store<AppState> store) => _ViewModel.create(store),
-            builder: (BuildContext context, _ViewModel model) => Text(model.details.coinInformation.fullName)
-        ),
+            builder: (BuildContext context, _ViewModel model) =>
+                Text(model.details.coinInformation.fullName)),
       ),
       body: Container(
         padding: EdgeInsets.all(10.0),
@@ -43,17 +41,7 @@ class DetailsPage extends StatelessWidget {
               padding: const EdgeInsets.all(0.0),
               alignment: Alignment.center,
               width: 1.7976931348623157e+308,
-              child: StoreConnector<AppState, _ViewModel>(
-                converter: (Store<AppState> store) => _ViewModel.create(store),
-                builder: (BuildContext context, _ViewModel model) {
-                  return _CoinInformationWidget(
-                    imageUrl: model.details.coinInformation.imageUrl,
-                    priceChange: model.details.coinInformation.priceChange,
-                    formattedPriceChange: model.details.coinInformation.formattedPriceChange,
-                    formattedPrice: model.details.coinInformation.formattedPrice,
-                  );
-                },
-              ),
+              child: _CoinInformationWidget(),
             ),
             Expanded(
               child: Column(
@@ -62,28 +50,12 @@ class DetailsPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
                   Expanded(
-                    child: StoreConnector<AppState, _ViewModel>(
-                      converter: (Store<AppState> store) => _ViewModel.create(store),
-                      builder: (BuildContext context, _ViewModel model) {
-                        return model.histogramData.length > 0 ? CoinCostWidget(
-                          histData: model.histogramData,
-                          isRefresh: false,
-                        ) : Loading();
-                      },
-                    ),
+                    child: _HistogramCostWidget(),
                   ),
                 ],
               ),
             ),
-            StoreConnector<AppState, _ViewModel>(
-              converter: (Store<AppState> store) => _ViewModel.create(store),
-              builder: (BuildContext context, _ViewModel model) {
-                return model.histogramData.length > 0 ? CoinVolumeWidget(
-                  histData: model.histogramData,
-                  isRefresh: false,
-                ): Loading();
-              },
-            ),
+            _HistogramVolumeWidget(),
           ],
         ),
       ),
@@ -91,97 +63,136 @@ class DetailsPage extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
-            StoreConnector<AppState, _ViewModel>(
-              converter: (Store<AppState> store) => _ViewModel.create(store),
-              builder: (BuildContext context, _ViewModel model) {
-                return DropdownButton(
-                  value: model.activeHistogramRange,
-                  items: model.histogramTimeRange.map((TimeRange value) {
-                    return DropdownMenuItem<TimeRange>(
-                      value: value,
-                      child: Text(model.timeRangeTranslation[value]),
-                    );
-                  }).toList(),
-                  onChanged: (TimeRange value) {
-                    model.onHistogramTimeRangeChange(value);
-                    model.onRequestHistogramData();
-                  },
-                );
-              }
-            ),
+            _HistogramTimeRangDropDownWidget(),
             Padding(padding: EdgeInsets.symmetric(horizontal: 5.0)),
-            StoreConnector<AppState, _ViewModel>(
-                converter: (Store<AppState> store) => _ViewModel.create(store),
-                builder: (BuildContext context, _ViewModel model) {
-                  return DropdownButton(
-                    value: model.activeCurrency,
-                    items: model.availableCurrencies.map((String value) {
-                      return new DropdownMenuItem<String>(
-                        value: value,
-                        child: new Text(value),
-                      );
-                    }).toList(),
-                    onChanged: (String currency) {
-                      model.onRequestHistogramData();
-                      model.onChangeCurrency(currency);
-                    },
-                  );
-                }
-            ),
+            _CurrencyDropDownWidget(),
             Padding(padding: EdgeInsets.symmetric(horizontal: 5.0)),
           ],
         ),
       ),
     );
   }
+}
 
+class _HistogramCostWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return StoreConnector<AppState, _ViewModel>(
+      converter: (Store<AppState> store) => _ViewModel.create(store),
+      builder: (BuildContext context, _ViewModel model) {
+        return model.histogramData.length > 0
+            ? CoinCostWidget(
+                histData: model.histogramData,
+                isRefresh: false,
+              )
+            : Loading();
+      },
+    );
+  }
+}
+
+class _HistogramVolumeWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return StoreConnector<AppState, _ViewModel>(
+      converter: (Store<AppState> store) => _ViewModel.create(store),
+      builder: (BuildContext context, _ViewModel model) {
+        return model.histogramData.length > 0
+            ? CoinVolumeWidget(
+                histData: model.histogramData,
+                isRefresh: false,
+              )
+            : Loading();
+      },
+    );
+  }
+}
+
+class _HistogramTimeRangDropDownWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return StoreConnector<AppState, _ViewModel>(
+        converter: (Store<AppState> store) => _ViewModel.create(store),
+        builder: (BuildContext context, _ViewModel model) {
+          return DropdownButton(
+            value: model.activeHistogramRange,
+            items: model.histogramTimeRange.map((TimeRange value) {
+              return DropdownMenuItem<TimeRange>(
+                value: value,
+                child: Text(model.timeRangeTranslation[value]),
+              );
+            }).toList(),
+            onChanged: (TimeRange value) {
+              model.onHistogramTimeRangeChange(value);
+              model.onRequestHistogramData();
+            },
+          );
+        });
+  }
+}
+
+class _CurrencyDropDownWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return StoreConnector<AppState, _ViewModel>(
+        converter: (Store<AppState> store) => _ViewModel.create(store),
+        builder: (BuildContext context, _ViewModel model) {
+          return DropdownButton(
+            value: model.activeCurrency,
+            items: model.availableCurrencies.map((String value) {
+              return new DropdownMenuItem<String>(
+                value: value,
+                child: new Text(value),
+              );
+            }).toList(),
+            onChanged: (String currency) {
+              model.onRequestHistogramData();
+              model.onChangeCurrency(currency);
+            },
+          );
+        });
+  }
 }
 
 class _CoinInformationWidget extends StatelessWidget {
-
-  final String imageUrl;
-  final String formattedPrice;
-  final num priceChange;
-  final String formattedPriceChange;
-
-
-  _CoinInformationWidget({this.imageUrl, this.formattedPrice, this.priceChange,
-    this.formattedPriceChange});
-
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Row(
-          children: <Widget>[
-            CachedNetworkImage(
-              placeholder: CircularProgressIndicator(),
-              imageUrl: imageUrl,
-              height: 30.0,
-            ),
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    '${formattedPrice}',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 20.0),
+    return StoreConnector<AppState, _ViewModel>(
+      converter: (Store<AppState> store) => _ViewModel.create(store),
+      builder: (BuildContext context, _ViewModel model) {
+        return Card(
+          child: Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Row(
+              children: <Widget>[
+                CachedNetworkImage(
+                  placeholder: CircularProgressIndicator(),
+                  imageUrl: model.details.coinInformation.imageUrl,
+                  height: 30.0,
+                ),
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        '${model.details.coinInformation.formattedPrice}',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 20.0),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+                PriceChange(
+                  change: model.details.coinInformation.priceChange,
+                  price: model.details.coinInformation.formattedPriceChange,
+                ),
+              ],
             ),
-            PriceChange(
-              change: priceChange,
-              price: formattedPriceChange,
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
-
 }
 
 class _ViewModel {
@@ -210,7 +221,6 @@ class _ViewModel {
   });
 
   factory _ViewModel.create(Store<AppState> store) {
-
     return _ViewModel(
       activeCurrency: store.state.currency,
       availableCurrencies: store.state.marketsPageState.availableCurrencies,
@@ -219,9 +229,12 @@ class _ViewModel {
       activeHistogramRange: store.state.detailsPageState.activeHistogramRange,
       histogramTimeRange: store.state.detailsPageState.histogramTimeRange,
       timeRangeTranslation: store.state.detailsPageState.timeRangeTranslation,
-      onRequestHistogramData: () => store.dispatch(DetailsRequestHistogramDataAction()),
-      onChangeCurrency: (String currency) => store.dispatch(DetailsChangeCurrencyAction(currency: currency)),
-      onHistogramTimeRangeChange: (TimeRange timeRange) => store.dispatch(DetailsHistogramTimeRange(timeRange: timeRange)),
+      onRequestHistogramData: () =>
+          store.dispatch(DetailsRequestHistogramDataAction()),
+      onChangeCurrency: (String currency) =>
+          store.dispatch(DetailsChangeCurrencyAction(currency: currency)),
+      onHistogramTimeRangeChange: (TimeRange timeRange) =>
+          store.dispatch(DetailsHistogramTimeRange(timeRange: timeRange)),
     );
   }
 }
