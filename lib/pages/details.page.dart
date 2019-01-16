@@ -83,7 +83,6 @@ class _HistogramCostWidget extends StatelessWidget {
         return model.histogramData.length > 0
             ? CoinCostWidget(
                 histData: model.histogramData,
-                isRefresh: false,
               )
             : Loading();
       },
@@ -100,7 +99,6 @@ class _HistogramVolumeWidget extends StatelessWidget {
         return model.histogramData.length > 0
             ? CoinVolumeWidget(
                 histData: model.histogramData,
-                isRefresh: false,
               )
             : Loading();
       },

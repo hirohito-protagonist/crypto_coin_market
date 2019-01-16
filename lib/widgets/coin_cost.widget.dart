@@ -7,14 +7,12 @@ import 'package:crypto_coin_market/model/histogram_data.model.dart';
 class CoinCostWidget extends StatefulWidget {
 
   List<HistogramDataModel> histData = [];
-  bool isRefresh = false;
 
-  CoinCostWidget({Key key, this.histData, this.isRefresh}): super(key: key);
+  CoinCostWidget({Key key, this.histData,}): super(key: key);
 
   @override
   State<StatefulWidget> createState() {
     return CoinCostState(
-      isRefresh: isRefresh,
       histData: histData,
     );
   }
@@ -30,9 +28,8 @@ class CoinCostState extends State<CoinCostWidget> {
       low: '',
       high: ''
   );
-  bool isRefresh;
 
-  CoinCostState({this.histData, this.isRefresh});
+  CoinCostState({this.histData,});
 
   @override
   void initState() {
@@ -50,7 +47,6 @@ class CoinCostState extends State<CoinCostWidget> {
   void update(histData, isRefresh) {
     setState(() {
       this.histData = histData;
-      this.isRefresh = isRefresh;
       _selectionChartSliderValue = _SelectionChartSliderValue(
         close: histData[0].close.toString(),
         date: histData[0].time.toString(),
@@ -142,8 +138,7 @@ class CoinCostState extends State<CoinCostWidget> {
         child: Container(
           padding: const EdgeInsets.all(0.0),
           alignment: Alignment.center,
-          child: isRefresh ?
-          CircularProgressIndicator() :
+          child:
           charts.TimeSeriesChart(
             _createHistCostData(histData),
             animate: true,
@@ -178,7 +173,7 @@ class CoinCostState extends State<CoinCostWidget> {
   }
 
   _onSliderChange(point, dynamic domain, charts.SliderListenerDragState dragState) {
-    if (dragState == charts.SliderListenerDragState.end) {
+
       void rebuild(_) {
 
         histData.forEach((d) {
@@ -198,7 +193,6 @@ class CoinCostState extends State<CoinCostWidget> {
       }
 
       SchedulerBinding.instance.addPostFrameCallback(rebuild);
-    }
   }
 }
 

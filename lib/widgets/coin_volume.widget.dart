@@ -5,14 +5,12 @@ import 'package:crypto_coin_market/model/histogram_data.model.dart';
 class CoinVolumeWidget extends StatefulWidget {
 
   List<HistogramDataModel> histData = [];
-  bool isRefresh = false;
 
-  CoinVolumeWidget({Key key, this.histData, this.isRefresh}): super(key: key);
+  CoinVolumeWidget({Key key, this.histData,}): super(key: key);
 
   @override
   State<StatefulWidget> createState() {
     return CoinVolumeState(
-      isRefresh: isRefresh,
       histData: histData,
     );
   }
