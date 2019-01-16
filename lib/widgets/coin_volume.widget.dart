@@ -45,8 +45,7 @@ class CoinVolumeState extends State<CoinVolumeWidget> {
     return Container(
       height: 100.0,
       alignment: Alignment.center,
-      child: isRefresh ?
-      CircularProgressIndicator() :
+      child:
       charts.TimeSeriesChart(
         _createHistVolumeData(histData),
         animate: true,
