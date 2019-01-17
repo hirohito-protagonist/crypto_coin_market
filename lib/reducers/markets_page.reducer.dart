@@ -27,12 +27,12 @@ class MarketsPageState {
 MarketsPageState marketsPageReducer(MarketsPageState state, action) {
   return MarketsPageState(
     availableCurrencies: Currency.availableCurrencies(),
-    page: pageReducer_(state.page, action),
-    markets: marketsReducer_(state.markets, action),
+    page: _pageReducer(state.page, action),
+    markets: _marketsReducer(state.markets, action),
   );
 }
 
-int pageReducer_(int state, action) {
+int _pageReducer(int state, action) {
 
   if (action is MarketsChangePageAction) {
     return action.page;
@@ -40,7 +40,7 @@ int pageReducer_(int state, action) {
   return state;
 }
 
-MarketsViewModel marketsReducer_(MarketsViewModel state, action) {
+MarketsViewModel _marketsReducer(MarketsViewModel state, action) {
 
   if (action is MarketsResponseDataAction) {
 

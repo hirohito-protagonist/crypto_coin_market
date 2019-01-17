@@ -53,16 +53,16 @@ class DetailsPageState {
 
 DetailsPageState detailsPageReducer(DetailsPageState state, action) {
   return DetailsPageState(
-    details: detailsReducer_(state.details, action),
-    histogramData: histogramReducer_(state.histogramData, action),
-    activeHistogramRange: histogramTimeRangeReducer_(state.activeHistogramRange, action),
+    details: _detailsReducer(state.details, action),
+    histogramData: _histogramReducer(state.histogramData, action),
+    activeHistogramRange: _histogramTimeRangeReducer(state.activeHistogramRange, action),
     histogramTimeRange: state.histogramTimeRange,
     timeRangeTranslation: state.timeRangeTranslation,
   );
 }
 
 
-TimeRange histogramTimeRangeReducer_(TimeRange state, action) {
+TimeRange _histogramTimeRangeReducer(TimeRange state, action) {
 
   if (action is  DetailsHistogramTimeRange) {
     return action.timeRange;
@@ -72,7 +72,7 @@ TimeRange histogramTimeRangeReducer_(TimeRange state, action) {
 
 
 
-List<HistogramDataModel> histogramReducer_(List<HistogramDataModel> state, action) {
+List<HistogramDataModel> _histogramReducer(List<HistogramDataModel> state, action) {
 
   if (action is DetailsRequestHistogramDataAction) {
     return List.unmodifiable([]);
@@ -84,7 +84,7 @@ List<HistogramDataModel> histogramReducer_(List<HistogramDataModel> state, actio
   return state;
 }
 
-DetailsViewModel detailsReducer_(DetailsViewModel state, action) {
+DetailsViewModel _detailsReducer(DetailsViewModel state, action) {
 
   if (action is NavigationChangeToDetailsPageAction) {
 
