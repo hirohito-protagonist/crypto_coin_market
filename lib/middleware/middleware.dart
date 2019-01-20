@@ -14,7 +14,7 @@ List<Middleware<AppState>> appStateMiddleware() {
     TypedMiddleware<AppState, MarketsChangePageAction>(_loadMarketsData()),
     TypedMiddleware<AppState, MarketsChangeCurrencyAction>(_loadMarketsData()),
     TypedMiddleware<AppState, DetailsChangeCurrencyAction>(_loadMarketsData()),
-    TypedMiddleware<AppState, DetailsRequestHistogramDataAction>(
+    TypedMiddleware<AppState, HistogramRequestDataAction>(
         _loadHistogramData()),
     TypedMiddleware<AppState, DetailsChangeCurrencyAction>(
         _updateDetailsPageData())
@@ -54,7 +54,7 @@ Middleware<AppState> _loadHistogramData() {
         store.state.detailsPageState.activeHistogramRange,
         store.state.currency,
         store.state.detailsPageState.details.coinInformation.name);
-    store.dispatch(DetailsResponseHistogramDataAction(data: histData));
+    store.dispatch(HistogramResponseDataAction(data: histData));
   };
 }
 

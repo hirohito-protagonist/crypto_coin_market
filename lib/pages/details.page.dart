@@ -228,7 +228,7 @@ class _ViewModel {
       histogramTimeRange: store.state.detailsPageState.histogramTimeRange,
       timeRangeTranslation: store.state.detailsPageState.timeRangeTranslation,
       onRequestHistogramData: () =>
-          store.dispatch(DetailsRequestHistogramDataAction()),
+          store.dispatch(HistogramRequestDataAction()),
       onChangeCurrency: (String currency) =>
           store.dispatch(DetailsChangeCurrencyAction(currency: currency)),
       onHistogramTimeRangeChange: (TimeRange timeRange) =>

@@ -3,15 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:crypto_coin_market/model/model.dart';
 import 'package:crypto_coin_market/services/services.dart';
 
-class DetailsRequestHistogramDataAction {}
-
-class DetailsResponseHistogramDataAction {
-  List<HistogramDataModel> data;
-
-  DetailsResponseHistogramDataAction({
-    @required this.data
-  });
-}
 
 class DetailsChangeCurrencyAction {
   final String currency;

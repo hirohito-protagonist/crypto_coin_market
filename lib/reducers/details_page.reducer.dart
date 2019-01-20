@@ -74,11 +74,11 @@ TimeRange _histogramTimeRangeReducer(TimeRange state, action) {
 
 List<HistogramDataModel> _histogramReducer(List<HistogramDataModel> state, action) {
 
-  if (action is DetailsRequestHistogramDataAction) {
+  if (action is HistogramRequestDataAction) {
     return List.unmodifiable([]);
   }
 
-  if (action is DetailsResponseHistogramDataAction) {
+  if (action is HistogramResponseDataAction) {
     return List.unmodifiable(action.data);
   }
   return state;
