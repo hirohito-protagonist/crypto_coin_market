@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 
 import 'package:crypto_coin_market/actions/actions.dart';
+import 'package:crypto_coin_market/markets/markets.dart';
 
-import './markets_page.reducer.dart';
 import './details_page.reducer.dart';
 
 class AppState {

@@ -6,6 +6,8 @@ import 'package:crypto_coin_market/model/model.dart';
 import 'package:crypto_coin_market/actions/actions.dart';
 import 'package:crypto_coin_market/reducers/reducers.dart';
 
+import 'package:crypto_coin_market/markets/actions.dart';
+
 List<Middleware<AppState>> appStateMiddleware() {
   return [
     TypedMiddleware<AppState, NavigationChangeToDetailsPageAction>(

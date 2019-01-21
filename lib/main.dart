@@ -7,6 +7,8 @@ import 'package:crypto_coin_market/middleware/middleware.dart';
 import 'package:crypto_coin_market/actions/actions.dart';
 import 'package:crypto_coin_market/pages/pages.dart';
 
+import 'package:crypto_coin_market/markets/markets.dart';
+
 void main() => runApp(CoinMarketApp());
 
 
