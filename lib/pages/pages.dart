@@ -1,1 +1,0 @@
-export './details.page.dart';

@@ -6,7 +6,8 @@ import 'package:crypto_coin_market/model/model.dart';
 import 'package:crypto_coin_market/actions/actions.dart';
 import 'package:crypto_coin_market/reducers/reducers.dart';
 
-import 'package:crypto_coin_market/markets/actions.dart';
+import 'package:crypto_coin_market/markets/markets.dart';
+import 'package:crypto_coin_market/coin_details/coin_details.dart';
 
 List<Middleware<AppState>> appStateMiddleware() {
   return [

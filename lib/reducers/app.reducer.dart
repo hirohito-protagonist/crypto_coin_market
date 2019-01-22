@@ -1,9 +1,7 @@
 import 'package:flutter/foundation.dart';
 
-import 'package:crypto_coin_market/actions/actions.dart';
 import 'package:crypto_coin_market/markets/markets.dart';
-
-import './details_page.reducer.dart';
+import 'package:crypto_coin_market/coin_details/coin_details.dart';
 
 class AppState {
   final String currency;

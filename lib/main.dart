@@ -5,9 +5,9 @@ import 'package:redux/redux.dart';
 import 'package:crypto_coin_market/reducers/reducers.dart';
 import 'package:crypto_coin_market/middleware/middleware.dart';
 import 'package:crypto_coin_market/actions/actions.dart';
-import 'package:crypto_coin_market/pages/pages.dart';
 
 import 'package:crypto_coin_market/markets/markets.dart';
+import 'package:crypto_coin_market/coin_details/coin_details.dart';
 
 void main() => runApp(CoinMarketApp());
 
