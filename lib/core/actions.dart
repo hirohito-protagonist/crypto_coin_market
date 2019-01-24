@@ -13,3 +13,21 @@ class NavigationChangeToDetailsPageAction {
     @required this.data
   });
 }
+
+class MarketsRequestDataAction {}
+class MarketsResponseDataAction {
+  final MarketsViewModel data;
+
+  MarketsResponseDataAction({
+    @required this.data
+  });
+}
+
+class HistogramRequestDataAction {}
+class HistogramResponseDataAction {
+  List<HistogramDataModel> data;
+
+  HistogramResponseDataAction({
+    @required this.data
+  });
+}

@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import 'package:crypto_coin_market/model/model.dart';
-import 'package:crypto_coin_market/actions/actions.dart';
+import 'package:crypto_coin_market/core/core.dart';
 
 import './actions.dart';
 
