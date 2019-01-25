@@ -1,8 +1,7 @@
 import 'package:test/test.dart';
 import 'dart:convert';
-import 'package:crypto_coin_market/model/currency.model.dart';
-import 'package:crypto_coin_market/services/histogram.service.dart';
-import 'package:crypto_coin_market/services/uri.service.dart';
+import 'package:crypto_coin_market/data_source/data_source.dart';
+import 'package:crypto_coin_market/data_source/services/uri.service.dart';
 import 'package:mockito/mockito.dart';
 import 'package:http/http.dart' as http;
 

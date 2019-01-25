@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 
 import 'package:http/http.dart' as http;
-import 'package:crypto_coin_market/model/model.dart';
+import './../model/model.dart';
 
 import './util.service.dart';
 import './uri.service.dart';

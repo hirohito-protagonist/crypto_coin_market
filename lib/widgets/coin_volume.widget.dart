@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:crypto_coin_market/model/histogram_data.model.dart';
+import 'package:crypto_coin_market/data_source/data_source.dart';
 
 class CoinVolumeWidget extends StatefulWidget {
 

@@ -1,8 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'package:redux/redux.dart';
 
-import 'package:crypto_coin_market/services/services.dart';
-import 'package:crypto_coin_market/model/model.dart';
+import 'package:crypto_coin_market/data_source/data_source.dart';
 import 'package:crypto_coin_market/core/core.dart';
 
 import './actions.dart';

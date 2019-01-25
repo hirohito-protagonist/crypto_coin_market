@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-import 'package:crypto_coin_market/model/model.dart';
-import 'package:crypto_coin_market/services/services.dart';
+import 'package:crypto_coin_market/data_source/data_source.dart';
 
 
 class DetailsChangeCurrencyAction {
