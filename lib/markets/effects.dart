@@ -7,15 +7,18 @@ import 'package:crypto_coin_market/core/core.dart';
 import './actions.dart';
 
 List<Middleware<AppState>> marketsEffects() {
+  var marketEffect = MarketsEffect();
   return [
-    TypedMiddleware<AppState, MarketsRequestDataAction>(_loadMarketsData()),
-    TypedMiddleware<AppState, MarketsChangePageAction>(_loadMarketsData()),
-    TypedMiddleware<AppState, MarketsChangeCurrencyAction>(_loadMarketsData()),
+    TypedMiddleware<AppState, MarketsRequestDataAction>(marketEffect),
+    TypedMiddleware<AppState, MarketsChangePageAction>(marketEffect),
+    TypedMiddleware<AppState, MarketsChangeCurrencyAction>(marketEffect),
   ];
 }
 
-Middleware<AppState> _loadMarketsData() {
-  return (Store<AppState> store, action, NextDispatcher next) async {
+class MarketsEffect implements MiddlewareClass<AppState> {
+
+  @override
+  void call(Store<AppState> store, action, NextDispatcher next) async {
     next(action);
     final currency = Currency.fromCurrencyCode(store.state.currency);
     final volume = await TopListsService(client: http.Client())
@@ -30,5 +33,6 @@ Middleware<AppState> _loadMarketsData() {
         prices: prices,
       ),
     ));
-  };
+  }
+
 }
