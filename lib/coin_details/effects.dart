@@ -8,16 +8,17 @@ import './actions.dart';
 
 List<Middleware<AppState>> coinDetailsEffects() {
   return [
-    TypedMiddleware<AppState, DetailsChangeCurrencyAction>(_loadMarketsData()),
+    TypedMiddleware<AppState, DetailsChangeCurrencyAction>(_MarketsDataEffect()),
     TypedMiddleware<AppState, HistogramRequestDataAction>(
-        _loadHistogramData()),
+        _HistogramDataEffect()),
     TypedMiddleware<AppState, DetailsChangeCurrencyAction>(
-        _updateDetailsPageData())
+        _DetailsEffect())
   ];
 }
 
-Middleware<AppState> _loadMarketsData() {
-  return (Store<AppState> store, action, NextDispatcher next) async {
+class _MarketsDataEffect implements MiddlewareClass<AppState> {
+  @override
+  void call(Store<AppState> store, action, NextDispatcher next) async {
     next(action);
     final currency = Currency.fromCurrencyCode(store.state.currency);
     final volume = await TopListsService(client: http.Client())
@@ -32,22 +33,28 @@ Middleware<AppState> _loadMarketsData() {
         prices: prices,
       ),
     ));
-  };
+  }
+
 }
 
-Middleware<AppState> _loadHistogramData() {
-  return (Store<AppState> store, action, NextDispatcher next) async {
+class _HistogramDataEffect implements MiddlewareClass<AppState> {
+
+  @override
+  void call(Store<AppState> store, action, NextDispatcher next) async {
     next(action);
     final histData = await HistogramService.OHLCV(
         store.state.detailsPageState.activeHistogramRange,
         store.state.currency,
         store.state.detailsPageState.details.coinInformation.name);
     store.dispatch(HistogramResponseDataAction(data: histData));
-  };
+  }
+
 }
 
-Middleware<AppState> _updateDetailsPageData() {
-  return (Store<AppState> store, action, NextDispatcher next) async {
+class _DetailsEffect implements MiddlewareClass<AppState> {
+
+  @override
+  void call(Store<AppState> store, action, NextDispatcher next) async {
     next(action);
     final currency = store.state.currency;
     final coinName = store.state.detailsPageState.details.coinInformation.name;
@@ -79,5 +86,6 @@ Middleware<AppState> _updateDetailsPageData() {
           coinInformation: coinModel,
           currency: currency,
         )));
-  };
+  }
+
 }
