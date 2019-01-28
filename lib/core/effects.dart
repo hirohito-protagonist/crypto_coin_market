@@ -9,11 +9,11 @@ import './store.dart';
 List<Middleware<AppState>> appStateMiddleware() {
   return [
     TypedMiddleware<AppState, NavigationChangeToDetailsPageAction>(
-        NavigationEffect()),
+        _NavigationEffect()),
   ]..addAll(marketsEffects())..addAll(coinDetailsEffects());
 }
 
-class NavigationEffect implements MiddlewareClass<AppState> {
+class _NavigationEffect implements MiddlewareClass<AppState> {
 
   @override
   void call(Store<AppState> store, dynamic action, NextDispatcher next) async {

@@ -7,7 +7,7 @@ import 'package:crypto_coin_market/core/core.dart';
 import './actions.dart';
 
 List<Middleware<AppState>> marketsEffects() {
-  var marketEffect = MarketsEffect();
+  var marketEffect = _MarketsEffect();
   return [
     TypedMiddleware<AppState, MarketsRequestDataAction>(marketEffect),
     TypedMiddleware<AppState, MarketsChangePageAction>(marketEffect),
@@ -15,7 +15,7 @@ List<Middleware<AppState>> marketsEffects() {
   ];
 }
 
-class MarketsEffect implements MiddlewareClass<AppState> {
+class _MarketsEffect implements MiddlewareClass<AppState> {
 
   @override
   void call(Store<AppState> store, action, NextDispatcher next) async {
