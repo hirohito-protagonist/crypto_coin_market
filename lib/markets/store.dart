@@ -1,15 +1,16 @@
 import 'package:flutter/foundation.dart';
 
-import 'package:crypto_coin_market/data_source/data_source.dart';
 import 'package:crypto_coin_market/core/core.dart';
+import 'package:crypto_coin_market/data_source/data_source.dart';
 
 import './actions.dart';
+import './model.dart';
 
 
 class MarketsPageState {
   final List<String> availableCurrencies;
   final int page;
-  final MarketsViewModel markets;
+  final MarketsModel markets;
 
   MarketsPageState({
     @required this.availableCurrencies,
@@ -18,7 +19,7 @@ class MarketsPageState {
   });
 
   MarketsPageState.initialState():
-        markets = MarketsViewModel(
+        markets = MarketsModel(
           prices: MultipleSymbols(display: {},raw: {}),
           volume: List.unmodifiable([]),
         ),
@@ -42,11 +43,14 @@ int _pageReducer(int state, action) {
   return state;
 }
 
-MarketsViewModel _marketsReducer(MarketsViewModel state, action) {
+MarketsModel _marketsReducer(MarketsModel state, action) {
 
   if (action is MarketsResponseDataAction) {
 
-    return action.data;
+    return MarketsModel(
+      prices: action.prices,
+      volume: action.volume,
+    );
   }
   return state;
 }

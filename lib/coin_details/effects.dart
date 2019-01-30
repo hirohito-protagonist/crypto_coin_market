@@ -28,10 +28,8 @@ class _MarketsDataEffect implements MiddlewareClass<AppState> {
         .multipleSymbolsFullData(coins, currency);
 
     store.dispatch(MarketsResponseDataAction(
-      data: MarketsViewModel(
-        volume: volume,
-        prices: prices,
-      ),
+      prices: prices,
+      volume: volume,
     ));
   }
 

@@ -1,14 +1,13 @@
 import 'package:flutter/foundation.dart';
 
-import './total_volume.model.dart';
-import './multiple_sybmols.model.dart';
+import 'package:crypto_coin_market/data_source/data_source.dart';
 
-class MarketsViewModel {
+class MarketsModel {
 
   final List<TotalVolume> volume;
   final MultipleSymbols prices;
 
-  MarketsViewModel({
+  MarketsModel({
     @required this.volume,
     @required this.prices
   });

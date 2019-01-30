@@ -3,9 +3,10 @@ import 'package:crypto_coin_market/core/core.dart';
 import 'package:crypto_coin_market/data_source/data_source.dart';
 
 import './actions.dart';
+import './model.dart';
 
 class PageModel {
-  final MarketsViewModel markets;
+  final MarketsModel markets;
   final String activeCurrency;
   final List<String> availableCurrencies;
   final num activePage;

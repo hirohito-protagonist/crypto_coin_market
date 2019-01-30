@@ -16,10 +16,12 @@ class NavigationChangeToDetailsPageAction {
 
 class MarketsRequestDataAction {}
 class MarketsResponseDataAction {
-  final MarketsViewModel data;
+  final List<TotalVolume> volume;
+  final MultipleSymbols prices;
 
   MarketsResponseDataAction({
-    @required this.data
+    @required this.volume,
+    @required this.prices,
   });
 }
 
