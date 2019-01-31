@@ -3,11 +3,12 @@ import 'package:crypto_coin_market/data_source/data_source.dart';
 import 'package:crypto_coin_market/core/core.dart';
 
 import './actions.dart';
+import './model.dart';
 
 class PageModel {
   final String activeCurrency;
   final List<String> availableCurrencies;
-  final DetailsViewModel details;
+  final DetailsModel details;
   final Map<TimeRange, String> timeRangeTranslation;
   final List<TimeRange> histogramTimeRange;
   final TimeRange activeHistogramRange;

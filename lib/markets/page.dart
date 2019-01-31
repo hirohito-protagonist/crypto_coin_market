@@ -60,16 +60,13 @@ class _VolumeListWidget extends StatelessWidget {
                 formattedPriceChange: item.priceChangeDisplay,
                 priceChange: item.priceChange,
                 onSelect: (SelectedCoinTile data) {
-                  model.onNavigateToDetails(DetailsViewModel(
-                    currency: model.activeCurrency,
-                    coinInformation: DetailsCoinInformation(
-                      priceChange: data.priceChange,
-                      fullName: data.fullName,
-                      imageUrl: data.imageUrl,
-                      name: data.name,
-                      formattedPriceChange: data.formattedPriceChange,
-                      formattedPrice: data.formattedPrice,
-                    ),
+                  model.onNavigateToDetails(CoinInformation(
+                    priceChange: data.priceChange,
+                    fullName: data.fullName,
+                    imageUrl: data.imageUrl,
+                    name: data.name,
+                    formattedPriceChange: data.formattedPriceChange,
+                    formattedPrice: data.formattedPrice,
                   ));
                 });
           },

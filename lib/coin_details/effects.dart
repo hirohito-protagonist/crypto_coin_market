@@ -5,6 +5,7 @@ import 'package:crypto_coin_market/data_source/data_source.dart';
 import 'package:crypto_coin_market/core/core.dart';
 
 import './actions.dart';
+import './model.dart';
 
 List<Middleware<AppState>> coinDetailsEffects() {
   return [
@@ -64,7 +65,7 @@ class _DetailsEffect implements MiddlewareClass<AppState> {
     prices.display.containsKey(coinName) ? prices.display[coinName] : null;
     final rawPriceNode =
     prices.raw.containsKey(coinName) ? prices.raw[coinName] : null;
-    final coinModel = DetailsCoinInformation(
+    final coinModel = CoinInformation(
         formattedPriceChange: displayPriceNode != null
             ? Map.of(displayPriceNode).values.toList()[0]['CHANGEPCT24HOUR']
             : '',
@@ -80,9 +81,8 @@ class _DetailsEffect implements MiddlewareClass<AppState> {
         store.state.detailsPageState.details.coinInformation.fullName);
 
     store.dispatch(DetailsUpdate(
-        details: DetailsViewModel(
+        details: DetailsModel(
           coinInformation: coinModel,
-          currency: currency,
         )));
   }
 

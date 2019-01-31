@@ -4,6 +4,7 @@ import 'package:crypto_coin_market/data_source/data_source.dart';
 import 'package:crypto_coin_market/core/core.dart';
 
 import './actions.dart';
+import './model.dart';
 
 class DetailsPageState {
 
@@ -19,7 +20,7 @@ class DetailsPageState {
     TimeRange.OneYear: '1Y'
   };
 
-  final DetailsViewModel details;
+  final DetailsModel details;
   final List<HistogramDataModel> histogramData;
   final Map<TimeRange, String> timeRangeTranslation;
   final List<TimeRange> histogramTimeRange;
@@ -34,8 +35,8 @@ class DetailsPageState {
   });
 
   DetailsPageState.initialState():
-        details = DetailsViewModel(
-            coinInformation: DetailsCoinInformation(
+        details = DetailsModel(
+            coinInformation: CoinInformation(
                 formattedPriceChange: '',
                 priceChange: 0,
                 formattedPrice: '',
@@ -43,7 +44,6 @@ class DetailsPageState {
                 imageUrl: '',
                 fullName: ''
             ),
-            currency: 'USD'
         ),
         histogramData = [],
         timeRangeTranslation = Map.of(_timeRangeTranslation),
@@ -85,11 +85,13 @@ List<HistogramDataModel> _histogramReducer(List<HistogramDataModel> state, actio
   return state;
 }
 
-DetailsViewModel _detailsReducer(DetailsViewModel state, action) {
+DetailsModel _detailsReducer(DetailsModel state, action) {
 
   if (action is NavigationChangeToDetailsPageAction) {
 
-    return action.data;
+    return DetailsModel(
+      coinInformation: action.coinInformation,
+    );
   }
   if (action is DetailsUpdate) {
 

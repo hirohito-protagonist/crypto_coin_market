@@ -12,7 +12,7 @@ class PageModel {
   final num activePage;
   final Function(String) onChangeCurrency;
   final Function(num) onPageChange;
-  final Function(DetailsViewModel) onNavigateToDetails;
+  final Function(CoinInformation) onNavigateToDetails;
   final Function() onRequestData;
 
   PageModel({
@@ -34,8 +34,8 @@ class PageModel {
       activePage: store.state.marketsPageState.page,
       onChangeCurrency: (String currency) =>
           store.dispatch(MarketsChangeCurrencyAction(currency: currency)),
-      onNavigateToDetails: (DetailsViewModel model) =>
-          store.dispatch(NavigationChangeToDetailsPageAction(data: model)),
+      onNavigateToDetails: (CoinInformation coinInformation) =>
+          store.dispatch(NavigationChangeToDetailsPageAction(coinInformation: coinInformation)),
       onPageChange: (num page) =>
           store.dispatch(MarketsChangePageAction(page: page)),
       onRequestData: () => store.dispatch(MarketsRequestDataAction()),
