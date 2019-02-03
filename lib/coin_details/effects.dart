@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:redux/redux.dart';
 
@@ -9,11 +10,11 @@ import './model.dart';
 
 List<Middleware<AppState>> coinDetailsEffects() {
   return [
-    TypedMiddleware<AppState, DetailsChangeCurrencyAction>(_MarketsDataEffect()),
+    TypedMiddleware<AppState, DetailsChangeCurrencyAction>(
+        _MarketsDataEffect()),
     TypedMiddleware<AppState, HistogramRequestDataAction>(
         _HistogramDataEffect()),
-    TypedMiddleware<AppState, DetailsChangeCurrencyAction>(
-        _DetailsEffect())
+    TypedMiddleware<AppState, DetailsChangeCurrencyAction>(_DetailsEffect())
   ];
 }
 
@@ -33,11 +34,9 @@ class _MarketsDataEffect implements MiddlewareClass<AppState> {
       volume: volume,
     ));
   }
-
 }
 
 class _HistogramDataEffect implements MiddlewareClass<AppState> {
-
   @override
   void call(Store<AppState> store, action, NextDispatcher next) async {
     next(action);
@@ -47,11 +46,9 @@ class _HistogramDataEffect implements MiddlewareClass<AppState> {
         store.state.detailsPageState.details.coinInformation.name);
     store.dispatch(HistogramResponseDataAction(data: histData));
   }
-
 }
 
 class _DetailsEffect implements MiddlewareClass<AppState> {
-
   @override
   void call(Store<AppState> store, action, NextDispatcher next) async {
     next(action);
@@ -59,31 +56,41 @@ class _DetailsEffect implements MiddlewareClass<AppState> {
     final coinName = store.state.detailsPageState.details.coinInformation.name;
     final prices = await PriceService(client: http.Client())
         .multipleSymbolsFullData(
-        [coinName], Currency.fromCurrencyCode(currency));
+            [coinName], Currency.fromCurrencyCode(currency));
 
-    final displayPriceNode =
-    prices.display.containsKey(coinName) ? prices.display[coinName] : null;
-    final rawPriceNode =
-    prices.raw.containsKey(coinName) ? prices.raw[coinName] : null;
-    final coinModel = CoinInformation(
-        formattedPriceChange: displayPriceNode != null
-            ? Map.of(displayPriceNode).values.toList()[0]['CHANGEPCT24HOUR']
-            : '',
-        priceChange: rawPriceNode != null
-            ? Map.of(rawPriceNode).values.toList()[0]['CHANGEPCT24HOUR']
-            : 0,
-        formattedPrice: displayPriceNode != null
-            ? Map.of(displayPriceNode).values.toList()[0]['PRICE']
-            : '',
-        name: store.state.detailsPageState.details.coinInformation.name,
-        imageUrl: store.state.detailsPageState.details.coinInformation.imageUrl,
-        fullName:
-        store.state.detailsPageState.details.coinInformation.fullName);
+    final coinModel = this._createCoinInformation(
+      prices: prices,
+      coinName: coinName,
+      fullName: store.state.detailsPageState.details.coinInformation.fullName,
+      imageUrl: store.state.detailsPageState.details.coinInformation.imageUrl,
+      name: store.state.detailsPageState.details.coinInformation.name,
+    );
 
     store.dispatch(DetailsUpdate(
         details: DetailsModel(
-          coinInformation: coinModel,
-        )));
+      coinInformation: coinModel,
+    )));
   }
 
+  CoinInformation _createCoinInformation(
+      {@required String coinName,
+      @required MultipleSymbols prices,
+      @required String name,
+      @required String imageUrl,
+      @required String fullName}) {
+    final displayPriceNode =
+        prices.display.containsKey(coinName) ? prices.display[coinName] : null;
+    final rawPriceNode =
+        prices.raw.containsKey(coinName) ? prices.raw[coinName] : null;
+    final displayPrice = Map.of(displayPriceNode).values.toList().elementAt(0);
+    final rawPrice = Map.of(rawPriceNode).values.toList().elementAt(0);
+    return CoinInformation(
+        formattedPriceChange:
+            displayPriceNode != null ? displayPrice['CHANGEPCT24HOUR'] : '',
+        priceChange: rawPriceNode != null ? rawPrice['CHANGEPCT24HOUR'] : 0,
+        formattedPrice: displayPriceNode != null ? displayPrice['PRICE'] : '',
+        name: name,
+        imageUrl: imageUrl,
+        fullName: fullName);
+  }
 }
