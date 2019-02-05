@@ -16,10 +16,22 @@ class NavigationChangeToDetailsPageAction {
   });
 }
 
-class MarketsRequestDataAction {}
+enum MarketsDataState {
+  Error, Success, Loading
+}
+
+class MarketsRequestDataAction {
+  final MarketsDataState dataState = MarketsDataState.Loading;
+}
+
+class MarketsErrorDataAction {
+  final MarketsDataState dataState = MarketsDataState.Error;
+}
+
 class MarketsResponseDataAction {
   final List<TotalVolume> volume;
   final MultipleSymbols prices;
+  final MarketsDataState dataState = MarketsDataState.Success;
 
   MarketsResponseDataAction({
     @required this.volume,

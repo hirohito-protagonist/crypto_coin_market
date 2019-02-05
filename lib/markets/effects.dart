@@ -18,19 +18,25 @@ List<Middleware<AppState>> marketsEffects() {
 class _MarketsEffect implements MiddlewareClass<AppState> {
 
   @override
-  void call(Store<AppState> store, action, NextDispatcher next) async {
+  void call(Store<AppState> store, action, NextDispatcher next) {
     next(action);
     final currency = Currency.fromCurrencyCode(store.state.currency);
-    final volume = await TopListsService(client: http.Client())
-        .totalVolume(currency, page: store.state.marketsPageState.page);
-    final coins = volume.map((TotalVolume tv) => tv.coinInfo.name).toList();
-    final prices = await PriceService(client: http.Client())
-        .multipleSymbolsFullData(coins, currency);
+    
+    TopListsService(client: http.Client())
+        .volume(currency, page: store.state.marketsPageState.page)
+        .then((volume) {
+          final coins = volume.map((TotalVolume tv) => tv.coinInfo.name).toList();
 
-    store.dispatch(MarketsResponseDataAction(
-      volume: volume,
-      prices: prices,
-    ));
+          return PriceService(client: http.Client())
+              .multipleSymbolsFullData(coins, currency)
+              .then((prices) {
+                store.dispatch(MarketsResponseDataAction(
+                  volume: volume,
+                  prices: prices,
+                ));
+              });
+        })
+        .catchError((e) => store.dispatch(MarketsErrorDataAction()));
   }
 
 }

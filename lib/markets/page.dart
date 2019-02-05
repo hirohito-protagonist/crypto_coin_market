@@ -3,7 +3,6 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 
 import 'package:crypto_coin_market/core/core.dart';
-import 'package:crypto_coin_market/data_source/data_source.dart';
 
 import 'package:crypto_coin_market/widgets/coin_list_tile.widget.dart';
 import 'package:crypto_coin_market/widgets/loading.widget.dart';
@@ -46,8 +45,10 @@ class _VolumeListWidget extends StatelessWidget {
     return StoreConnector<AppState, PageModel>(
       converter: (Store<AppState> store) => PageModel.create(store),
       builder: (BuildContext context, PageModel model) {
-        return model.markets.volume.length == 0
+        return model.dataState == MarketsDataState.Loading
             ? Loading()
+            : model.dataState == MarketsDataState.Error
+            ? Text('Upps we have error')
             : ListView.builder(
           itemCount: model.markets.volume.length,
           itemBuilder: (context, i) {

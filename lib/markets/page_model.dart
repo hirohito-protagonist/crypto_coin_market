@@ -1,6 +1,5 @@
 import 'package:redux/redux.dart';
 import 'package:crypto_coin_market/core/core.dart';
-import 'package:crypto_coin_market/data_source/data_source.dart';
 
 import './actions.dart';
 import './model.dart';
@@ -10,6 +9,7 @@ class PageModel {
   final String activeCurrency;
   final List<String> availableCurrencies;
   final num activePage;
+  final MarketsDataState dataState;
   final Function(String) onChangeCurrency;
   final Function(num) onPageChange;
   final Function(CoinInformation) onNavigateToDetails;
@@ -19,6 +19,7 @@ class PageModel {
     this.markets,
     this.activeCurrency,
     this.availableCurrencies,
+    this.dataState,
     this.activePage,
     this.onChangeCurrency,
     this.onPageChange,
@@ -31,6 +32,7 @@ class PageModel {
       activeCurrency: store.state.currency,
       markets: store.state.marketsPageState.markets,
       availableCurrencies: store.state.marketsPageState.availableCurrencies,
+      dataState: store.state.marketsPageState.dataState,
       activePage: store.state.marketsPageState.page,
       onChangeCurrency: (String currency) =>
           store.dispatch(MarketsChangeCurrencyAction(currency: currency)),
