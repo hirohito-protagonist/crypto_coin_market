@@ -20,8 +20,11 @@ enum MarketsDataState {
   Error, Success, Loading
 }
 
-class MarketsRequestDataAction {
+class MarketsLoadingDataAction {
   final MarketsDataState dataState = MarketsDataState.Loading;
+}
+
+class MarketsRequestDataAction {
 }
 
 class MarketsErrorDataAction {

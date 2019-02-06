@@ -62,7 +62,7 @@ MarketsModel _marketsReducer(MarketsModel state, action) {
 MarketsDataState _dataStateReducer(MarketsDataState state, action) {
   if (action is MarketsResponseDataAction ||
       action is MarketsErrorDataAction ||
-      action is MarketsRequestDataAction
+      action is MarketsLoadingDataAction
   ) {
 
     return action.dataState;
