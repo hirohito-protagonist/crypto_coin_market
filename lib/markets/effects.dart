@@ -14,6 +14,7 @@ List<Middleware<AppState>> marketsEffects() {
     TypedMiddleware<AppState, MarketsRequestDataAction>(marketEffect),
     TypedMiddleware<AppState, MarketsChangePageAction>(marketEffect),
     TypedMiddleware<AppState, MarketsChangeCurrencyAction>(marketEffect),
+    TypedMiddleware<AppState, MarketsRefresh>(marketEffect),
   ];
 }
 

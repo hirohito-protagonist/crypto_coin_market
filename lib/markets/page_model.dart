@@ -14,6 +14,7 @@ class PageModel {
   final Function(num) onPageChange;
   final Function(CoinInformation) onNavigateToDetails;
   final Function() onRequestData;
+  final Function() onRefresh;
 
   PageModel({
     this.markets,
@@ -25,6 +26,7 @@ class PageModel {
     this.onPageChange,
     this.onNavigateToDetails,
     this.onRequestData,
+    this.onRefresh,
   });
 
   factory PageModel.create(Store<AppState> store) {
@@ -41,6 +43,7 @@ class PageModel {
       onPageChange: (num page) =>
           store.dispatch(MarketsChangePageAction(page: page)),
       onRequestData: () => store.dispatch(MarketsRequestDataAction()),
+      onRefresh: () => store.dispatch(MarketsRefresh()),
     );
   }
 }

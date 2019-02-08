@@ -23,7 +23,19 @@ class MarketsPage extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: Text('Markets'),
-          actions: <Widget>[],
+          actions: <Widget>[
+            StoreConnector<AppState, PageModel>(
+              converter: (Store<AppState> store) => PageModel.create(store),
+              builder: (BuildContext context, PageModel model) {
+                return IconButton(
+                  icon: Icon(
+                    Icons.refresh,
+                  ),
+                  onPressed: () => model.onRefresh(),
+                );
+              }
+            ),
+          ],
         ),
         body: _VolumeListWidget(),
         bottomNavigationBar: BottomAppBar(

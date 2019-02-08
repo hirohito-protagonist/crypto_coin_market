@@ -13,3 +13,5 @@ class MarketsChangePageAction {
     @required this.page
   });
 }
+
+class MarketsRefresh {}
