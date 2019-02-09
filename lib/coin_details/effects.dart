@@ -14,7 +14,10 @@ List<Middleware<AppState>> coinDetailsEffects() {
         _MarketsDataEffect()),
     TypedMiddleware<AppState, HistogramRequestDataAction>(
         _HistogramDataEffect()),
-    TypedMiddleware<AppState, DetailsChangeCurrencyAction>(_DetailsEffect())
+    TypedMiddleware<AppState, DetailsRefresh>(
+        _HistogramDataEffect()),
+    TypedMiddleware<AppState, DetailsChangeCurrencyAction>(_DetailsEffect()),
+    TypedMiddleware<AppState, DetailsRefresh>(_DetailsEffect()),
   ];
 }
 

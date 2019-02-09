@@ -16,6 +16,7 @@ class PageModel {
   final Function() onRequestHistogramData;
   final Function(String) onChangeCurrency;
   final Function(TimeRange) onHistogramTimeRangeChange;
+  final Function() onRefresh;
 
   PageModel({
     this.details,
@@ -28,6 +29,7 @@ class PageModel {
     this.onRequestHistogramData,
     this.onChangeCurrency,
     this.onHistogramTimeRangeChange,
+    this.onRefresh,
   });
 
   factory PageModel.create(Store<AppState> store) {
@@ -45,6 +47,7 @@ class PageModel {
           store.dispatch(DetailsChangeCurrencyAction(currency: currency)),
       onHistogramTimeRangeChange: (TimeRange timeRange) =>
           store.dispatch(DetailsHistogramTimeRange(timeRange: timeRange)),
+      onRefresh: () => store.dispatch(DetailsRefresh()),
     );
   }
 }

@@ -30,6 +30,19 @@ class DetailsPage extends StatelessWidget {
             converter: (Store<AppState> store) => PageModel.create(store),
             builder: (BuildContext context, PageModel model) =>
                 Text(model.details.coinInformation.fullName)),
+        actions: <Widget>[
+          StoreConnector<AppState, PageModel>(
+              converter: (Store<AppState> store) => PageModel.create(store),
+              builder: (BuildContext context, PageModel model) {
+                return IconButton(
+                  icon: Icon(
+                    Icons.refresh,
+                  ),
+                  onPressed: () => model.onRefresh(),
+                );
+              }
+          ),
+        ],
       ),
       body: Container(
         padding: EdgeInsets.all(10.0),

@@ -27,3 +27,5 @@ class DetailsHistogramTimeRange {
     @required this.timeRange
   });
 }
+
+class DetailsRefresh {}
