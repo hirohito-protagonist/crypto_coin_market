@@ -9,7 +9,7 @@ class PageModel {
   final String activeCurrency;
   final List<String> availableCurrencies;
   final num activePage;
-  final MarketsDataState dataState;
+  final ServiceDataState dataState;
   final Function(String) onChangeCurrency;
   final Function(num) onPageChange;
   final Function(CoinInformation) onNavigateToDetails;

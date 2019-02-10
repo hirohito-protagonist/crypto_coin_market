@@ -11,7 +11,7 @@ class MarketsPageState {
   final List<String> availableCurrencies;
   final int page;
   final MarketsModel markets;
-  final MarketsDataState dataState;
+  final ServiceDataState dataState;
 
   MarketsPageState({
     @required this.availableCurrencies,
@@ -26,7 +26,7 @@ class MarketsPageState {
           volume: List.unmodifiable([]),
         ),
         page = 0,
-        dataState = MarketsDataState.Success,
+        dataState = ServiceDataState.Success,
         availableCurrencies = Currency.availableCurrencies();
 }
 
@@ -59,8 +59,8 @@ MarketsModel _marketsReducer(MarketsModel state, action) {
   return state;
 }
 
-MarketsDataState _dataStateReducer(MarketsDataState state, action) {
-  if (action is MarketsResponseDataAction ||
+ServiceDataState _dataStateReducer(ServiceDataState state, action) {
+  if (action is MarketsSuccessDataAction ||
       action is MarketsErrorDataAction ||
       action is MarketsLoadingDataAction
   ) {

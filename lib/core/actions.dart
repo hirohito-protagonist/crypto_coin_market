@@ -16,25 +16,28 @@ class NavigationChangeToDetailsPageAction {
   });
 }
 
-enum MarketsDataState {
+enum ServiceDataState {
   Error, Success, Loading
 }
 
-class MarketsLoadingDataAction {
-  final MarketsDataState dataState = MarketsDataState.Loading;
-}
 
-class MarketsRequestDataAction {
+class MarketsLoadingDataAction {
+  final ServiceDataState dataState = ServiceDataState.Loading;
 }
 
 class MarketsErrorDataAction {
-  final MarketsDataState dataState = MarketsDataState.Error;
+  final ServiceDataState dataState = ServiceDataState.Error;
 }
+
+class MarketsSuccessDataAction {
+  final ServiceDataState dataState = ServiceDataState.Success;
+}
+
+class MarketsRequestDataAction {}
 
 class MarketsResponseDataAction {
   final List<TotalVolume> volume;
   final MultipleSymbols prices;
-  final MarketsDataState dataState = MarketsDataState.Success;
 
   MarketsResponseDataAction({
     @required this.volume,

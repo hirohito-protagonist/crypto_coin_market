@@ -28,20 +28,45 @@ class _MarketsEffect implements MiddlewareClass<AppState> {
 
     final currency = Currency.fromCurrencyCode(store.state.currency);
     store.dispatch(MarketsLoadingDataAction());
-    _operation = CancelableOperation.fromFuture(
-        TopListsService(client: http.Client())
-            .volume(currency, page: store.state.marketsPageState.page)
-            .then((volume) {
-      final coins = volume.map((TotalVolume tv) => tv.coinInfo.name).toList();
 
-      return PriceService(client: http.Client())
-          .multipleSymbolsFullData(coins, currency)
-          .then((prices) {
-        return store.dispatch(MarketsResponseDataAction(
+    _operation = CancelableOperation.fromFuture(
+      _fetchVolume(currency, store.state.marketsPageState.page)
+        .then((volume) => _fetchPrices(volume, currency))
+        .then((_AggregatedDataModel model) {
+          store.dispatch(MarketsSuccessDataAction());
+          return store.dispatch(MarketsResponseDataAction(
+            volume: model.volume,
+            prices: model.prices,
+          ));
+        })
+        .catchError((e) => store.dispatch(MarketsErrorDataAction()))
+    );
+  }
+
+  Future<List<TotalVolume>> _fetchVolume(currency, page) {
+    return TopListsService(client: http.Client()).volume(currency, page: page);
+  }
+
+  Future<_AggregatedDataModel> _fetchPrices(List<TotalVolume> volume, currency) {
+    final coins = volume.map((TotalVolume tv) => tv.coinInfo.name).toList();
+    return PriceService(client: http.Client())
+      .multipleSymbolsFullData(coins, currency)
+      .then((prices) {
+
+        return _AggregatedDataModel(
           volume: volume,
           prices: prices,
-        ));
+        );
       });
-    }).catchError((e) => store.dispatch(MarketsErrorDataAction())));
   }
+}
+
+class _AggregatedDataModel {
+  final List<TotalVolume> volume;
+  final MultipleSymbols prices;
+
+  _AggregatedDataModel({
+    this.prices,
+    this.volume,
+  });
 }

@@ -58,9 +58,9 @@ class _VolumeListWidget extends StatelessWidget {
     return StoreConnector<AppState, PageModel>(
       converter: (Store<AppState> store) => PageModel.create(store),
       builder: (BuildContext context, PageModel model) {
-        return model.dataState == MarketsDataState.Loading
+        return model.dataState == ServiceDataState.Loading
             ? Loading()
-            : model.dataState == MarketsDataState.Error
+            : model.dataState == ServiceDataState.Error
             ? ErrorMessageWidget(message: 'Upps we can load data')
             : ListView.builder(
           itemCount: model.markets.volume.length,
