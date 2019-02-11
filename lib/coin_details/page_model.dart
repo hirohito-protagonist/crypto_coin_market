@@ -13,6 +13,7 @@ class PageModel {
   final List<TimeRange> histogramTimeRange;
   final TimeRange activeHistogramRange;
   final List<HistogramDataModel> histogramData;
+  final ServiceDataState histogramDataState;
   final Function() onRequestHistogramData;
   final Function(String) onChangeCurrency;
   final Function(TimeRange) onHistogramTimeRangeChange;
@@ -30,6 +31,7 @@ class PageModel {
     this.onChangeCurrency,
     this.onHistogramTimeRangeChange,
     this.onRefresh,
+    this.histogramDataState,
   });
 
   factory PageModel.create(Store<AppState> store) {
@@ -41,6 +43,7 @@ class PageModel {
       activeHistogramRange: store.state.detailsPageState.activeHistogramRange,
       histogramTimeRange: store.state.detailsPageState.histogramTimeRange,
       timeRangeTranslation: store.state.detailsPageState.timeRangeTranslation,
+      histogramDataState: store.state.detailsPageState.histogramDataState,
       onRequestHistogramData: () =>
           store.dispatch(HistogramRequestDataAction()),
       onChangeCurrency: (String currency) =>

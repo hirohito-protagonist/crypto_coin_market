@@ -11,6 +11,7 @@ import 'package:crypto_coin_market/widgets/price_change.widget.dart';
 import 'package:crypto_coin_market/widgets/coin_cost.widget.dart';
 import 'package:crypto_coin_market/widgets/coin_volume.widget.dart';
 import 'package:crypto_coin_market/widgets/loading.widget.dart';
+import 'package:crypto_coin_market/widgets/error.widget.dart';
 
 import './page_model.dart';
 
@@ -94,11 +95,12 @@ class _HistogramCostWidget extends StatelessWidget {
     return StoreConnector<AppState, PageModel>(
       converter: (Store<AppState> store) => PageModel.create(store),
       builder: (BuildContext context, PageModel model) {
-        return model.histogramData.length > 0
+        return model.histogramDataState == ServiceDataState.Success
             ? CoinCostWidget(
           histData: model.histogramData,
-        )
-            : Loading();
+        ) : model.histogramDataState == ServiceDataState.Error ?
+        ErrorMessageWidget(message: 'Upps we can not load data') :
+        Loading();
       },
     );
   }
@@ -110,11 +112,12 @@ class _HistogramVolumeWidget extends StatelessWidget {
     return StoreConnector<AppState, PageModel>(
       converter: (Store<AppState> store) => PageModel.create(store),
       builder: (BuildContext context, PageModel model) {
-        return model.histogramData.length > 0
+        return model.histogramDataState == ServiceDataState.Success
             ? CoinVolumeWidget(
           histData: model.histogramData,
-        )
-            : Loading();
+        ) : model.histogramDataState == ServiceDataState.Error ?
+        ErrorMessageWidget(message: 'Upps we can not load data') :
+        Loading();
       },
     );
   }

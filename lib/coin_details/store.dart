@@ -25,6 +25,7 @@ class DetailsPageState {
   final Map<TimeRange, String> timeRangeTranslation;
   final List<TimeRange> histogramTimeRange;
   final TimeRange activeHistogramRange;
+  final ServiceDataState histogramDataState;
 
   DetailsPageState({
     @required this.details,
@@ -32,6 +33,7 @@ class DetailsPageState {
     @required this.timeRangeTranslation,
     @required this.histogramTimeRange,
     @required this.activeHistogramRange,
+    @required this.histogramDataState,
   });
 
   DetailsPageState.initialState():
@@ -46,6 +48,7 @@ class DetailsPageState {
             ),
         ),
         histogramData = [],
+        histogramDataState = ServiceDataState.Success,
         timeRangeTranslation = Map.of(_timeRangeTranslation),
         histogramTimeRange = Map.of(_timeRangeTranslation).keys.toList(),
         activeHistogramRange = TimeRange.OneDay;
@@ -57,6 +60,7 @@ DetailsPageState detailsPageReducer(DetailsPageState state, action) {
     details: _detailsReducer(state.details, action),
     histogramData: _histogramReducer(state.histogramData, action),
     activeHistogramRange: _histogramTimeRangeReducer(state.activeHistogramRange, action),
+    histogramDataState: _histogramDataStateReduce(state.histogramDataState, action),
     histogramTimeRange: state.histogramTimeRange,
     timeRangeTranslation: state.timeRangeTranslation,
   );
@@ -96,6 +100,17 @@ DetailsModel _detailsReducer(DetailsModel state, action) {
   if (action is DetailsUpdate) {
 
     return action.details;
+  }
+  return state;
+}
+
+ServiceDataState _histogramDataStateReduce(ServiceDataState state, action) {
+
+  if (action is HistogramLoadingDataAction ||
+    action is HistogramErrorDataAction ||
+    action is HistogramSuccessDataAction
+  ) {
+    return action.dataState;
   }
   return state;
 }

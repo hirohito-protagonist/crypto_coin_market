@@ -33,6 +33,19 @@ class MarketsSuccessDataAction {
   final ServiceDataState dataState = ServiceDataState.Success;
 }
 
+
+class HistogramLoadingDataAction {
+  final ServiceDataState dataState = ServiceDataState.Loading;
+}
+
+class HistogramErrorDataAction {
+  final ServiceDataState dataState = ServiceDataState.Error;
+}
+
+class HistogramSuccessDataAction {
+  final ServiceDataState dataState = ServiceDataState.Success;
+}
+
 class MarketsRequestDataAction {}
 
 class MarketsResponseDataAction {
