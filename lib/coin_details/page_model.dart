@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:redux/redux.dart';
 import 'package:crypto_coin_market/data_source/data_source.dart';
 import 'package:crypto_coin_market/core/core.dart';
@@ -20,18 +21,18 @@ class PageModel {
   final Function() onRefresh;
 
   PageModel({
-    this.details,
-    this.activeCurrency,
-    this.availableCurrencies,
-    this.histogramData,
-    this.histogramTimeRange,
-    this.timeRangeTranslation,
-    this.activeHistogramRange,
-    this.onRequestHistogramData,
-    this.onChangeCurrency,
-    this.onHistogramTimeRangeChange,
-    this.onRefresh,
-    this.histogramDataState,
+    @required this.details,
+    @required this.activeCurrency,
+    @required this.availableCurrencies,
+    @required this.histogramData,
+    @required this.histogramTimeRange,
+    @required this.timeRangeTranslation,
+    @required this.activeHistogramRange,
+    @required this.onRequestHistogramData,
+    @required this.onChangeCurrency,
+    @required this.onHistogramTimeRangeChange,
+    @required this.onRefresh,
+    @required this.histogramDataState,
   });
 
   factory PageModel.create(Store<AppState> store) {
