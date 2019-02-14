@@ -16,10 +16,6 @@ class NavigationChangeToDetailsPageAction {
   });
 }
 
-enum ServiceDataState {
-  Error, Success, Loading
-}
-
 
 class MarketsLoadingDataAction {
   final ServiceDataState dataState = ServiceDataState.Loading;

@@ -2,22 +2,26 @@ import 'package:flutter/foundation.dart';
 
 import 'package:crypto_coin_market/markets/markets.dart';
 import 'package:crypto_coin_market/coin_details/coin_details.dart';
+import 'package:crypto_coin_market/data_source/data_source.dart';
 
 class AppState {
   final String currency;
   final MarketsPageState marketsPageState;
   final DetailsPageState detailsPageState;
+  final DataSourceState dataSourceState;
 
   AppState({
     @required this.currency,
     @required this.marketsPageState,
     @required this.detailsPageState,
+    @required this.dataSourceState,
   });
 
   AppState.initialState()
       : currency = 'USD',
         marketsPageState = MarketsPageState.initialState(),
-        detailsPageState = DetailsPageState.initialState();
+        detailsPageState = DetailsPageState.initialState(),
+        dataSourceState = DataSourceState.initialState();
 }
 
 AppState appStateReducer(AppState state, action) {

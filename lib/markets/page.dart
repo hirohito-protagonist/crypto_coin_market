@@ -3,7 +3,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 
 import 'package:crypto_coin_market/core/core.dart';
-
+import 'package:crypto_coin_market/data_source/data_source.dart';
 import 'package:crypto_coin_market/widgets/coin_list_tile.widget.dart';
 import 'package:crypto_coin_market/widgets/loading.widget.dart';
 import 'package:crypto_coin_market/widgets/error.widget.dart';
