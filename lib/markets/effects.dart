@@ -27,6 +27,11 @@ class _MarketsEffect implements MiddlewareClass<AppState> {
     _operation?.cancel();
 
     final currency = Currency.fromCurrencyCode(store.state.currency);
+
+    store.dispatch(VolumeWithPricesAction(
+      page: store.state.marketsPageState.page,
+      currency: currency,
+    ));
     store.dispatch(MarketsLoadingDataAction());
 
     _operation = CancelableOperation.fromFuture(
