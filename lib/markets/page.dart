@@ -9,6 +9,7 @@ import 'package:crypto_coin_market/widgets/loading.widget.dart';
 import 'package:crypto_coin_market/widgets/error.widget.dart';
 
 import './page_model.dart';
+import './model.dart';
 
 class MarketsPage extends StatelessWidget {
   final Store<AppState> store;
@@ -58,14 +59,18 @@ class _VolumeListWidget extends StatelessWidget {
     return StoreConnector<AppState, PageModel>(
       converter: (Store<AppState> store) => PageModel.create(store),
       builder: (BuildContext context, PageModel model) {
-        return model.dataState == ServiceDataState.Loading
+        return model.dataSourceSelectors.volume().state == ServiceDataState.Loading
             ? Loading()
-            : model.dataState == ServiceDataState.Error
+            : model.dataSourceSelectors.volume().state == ServiceDataState.Error
             ? ErrorMessageWidget(message: 'Upps we can load data')
             : ListView.builder(
-          itemCount: model.markets.volume.length,
+          itemCount: model.dataSourceSelectors.volume().response.length,
           itemBuilder: (context, i) {
-            final item = model.markets.volumeItem(i);
+            final marketsModel = MarketsModel(
+              volume: model.dataSourceSelectors.volume().response,
+              prices: model.dataSourceSelectors.prices().response
+            );
+            final item = marketsModel.volumeItem(i);
             return CoinListTile(
                 imageUrl: item.imageUrl,
                 name: item.name,

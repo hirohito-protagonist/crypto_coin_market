@@ -13,7 +13,6 @@ class MarketsModel {
   });
 
   _VolumeItemModel volumeItem(int index) {
-
     final currency = volume[index]?.coinInfo?.name;
     final displayPriceNode = prices.display.containsKey(currency) ? prices.display[currency] : null;
     final rawPriceNode = prices.raw.containsKey(currency) ? prices.raw[currency] : null;

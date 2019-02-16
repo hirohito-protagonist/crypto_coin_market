@@ -4,14 +4,12 @@ import 'package:crypto_coin_market/core/core.dart';
 import 'package:crypto_coin_market/data_source/data_source.dart';
 
 import './actions.dart';
-import './model.dart';
 
 class PageModel {
-  final MarketsModel markets;
+  final DataSourceSelectors dataSourceSelectors;
   final String activeCurrency;
   final List<String> availableCurrencies;
   final num activePage;
-  final ServiceDataState dataState;
   final Function(String) onChangeCurrency;
   final Function(num) onPageChange;
   final Function(CoinInformation) onNavigateToDetails;
@@ -19,24 +17,23 @@ class PageModel {
   final Function() onRefresh;
 
   PageModel({
-    @required this.markets,
     @required this.activeCurrency,
     @required this.availableCurrencies,
-    @required this.dataState,
     @required this.activePage,
     @required this.onChangeCurrency,
     @required this.onPageChange,
     @required this.onNavigateToDetails,
     @required this.onRequestData,
     @required this.onRefresh,
+    @required this.dataSourceSelectors,
   });
 
   factory PageModel.create(Store<AppState> store) {
+    final dataSourceSelectors = DataSourceSelectors(store: store);
     return PageModel(
+      dataSourceSelectors: dataSourceSelectors,
       activeCurrency: store.state.currency,
-      markets: store.state.marketsPageState.markets,
       availableCurrencies: store.state.marketsPageState.availableCurrencies,
-      dataState: store.state.marketsPageState.dataState,
       activePage: store.state.marketsPageState.page,
       onChangeCurrency: (String currency) =>
           store.dispatch(MarketsChangeCurrencyAction(currency: currency)),

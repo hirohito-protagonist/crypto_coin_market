@@ -29,6 +29,7 @@ AppState appStateReducer(AppState state, action) {
     currency: currencyReducer(state.currency, action),
     marketsPageState: marketsPageReducer(state.marketsPageState, action),
     detailsPageState: detailsPageReducer(state.detailsPageState, action),
+    dataSourceState: dataSourceStateReducer(state.dataSourceState, action)
   );
 }
 

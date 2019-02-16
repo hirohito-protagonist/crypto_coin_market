@@ -126,7 +126,7 @@ _ServiceDataState<MultipleSymbols> _pricesReducer(_ServiceDataState<MultipleSymb
   if (action is _SuccessAction && action.serviceType == ServicesType.Prices) {
     return _ServiceDataState<MultipleSymbols>(
       state: action.state,
-      response: MultipleSymbols(raw: Map.identity(), display: Map.identity())
+      response: action.response
     );
   }
 
@@ -192,7 +192,8 @@ class _VolumeWithPricesEffects implements MiddlewareClass<AppState> {
           final coins = volume.map((TotalVolume tv) => tv.coinInfo.name).toList();
           return PriceService(client: http.Client()).multipleSymbolsFullData(coins, currency)
             .then((prices) {
-              store.dispatch(_SuccessAction(serviceType: ServicesType.Prices, response: prices));
+                store.dispatch(_SuccessAction(
+                    serviceType: ServicesType.Prices, response: prices));
             })
             .catchError(() => store.dispatch(_ErrorAction(serviceType: ServicesType.Prices)));
         })
@@ -200,4 +201,15 @@ class _VolumeWithPricesEffects implements MiddlewareClass<AppState> {
     );
   }
 
+}
+
+class DataSourceSelectors {
+  final Store<AppState> store;
+
+  DataSourceSelectors({
+    @required this.store,
+  });
+
+  _ServiceDataState<List<TotalVolume>> volume() => this.store.state.dataSourceState.volume;
+  _ServiceDataState<MultipleSymbols> prices() => this.store.state.dataSourceState.prices;
 }
