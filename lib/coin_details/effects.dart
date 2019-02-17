@@ -33,10 +33,10 @@ class _MarketsDataEffect implements MiddlewareClass<AppState> {
     final prices = await PriceService(client: http.Client())
         .multipleSymbolsFullData(coins, currency);
 
-    store.dispatch(MarketsResponseDataAction(
-      prices: prices,
-      volume: volume,
-    ));
+//    store.dispatch(MarketsResponseDataAction(
+//      prices: prices,
+//      volume: volume,
+//    ));
   }
 }
 
