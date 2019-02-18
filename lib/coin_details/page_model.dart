@@ -48,7 +48,7 @@ class PageModel {
       onRequestHistogramData: () =>
           store.dispatch(HistogramRequestDataAction()),
       onChangeCurrency: (String currency) =>
-          store.dispatch(DetailsChangeCurrencyAction(currency: currency)),
+          store.dispatch(ChangeCurrencyAction(currency: currency)),
       onHistogramTimeRangeChange: (TimeRange timeRange) =>
           store.dispatch(DetailsHistogramTimeRange(timeRange: timeRange)),
       onRefresh: () => store.dispatch(DetailsRefresh()),

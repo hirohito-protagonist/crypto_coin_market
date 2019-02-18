@@ -16,6 +16,13 @@ class NavigationChangeToDetailsPageAction {
   });
 }
 
+class ChangeCurrencyAction {
+  final String currency;
+  ChangeCurrencyAction({
+    @required this.currency
+  });
+}
+
 class HistogramLoadingDataAction {
   final ServiceDataState dataState = ServiceDataState.Loading;
 }

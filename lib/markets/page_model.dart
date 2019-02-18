@@ -36,7 +36,7 @@ class PageModel {
       availableCurrencies: store.state.marketsPageState.availableCurrencies,
       activePage: store.state.marketsPageState.page,
       onChangeCurrency: (String currency) =>
-          store.dispatch(MarketsChangeCurrencyAction(currency: currency)),
+          store.dispatch(ChangeCurrencyAction(currency: currency)),
       onNavigateToDetails: (CoinInformation coinInformation) =>
           store.dispatch(NavigationChangeToDetailsPageAction(coinInformation: coinInformation)),
       onPageChange: (num page) =>

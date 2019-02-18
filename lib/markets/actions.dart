@@ -2,12 +2,6 @@ import 'package:flutter/foundation.dart';
 
 class MarketsRequestDataAction {}
 
-class MarketsChangeCurrencyAction {
-  final String currency;
-  MarketsChangeCurrencyAction({
-    @required this.currency
-  });
-}
 
 class MarketsChangePageAction {
   final int page;

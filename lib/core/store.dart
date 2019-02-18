@@ -4,6 +4,8 @@ import 'package:crypto_coin_market/markets/markets.dart';
 import 'package:crypto_coin_market/coin_details/coin_details.dart';
 import 'package:crypto_coin_market/data_source/data_source.dart';
 
+import './actions.dart';
+
 class AppState {
   final String currency;
   final MarketsPageState marketsPageState;
@@ -34,8 +36,7 @@ AppState appStateReducer(AppState state, action) {
 }
 
 String currencyReducer(String state, action) {
-  if (action is MarketsChangeCurrencyAction ||
-      action is DetailsChangeCurrencyAction) {
+  if (action is ChangeCurrencyAction) {
     return action.currency;
   }
   return state;

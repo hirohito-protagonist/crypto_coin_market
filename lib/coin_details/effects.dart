@@ -11,33 +11,13 @@ import './model.dart';
 
 List<Middleware<AppState>> coinDetailsEffects() {
   return [
-    TypedMiddleware<AppState, DetailsChangeCurrencyAction>(
-        _MarketsDataEffect()),
     TypedMiddleware<AppState, HistogramRequestDataAction>(
         _HistogramDataEffect()),
     TypedMiddleware<AppState, DetailsRefresh>(
         _HistogramDataEffect()),
-    TypedMiddleware<AppState, DetailsChangeCurrencyAction>(_DetailsEffect()),
+    TypedMiddleware<AppState, ChangeCurrencyAction>(_DetailsEffect()),
     TypedMiddleware<AppState, DetailsRefresh>(_DetailsEffect()),
   ];
-}
-
-class _MarketsDataEffect implements MiddlewareClass<AppState> {
-  @override
-  void call(Store<AppState> store, action, NextDispatcher next) async {
-    next(action);
-    final currency = Currency.fromCurrencyCode(store.state.currency);
-    final volume = await TopListsService(client: http.Client())
-        .totalVolume(currency, page: store.state.marketsPageState.page);
-    final coins = volume.map((TotalVolume tv) => tv.coinInfo.name).toList();
-    final prices = await PriceService(client: http.Client())
-        .multipleSymbolsFullData(coins, currency);
-
-//    store.dispatch(MarketsResponseDataAction(
-//      prices: prices,
-//      volume: volume,
-//    ));
-  }
 }
 
 class _HistogramDataEffect implements MiddlewareClass<AppState> {
