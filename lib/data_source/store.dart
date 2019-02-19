@@ -27,6 +27,17 @@ class VolumeWithPricesAction {
   });
 }
 
+class HistogramTimeRangeAction {
+  final TimeRange timeRange;
+  final Currency currency;
+  final String cryptoCoin;
+  HistogramTimeRangeAction({
+    @required this.currency,
+    @required this.timeRange,
+    @required this.cryptoCoin
+  });
+}
+
 class _LoadingAction {
   final ServiceDataState state = ServiceDataState.Loading;
   final ServicesType serviceType;
@@ -166,7 +177,8 @@ _ServiceDataState<List<HistogramDataModel>> _histogramReducer(_ServiceDataState<
 
 List<Middleware<AppState>> dataSourceEffects() {
   return [
-    TypedMiddleware<AppState, VolumeWithPricesAction>(_VolumeWithPricesEffects())
+    TypedMiddleware<AppState, VolumeWithPricesAction>(_VolumeWithPricesEffects()),
+    TypedMiddleware<AppState, HistogramTimeRangeAction>(_HistogramTimeRangeEffects())
   ];
 }
 
@@ -203,6 +215,30 @@ class _VolumeWithPricesEffects implements MiddlewareClass<AppState> {
 
 }
 
+class _HistogramTimeRangeEffects implements MiddlewareClass<AppState> {
+
+  CancelableOperation<dynamic> _dataOperation;
+
+  @override
+  void call(Store<AppState> store, action, NextDispatcher next) {
+    _dataOperation?.cancel();
+
+    final timeRange = action.timeRange;
+    final currency = action.currency;
+    final cryptoCoin = action.cryptoCoin;
+    store.dispatch(_LoadingAction(serviceType: ServicesType.Histogram));
+    _dataOperation = CancelableOperation.fromFuture(
+      HistogramService.OHLCV(timeRange, currency, cryptoCoin)
+        .then((data) {
+          store.dispatch(_SuccessAction(
+              serviceType: ServicesType.Histogram, response: data));
+        })
+        .catchError(() => store.dispatch(_ErrorAction(serviceType: ServicesType.Histogram)))
+    );
+  }
+
+}
+
 class DataSourceSelectors {
   final Store<AppState> store;
 
@@ -212,4 +248,5 @@ class DataSourceSelectors {
 
   _ServiceDataState<List<TotalVolume>> volume() => this.store.state.dataSourceState.volume;
   _ServiceDataState<MultipleSymbols> prices() => this.store.state.dataSourceState.prices;
+  _ServiceDataState<List<HistogramDataModel>> histogram() => this.store.state.dataSourceState.histogram;
 }
