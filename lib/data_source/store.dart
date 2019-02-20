@@ -29,7 +29,7 @@ class VolumeWithPricesAction {
 
 class HistogramTimeRangeAction {
   final TimeRange timeRange;
-  final Currency currency;
+  final String currency;
   final String cryptoCoin;
   HistogramTimeRangeAction({
     @required this.currency,

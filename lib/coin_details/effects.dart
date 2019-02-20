@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:redux/redux.dart';
-import 'package:async/async.dart';
 
 import 'package:crypto_coin_market/data_source/data_source.dart';
 import 'package:crypto_coin_market/core/core.dart';
@@ -21,27 +20,15 @@ List<Middleware<AppState>> coinDetailsEffects() {
 }
 
 class _HistogramDataEffect implements MiddlewareClass<AppState> {
-  CancelableOperation<dynamic> _operation;
 
   @override
   void call(Store<AppState> store, action, NextDispatcher next) {
     next(action);
-    _operation?.cancel();
-
-    store.dispatch(HistogramLoadingDataAction());
-    _operation = CancelableOperation.fromFuture(
-      HistogramService.OHLCV(
-        store.state.detailsPageState.activeHistogramRange,
-        store.state.currency,
-        store.state.detailsPageState.details.coinInformation.name
-      )
-      .then((histData) {
-        store.dispatch(HistogramSuccessDataAction());
-        store.dispatch(HistogramResponseDataAction(data: histData));
-      })
-      .catchError((e) => store.dispatch(HistogramErrorDataAction()))
-    );
-
+    store.dispatch(HistogramTimeRangeAction(
+      currency: store.state.currency,
+      timeRange: store.state.detailsPageState.activeHistogramRange,
+      cryptoCoin: store.state.detailsPageState.details.coinInformation.name,
+    ));
   }
 }
 

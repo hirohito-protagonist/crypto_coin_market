@@ -36,15 +36,16 @@ class PageModel {
   });
 
   factory PageModel.create(Store<AppState> store) {
+    final dataSourceSelectors = DataSourceSelectors(store: store);
     return PageModel(
       activeCurrency: store.state.currency,
       availableCurrencies: store.state.marketsPageState.availableCurrencies,
       details: store.state.detailsPageState.details,
-      histogramData: store.state.detailsPageState.histogramData,
+      histogramData: dataSourceSelectors.histogram().response,
       activeHistogramRange: store.state.detailsPageState.activeHistogramRange,
       histogramTimeRange: store.state.detailsPageState.histogramTimeRange,
       timeRangeTranslation: store.state.detailsPageState.timeRangeTranslation,
-      histogramDataState: store.state.detailsPageState.histogramDataState,
+      histogramDataState: dataSourceSelectors.histogram().state,
       onRequestHistogramData: () =>
           store.dispatch(HistogramRequestDataAction()),
       onChangeCurrency: (String currency) =>
