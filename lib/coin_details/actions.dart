@@ -20,4 +20,6 @@ class DetailsHistogramTimeRange {
   });
 }
 
+class DetailsHistogramRequestDataAction {}
+
 class DetailsRefresh {}

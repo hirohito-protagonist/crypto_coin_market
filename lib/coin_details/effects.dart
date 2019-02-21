@@ -10,7 +10,7 @@ import './model.dart';
 
 List<Middleware<AppState>> coinDetailsEffects() {
   return [
-    TypedMiddleware<AppState, HistogramRequestDataAction>(
+    TypedMiddleware<AppState, DetailsHistogramRequestDataAction>(
         _HistogramDataEffect()),
     TypedMiddleware<AppState, DetailsRefresh>(
         _HistogramDataEffect()),

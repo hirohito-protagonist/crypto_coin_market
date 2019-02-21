@@ -47,7 +47,7 @@ class PageModel {
       timeRangeTranslation: store.state.detailsPageState.timeRangeTranslation,
       histogramDataState: dataSourceSelectors.histogram().state,
       onRequestHistogramData: () =>
-          store.dispatch(HistogramRequestDataAction()),
+          store.dispatch(DetailsHistogramRequestDataAction()),
       onChangeCurrency: (String currency) =>
           store.dispatch(ChangeCurrencyAction(currency: currency)),
       onHistogramTimeRangeChange: (TimeRange timeRange) =>

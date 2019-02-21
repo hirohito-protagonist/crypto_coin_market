@@ -22,24 +22,3 @@ class ChangeCurrencyAction {
     @required this.currency
   });
 }
-
-class HistogramLoadingDataAction {
-  final ServiceDataState dataState = ServiceDataState.Loading;
-}
-
-class HistogramErrorDataAction {
-  final ServiceDataState dataState = ServiceDataState.Error;
-}
-
-class HistogramSuccessDataAction {
-  final ServiceDataState dataState = ServiceDataState.Success;
-}
-
-class HistogramRequestDataAction {}
-class HistogramResponseDataAction {
-  List<HistogramDataModel> data;
-
-  HistogramResponseDataAction({
-    @required this.data
-  });
-}
