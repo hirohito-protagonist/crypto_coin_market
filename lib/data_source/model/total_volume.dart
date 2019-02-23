@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-import 'coin_info.model.dart';
+import 'coin_info.dart';
 
 class TotalVolume {
   final CoinInfo coinInfo;
