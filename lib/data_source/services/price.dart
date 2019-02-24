@@ -4,8 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import './../model/model.dart';
 
-import './util.service.dart';
-import './uri.service.dart';
+import './util.dart';
+import './uri.dart';
 
 class PriceService {
 

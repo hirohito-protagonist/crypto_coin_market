@@ -1,6 +1,6 @@
 import 'package:test/test.dart';
 
-import 'package:crypto_coin_market/data_source/services/util.service.dart';
+import 'package:crypto_coin_market/data_source/services/util.dart';
 
 void main() {
 

@@ -2,7 +2,7 @@ import 'package:test/test.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:crypto_coin_market/data_source/data_source.dart';
-import 'package:crypto_coin_market/data_source/services/uri.service.dart';
+import 'package:crypto_coin_market/data_source/services/uri.dart';
 import 'package:mockito/mockito.dart';
 
 class MockClient extends Mock implements http.Client {}

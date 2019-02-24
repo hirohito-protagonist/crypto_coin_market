@@ -1,3 +1,3 @@
-export './histogram.service.dart';
-export './price.service.dart';
-export './toplists.service.dart';
+export './histogram.dart';
+export './price.dart';
+export './toplists.dart';
