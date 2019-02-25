@@ -24,7 +24,9 @@ class VolumeWithPricesAction {
   VolumeWithPricesAction({
     @required this.currency,
     @required this.page,
-  });
+  }):
+    assert(currency != null),
+    assert(page != null);
 }
 
 class HistogramTimeRangeAction {
@@ -35,7 +37,10 @@ class HistogramTimeRangeAction {
     @required this.currency,
     @required this.timeRange,
     @required this.cryptoCoin
-  });
+  }):
+    assert(currency != null),
+    assert(timeRange != null),
+    assert(cryptoCoin != null);
 }
 
 class _LoadingAction {

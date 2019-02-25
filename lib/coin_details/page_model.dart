@@ -33,7 +33,14 @@ class PageModel {
     @required this.onHistogramTimeRangeChange,
     @required this.onRefresh,
     @required this.histogramDataState,
-  });
+  }):
+    assert(activeCurrency != null),
+    assert(availableCurrencies != null),
+    assert(details != null),
+    assert(timeRangeTranslation != null),
+    assert(histogramTimeRange != null),
+    assert(activeHistogramRange != null),
+    assert(histogramData != null);
 
   factory PageModel.create(Store<AppState> store) {
     final dataSourceSelectors = DataSourceSelectors(store: store);

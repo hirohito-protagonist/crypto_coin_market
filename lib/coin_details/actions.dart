@@ -9,7 +9,7 @@ class DetailsUpdate {
 
   DetailsUpdate({
     @required this.details
-  });
+  }): assert(details != null);
 }
 
 class DetailsHistogramTimeRange {
@@ -17,7 +17,7 @@ class DetailsHistogramTimeRange {
 
   DetailsHistogramTimeRange({
     @required this.timeRange
-  });
+  }): assert(timeRange != null);
 }
 
 class DetailsHistogramRequestDataAction {}

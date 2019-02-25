@@ -26,7 +26,10 @@ class PageModel {
     @required this.onRequestData,
     @required this.onRefresh,
     @required this.dataSourceSelectors,
-  });
+  }):
+    assert(activeCurrency != null),
+    assert(availableCurrencies != null),
+    assert(activePage != null);
 
   factory PageModel.create(Store<AppState> store) {
     final dataSourceSelectors = DataSourceSelectors(store: store);
