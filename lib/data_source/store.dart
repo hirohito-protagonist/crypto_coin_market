@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:async/async.dart';
 import 'package:http/http.dart' as http;
 import 'package:redux/redux.dart';
@@ -6,71 +5,9 @@ import 'package:redux/redux.dart';
 import 'package:flutter/foundation.dart';
 import './model/model.dart';
 import './services/services.dart';
+import './actions.dart';
 import 'package:crypto_coin_market/core/core.dart';
 
-
-enum ServicesType {
-  Volume, Prices, Histogram
-}
-
-enum ServiceDataState {
-  Error, Success, Loading
-}
-
-class VolumeWithPricesAction {
-  final num page;
-  final Currency currency;
-
-  VolumeWithPricesAction({
-    @required this.currency,
-    @required this.page,
-  }):
-    assert(currency != null),
-    assert(page != null);
-}
-
-class HistogramTimeRangeAction {
-  final TimeRange timeRange;
-  final String currency;
-  final String cryptoCoin;
-  HistogramTimeRangeAction({
-    @required this.currency,
-    @required this.timeRange,
-    @required this.cryptoCoin
-  }):
-    assert(currency != null),
-    assert(timeRange != null),
-    assert(cryptoCoin != null);
-}
-
-class _LoadingAction {
-  final ServiceDataState state = ServiceDataState.Loading;
-  final ServicesType serviceType;
-
-  _LoadingAction({
-    @required this.serviceType,
-  });
-}
-
-class _ErrorAction {
-  final ServiceDataState state = ServiceDataState.Loading;
-  final ServicesType serviceType;
-
-  _ErrorAction({
-    @required this.serviceType,
-  });
-}
-
-class _SuccessAction<T> {
-  final ServiceDataState state = ServiceDataState.Success;
-  final ServicesType serviceType;
-  final T response;
-
-  _SuccessAction({
-    @required this.serviceType,
-    @required this.response,
-  });
-}
 
 class _ServiceDataState<T> {
   final T response;
@@ -118,7 +55,7 @@ DataSourceState dataSourceStateReducer(DataSourceState state, action) {
 
 _ServiceDataState<List<TotalVolume>> _volumeReducer(_ServiceDataState<List<TotalVolume>> state, action) {
 
-  if (action is _SuccessAction && action.serviceType == ServicesType.Volume) {
+  if (action is SuccessAction && action.serviceType == ServicesType.Volume) {
     return _ServiceDataState<List<TotalVolume>>(
       state: action.state,
       response: List.unmodifiable(action.response)
@@ -126,8 +63,8 @@ _ServiceDataState<List<TotalVolume>> _volumeReducer(_ServiceDataState<List<Total
   }
 
   if (
-    (action is _ErrorAction && action.serviceType == ServicesType.Volume) ||
-    (action is _LoadingAction && action.serviceType == ServicesType.Volume)
+    (action is ErrorAction && action.serviceType == ServicesType.Volume) ||
+    (action is LoadingAction && action.serviceType == ServicesType.Volume)
   ) {
     return _ServiceDataState<List<TotalVolume>>(
         state: action.state,
@@ -139,7 +76,7 @@ _ServiceDataState<List<TotalVolume>> _volumeReducer(_ServiceDataState<List<Total
 
 _ServiceDataState<MultipleSymbols> _pricesReducer(_ServiceDataState<MultipleSymbols> state, action) {
 
-  if (action is _SuccessAction && action.serviceType == ServicesType.Prices) {
+  if (action is SuccessAction && action.serviceType == ServicesType.Prices) {
     return _ServiceDataState<MultipleSymbols>(
       state: action.state,
       response: action.response
@@ -147,8 +84,8 @@ _ServiceDataState<MultipleSymbols> _pricesReducer(_ServiceDataState<MultipleSymb
   }
 
   if (
-    (action is _ErrorAction && action.serviceType == ServicesType.Prices) ||
-    (action is _LoadingAction && action.serviceType == ServicesType.Prices)
+    (action is ErrorAction && action.serviceType == ServicesType.Prices) ||
+    (action is LoadingAction && action.serviceType == ServicesType.Prices)
   ) {
     return _ServiceDataState<MultipleSymbols>(
       state: action.state,
@@ -160,7 +97,7 @@ _ServiceDataState<MultipleSymbols> _pricesReducer(_ServiceDataState<MultipleSymb
 
 _ServiceDataState<List<HistogramDataModel>> _histogramReducer(_ServiceDataState<List<HistogramDataModel>> state, action) {
 
-  if (action is _SuccessAction && action.serviceType == ServicesType.Histogram) {
+  if (action is SuccessAction && action.serviceType == ServicesType.Histogram) {
     return _ServiceDataState<List<HistogramDataModel>>(
       state: action.state,
       response: List.unmodifiable(action.response)
@@ -168,8 +105,8 @@ _ServiceDataState<List<HistogramDataModel>> _histogramReducer(_ServiceDataState<
   }
 
   if (
-    (action is _ErrorAction && action.serviceType == ServicesType.Histogram) ||
-    (action is _LoadingAction && action.serviceType == ServicesType.Histogram)
+    (action is ErrorAction && action.serviceType == ServicesType.Histogram) ||
+    (action is LoadingAction && action.serviceType == ServicesType.Histogram)
   ) {
     return _ServiceDataState<List<HistogramDataModel>>(
       state: action.state,
@@ -199,22 +136,22 @@ class _VolumeWithPricesEffects implements MiddlewareClass<AppState> {
     final page = action.page;
     final currency = action.currency;
 
-    store.dispatch(_LoadingAction(serviceType: ServicesType.Volume));
+    store.dispatch(LoadingAction(serviceType: ServicesType.Volume));
     _dataOperation = CancelableOperation.fromFuture(
       TopListsService(client: http.Client()).volume(currency, page: page)
         .then((volume) {
 
-          store.dispatch(_SuccessAction(serviceType: ServicesType.Volume, response: volume));
-          store.dispatch(_LoadingAction(serviceType: ServicesType.Prices));
+          store.dispatch(SuccessAction(serviceType: ServicesType.Volume, response: volume));
+          store.dispatch(LoadingAction(serviceType: ServicesType.Prices));
           final coins = volume.map((TotalVolume tv) => tv.coinInfo.name).toList();
           return PriceService(client: http.Client()).multipleSymbolsFullData(coins, currency)
             .then((prices) {
-                store.dispatch(_SuccessAction(
+                store.dispatch(SuccessAction(
                     serviceType: ServicesType.Prices, response: prices));
             })
-            .catchError(() => store.dispatch(_ErrorAction(serviceType: ServicesType.Prices)));
+            .catchError(() => store.dispatch(ErrorAction(serviceType: ServicesType.Prices)));
         })
-        .catchError(() => store.dispatch(_ErrorAction(serviceType: ServicesType.Volume)))
+        .catchError(() => store.dispatch(ErrorAction(serviceType: ServicesType.Volume)))
     );
   }
 
@@ -231,14 +168,14 @@ class _HistogramTimeRangeEffects implements MiddlewareClass<AppState> {
     final timeRange = action.timeRange;
     final currency = action.currency;
     final cryptoCoin = action.cryptoCoin;
-    store.dispatch(_LoadingAction(serviceType: ServicesType.Histogram));
+    store.dispatch(LoadingAction(serviceType: ServicesType.Histogram));
     _dataOperation = CancelableOperation.fromFuture(
       HistogramService.OHLCV(timeRange, currency, cryptoCoin)
         .then((data) {
-          store.dispatch(_SuccessAction(
+          store.dispatch(SuccessAction(
               serviceType: ServicesType.Histogram, response: data));
         })
-        .catchError(() => store.dispatch(_ErrorAction(serviceType: ServicesType.Histogram)))
+        .catchError(() => store.dispatch(ErrorAction(serviceType: ServicesType.Histogram)))
     );
   }
 
