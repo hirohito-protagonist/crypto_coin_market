@@ -1,25 +1,23 @@
-import 'package:redux/redux.dart';
-
 import 'package:flutter/foundation.dart';
 import './model/model.dart';
 import './actions.dart';
-import 'package:crypto_coin_market/core/core.dart';
 
 
-class _ServiceDataState<T> {
+
+class ServiceDataSourceState<T> {
   final T response;
   final ServiceDataState state;
 
-  _ServiceDataState({
+  ServiceDataSourceState({
     @required this.response,
     @required this.state,
   });
 }
 
 class DataSourceState {
-  final _ServiceDataState<List<TotalVolume>> volume;
-  final _ServiceDataState<MultipleSymbols> prices;
-  final _ServiceDataState<List<HistogramDataModel>> histogram;
+  final ServiceDataSourceState<List<TotalVolume>> volume;
+  final ServiceDataSourceState<MultipleSymbols> prices;
+  final ServiceDataSourceState<List<HistogramDataModel>> histogram;
 
   DataSourceState({
     @required this.volume,
@@ -28,15 +26,15 @@ class DataSourceState {
   });
 
   DataSourceState.initialState():
-    volume = _ServiceDataState<List<TotalVolume>>(
+    volume = ServiceDataSourceState<List<TotalVolume>>(
       response: List.unmodifiable([]),
       state: ServiceDataState.Success
     ),
-    prices = _ServiceDataState<MultipleSymbols>(
+    prices = ServiceDataSourceState<MultipleSymbols>(
       response: MultipleSymbols(raw: Map.identity(), display: Map.identity()),
       state: ServiceDataState.Success
     ),
-    histogram = _ServiceDataState<List<HistogramDataModel>>(
+    histogram = ServiceDataSourceState<List<HistogramDataModel>>(
       response: List.unmodifiable([]),
       state: ServiceDataState.Success
     );
@@ -50,10 +48,10 @@ DataSourceState dataSourceStateReducer(DataSourceState state, action) {
   );
 }
 
-_ServiceDataState<List<TotalVolume>> _volumeReducer(_ServiceDataState<List<TotalVolume>> state, action) {
+ServiceDataSourceState<List<TotalVolume>> _volumeReducer(ServiceDataSourceState<List<TotalVolume>> state, action) {
 
   if (action is SuccessAction && action.serviceType == ServicesType.Volume) {
-    return _ServiceDataState<List<TotalVolume>>(
+    return ServiceDataSourceState<List<TotalVolume>>(
       state: action.state,
       response: List.unmodifiable(action.response)
     );
@@ -63,7 +61,7 @@ _ServiceDataState<List<TotalVolume>> _volumeReducer(_ServiceDataState<List<Total
     (action is ErrorAction && action.serviceType == ServicesType.Volume) ||
     (action is LoadingAction && action.serviceType == ServicesType.Volume)
   ) {
-    return _ServiceDataState<List<TotalVolume>>(
+    return ServiceDataSourceState<List<TotalVolume>>(
         state: action.state,
         response: List.unmodifiable([])
     );
@@ -71,10 +69,10 @@ _ServiceDataState<List<TotalVolume>> _volumeReducer(_ServiceDataState<List<Total
   return state;
 }
 
-_ServiceDataState<MultipleSymbols> _pricesReducer(_ServiceDataState<MultipleSymbols> state, action) {
+ServiceDataSourceState<MultipleSymbols> _pricesReducer(ServiceDataSourceState<MultipleSymbols> state, action) {
 
   if (action is SuccessAction && action.serviceType == ServicesType.Prices) {
-    return _ServiceDataState<MultipleSymbols>(
+    return ServiceDataSourceState<MultipleSymbols>(
       state: action.state,
       response: action.response
     );
@@ -84,7 +82,7 @@ _ServiceDataState<MultipleSymbols> _pricesReducer(_ServiceDataState<MultipleSymb
     (action is ErrorAction && action.serviceType == ServicesType.Prices) ||
     (action is LoadingAction && action.serviceType == ServicesType.Prices)
   ) {
-    return _ServiceDataState<MultipleSymbols>(
+    return ServiceDataSourceState<MultipleSymbols>(
       state: action.state,
       response: MultipleSymbols(raw: Map.identity(), display: Map.identity())
     );
@@ -92,10 +90,10 @@ _ServiceDataState<MultipleSymbols> _pricesReducer(_ServiceDataState<MultipleSymb
   return state;
 }
 
-_ServiceDataState<List<HistogramDataModel>> _histogramReducer(_ServiceDataState<List<HistogramDataModel>> state, action) {
+ServiceDataSourceState<List<HistogramDataModel>> _histogramReducer(ServiceDataSourceState<List<HistogramDataModel>> state, action) {
 
   if (action is SuccessAction && action.serviceType == ServicesType.Histogram) {
-    return _ServiceDataState<List<HistogramDataModel>>(
+    return ServiceDataSourceState<List<HistogramDataModel>>(
       state: action.state,
       response: List.unmodifiable(action.response)
     );
@@ -105,7 +103,7 @@ _ServiceDataState<List<HistogramDataModel>> _histogramReducer(_ServiceDataState<
     (action is ErrorAction && action.serviceType == ServicesType.Histogram) ||
     (action is LoadingAction && action.serviceType == ServicesType.Histogram)
   ) {
-    return _ServiceDataState<List<HistogramDataModel>>(
+    return ServiceDataSourceState<List<HistogramDataModel>>(
       state: action.state,
       response: List.unmodifiable([])
     );
@@ -115,14 +113,3 @@ _ServiceDataState<List<HistogramDataModel>> _histogramReducer(_ServiceDataState<
 
 
 
-class DataSourceSelectors {
-  final Store<AppState> store;
-
-  DataSourceSelectors({
-    @required this.store,
-  });
-
-  _ServiceDataState<List<TotalVolume>> volume() => this.store.state.dataSourceState.volume;
-  _ServiceDataState<MultipleSymbols> prices() => this.store.state.dataSourceState.prices;
-  _ServiceDataState<List<HistogramDataModel>> histogram() => this.store.state.dataSourceState.histogram;
-}
