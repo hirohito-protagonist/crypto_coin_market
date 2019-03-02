@@ -13,12 +13,12 @@ class NavigationChangeToDetailsPageAction {
   final CoinInformation coinInformation;
   NavigationChangeToDetailsPageAction({
     @required this.coinInformation
-  });
+  }): assert(coinInformation != null);
 }
 
 class ChangeCurrencyAction {
   final String currency;
   ChangeCurrencyAction({
     @required this.currency
-  });
+  }): assert(currency != null);
 }

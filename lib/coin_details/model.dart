@@ -6,6 +6,6 @@ class DetailsModel {
 
   DetailsModel({
     @required this.coinInformation
-  });
+  }): assert(coinInformation != null);
 
 }

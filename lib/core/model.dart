@@ -15,5 +15,10 @@ class CoinInformation {
     @required this.formattedPrice,
     @required this.priceChange,
     @required this.formattedPriceChange
-  });
+  }): assert(imageUrl != null),
+      assert(name != null),
+      assert(fullName != null),
+      assert(formattedPrice != null),
+      assert(priceChange != null),
+      assert(formattedPriceChange != null);
 }
