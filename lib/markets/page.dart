@@ -8,14 +8,14 @@ import 'package:crypto_coin_market/widgets/coin_list_tile.widget.dart';
 import 'package:crypto_coin_market/widgets/loading.widget.dart';
 import 'package:crypto_coin_market/widgets/error.widget.dart';
 
-import './page_model.dart';
+import './selectors.dart';
 import './model.dart';
 
 class MarketsPage extends StatelessWidget {
   final Store<AppState> store;
 
   MarketsPage({this.store}) {
-    final model = PageModel.create(this.store);
+    final model = MarketsSelectors.create(this.store);
     model.onRequestData();
   }
 
@@ -25,9 +25,9 @@ class MarketsPage extends StatelessWidget {
         appBar: AppBar(
           title: Text('Markets'),
           actions: <Widget>[
-            StoreConnector<AppState, PageModel>(
-              converter: (Store<AppState> store) => PageModel.create(store),
-              builder: (BuildContext context, PageModel model) {
+            StoreConnector<AppState, MarketsSelectors>(
+              converter: (Store<AppState> store) => MarketsSelectors.create(store),
+              builder: (BuildContext context, MarketsSelectors model) {
                 return IconButton(
                   icon: Icon(
                     Icons.refresh,
@@ -56,19 +56,19 @@ class MarketsPage extends StatelessWidget {
 class _VolumeListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AppState, PageModel>(
-      converter: (Store<AppState> store) => PageModel.create(store),
-      builder: (BuildContext context, PageModel model) {
-        return model.dataSourceSelectors.volume().state == ServiceDataState.Loading
+    return StoreConnector<AppState, MarketsSelectors>(
+      converter: (Store<AppState> store) => MarketsSelectors.create(store),
+      builder: (BuildContext context, MarketsSelectors model) {
+        return model.dataSource().volume().state == ServiceDataState.Loading
             ? Loading()
-            : model.dataSourceSelectors.volume().state == ServiceDataState.Error
+            : model.dataSource().volume().state == ServiceDataState.Error
             ? ErrorMessageWidget(message: 'Upps we can load data')
             : ListView.builder(
-          itemCount: model.dataSourceSelectors.volume().response.length,
+          itemCount: model.dataSource().volume().response.length,
           itemBuilder: (context, i) {
             final marketsModel = MarketsModel(
-              volume: model.dataSourceSelectors.volume().response,
-              prices: model.dataSourceSelectors.prices().response
+              volume: model.dataSource().volume().response,
+              prices: model.dataSource().prices().response
             );
             final item = marketsModel.volumeItem(i);
             return CoinListTile(
@@ -98,12 +98,12 @@ class _VolumeListWidget extends StatelessWidget {
 class _CurrencyDropDownWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AppState, PageModel>(
-        converter: (Store<AppState> store) => PageModel.create(store),
-        builder: (BuildContext context, PageModel model) {
+    return StoreConnector<AppState, MarketsSelectors>(
+        converter: (Store<AppState> store) => MarketsSelectors.create(store),
+        builder: (BuildContext context, MarketsSelectors model) {
           return DropdownButton(
-            value: model.activeCurrency,
-            items: model.availableCurrencies.map((String value) {
+            value: model.activeCurrency(),
+            items: model.availableCurrencies().map((String value) {
               return new DropdownMenuItem<String>(
                 value: value,
                 child: new Text(value),
@@ -120,11 +120,11 @@ class _CurrencyDropDownWidget extends StatelessWidget {
 class _VolumePageDropDownWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AppState, PageModel>(
-      converter: (Store<AppState> store) => PageModel.create(store),
-      builder: (BuildContext context, PageModel model) {
+    return StoreConnector<AppState, MarketsSelectors>(
+      converter: (Store<AppState> store) => MarketsSelectors.create(store),
+      builder: (BuildContext context, MarketsSelectors model) {
         return DropdownButton(
-          value: model.activePage + 1,
+          value: model.activePage() + 1,
           items: List.generate(26, (i) => i + 1).map((int value) {
             return new DropdownMenuItem<num>(
               value: value,
