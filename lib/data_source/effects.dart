@@ -39,9 +39,9 @@ class _VolumeWithPricesEffects implements MiddlewareClass<AppState> {
             store.dispatch(SuccessAction(
                 serviceType: ServicesType.Prices, response: prices));
           })
-              .catchError(() => store.dispatch(ErrorAction(serviceType: ServicesType.Prices)));
+              .catchError((e) => store.dispatch(ErrorAction(serviceType: ServicesType.Prices)));
         })
-            .catchError(() => store.dispatch(ErrorAction(serviceType: ServicesType.Volume)))
+            .catchError((e) => store.dispatch(ErrorAction(serviceType: ServicesType.Volume)))
     );
   }
 
@@ -64,8 +64,7 @@ class _HistogramTimeRangeEffects implements MiddlewareClass<AppState> {
             .then((data) {
           store.dispatch(SuccessAction(
               serviceType: ServicesType.Histogram, response: data));
-        })
-            .catchError(() => store.dispatch(ErrorAction(serviceType: ServicesType.Histogram)))
+        }).catchError((e) => store.dispatch(ErrorAction(serviceType: ServicesType.Histogram)))
     );
   }
 
