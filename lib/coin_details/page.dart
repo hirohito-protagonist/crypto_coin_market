@@ -181,8 +181,9 @@ class _CoinInformationWidget extends StatelessWidget {
             child: Row(
               children: <Widget>[
                 CachedNetworkImage(
-                  placeholder: CircularProgressIndicator(),
                   imageUrl: model.details.coinInformation.imageUrl,
+                  placeholder: (context, url) => CircularProgressIndicator(),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
                   height: 30.0,
                 ),
                 Expanded(

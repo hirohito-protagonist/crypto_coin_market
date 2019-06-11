@@ -34,8 +34,9 @@ class CoinListTile extends StatelessWidget {
         children: <Widget>[
           new ListTile(
             leading: CachedNetworkImage(
-              placeholder: CircularProgressIndicator(),
               imageUrl: imageUrl,
+              placeholder: (context, url) => CircularProgressIndicator(),
+              errorWidget: (context, url, error) => Icon(Icons.error),
               height: 30.0,
             ),
             onTap: () {

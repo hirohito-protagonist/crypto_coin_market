@@ -24,7 +24,7 @@ class CoinMarketApp extends StatelessWidget {
       store: store,
       child: MaterialApp(
         title: 'Crypto Coin Market',
-        theme: new ThemeData(
+        theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
         navigatorKey: NavigationKeys.navigationState,
