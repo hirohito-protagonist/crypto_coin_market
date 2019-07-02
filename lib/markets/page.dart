@@ -23,6 +23,11 @@ class MarketsPage extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: Text('Markets'),
+          backgroundColor: Colors.transparent,
+          elevation: 0.0,
+          textTheme: TextTheme(
+            title: Theme.of(context).textTheme.title
+          ),
           actions: <Widget>[
             StoreConnector<AppState, MarketsSelectors>(
               converter: (Store<AppState> store) => MarketsSelectors.create(store),

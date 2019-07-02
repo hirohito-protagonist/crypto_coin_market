@@ -31,6 +31,11 @@ class DetailsPage extends StatelessWidget {
             converter: (Store<AppState> store) => PageModel.create(store),
             builder: (BuildContext context, PageModel model) =>
                 Text(model.details.coinInformation.fullName)),
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+        textTheme: TextTheme(
+            title: Theme.of(context).textTheme.title
+        ),
         actions: <Widget>[
           StoreConnector<AppState, PageModel>(
               converter: (Store<AppState> store) => PageModel.create(store),

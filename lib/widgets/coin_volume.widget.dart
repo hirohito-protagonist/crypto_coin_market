@@ -49,7 +49,32 @@ class CoinVolumeState extends State<CoinVolumeWidget> {
       charts.TimeSeriesChart(
         _createHistVolumeData(histData),
         animate: true,
-        domainAxis: charts.DateTimeAxisSpec(usingBarRenderer: true),
+        domainAxis: charts.DateTimeAxisSpec(
+          usingBarRenderer: true,
+          showAxisLine: true,
+          renderSpec: charts.SmallTickRendererSpec(
+            minimumPaddingBetweenLabelsPx: 0,
+            labelStyle: charts.TextStyleSpec(
+              color: charts.MaterialPalette.white,
+            ),
+            lineStyle: charts.LineStyleSpec(
+              color: charts.MaterialPalette.white,
+            ),
+          ),
+        ),
+        primaryMeasureAxis: charts.NumericAxisSpec(
+            tickProviderSpec: charts.BasicNumericTickProviderSpec(zeroBound: false),
+            showAxisLine: true,
+            renderSpec: charts.GridlineRendererSpec(
+              tickLengthPx: 2,
+              labelStyle: charts.TextStyleSpec(
+                color: charts.MaterialPalette.white,
+              ),
+              lineStyle: charts.LineStyleSpec(
+                color: charts.MaterialPalette.white,
+              ),
+            )
+        ),
         defaultRenderer: charts.BarRendererConfig<DateTime>(),
       ),
     );
@@ -69,7 +94,8 @@ class CoinVolumeState extends State<CoinVolumeWidget> {
     return [
       charts.Series<LinearTime, DateTime>(
         id: 'TimeSeriesOfVolume',
-        colorFn: (_, __) => charts.MaterialPalette.purple.shadeDefault,
+        colorFn: (_, __) => charts.MaterialPalette.deepOrange.shadeDefault,
+        fillColorFn: (_, __) => charts.MaterialPalette.deepOrange.shadeDefault,
         domainFn: (LinearTime f, _) => f.time,
         measureFn: (LinearTime f, _) => f.volumeTo,
         data: data,

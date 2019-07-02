@@ -142,8 +142,30 @@ class CoinCostState extends State<CoinCostWidget> {
           charts.TimeSeriesChart(
             _createHistCostData(histData),
             animate: true,
+            domainAxis: charts.DateTimeAxisSpec(
+              showAxisLine: true,
+              renderSpec: charts.SmallTickRendererSpec(
+                minimumPaddingBetweenLabelsPx: 0,
+                labelStyle: charts.TextStyleSpec(
+                  color: charts.MaterialPalette.white,
+                ),
+                lineStyle: charts.LineStyleSpec(
+                  color: charts.MaterialPalette.white,
+                ),
+              ),
+            ),
             primaryMeasureAxis: charts.NumericAxisSpec(
               tickProviderSpec: charts.BasicNumericTickProviderSpec(zeroBound: false),
+              showAxisLine: true,
+              renderSpec: charts.GridlineRendererSpec(
+                tickLengthPx: 2,
+                labelStyle: charts.TextStyleSpec(
+                  color: charts.MaterialPalette.white,
+                ),
+                lineStyle: charts.LineStyleSpec(
+                  color: charts.MaterialPalette.white,
+                ),
+              )
             ),
             behaviors: [
               charts.Slider(
@@ -164,7 +186,9 @@ class CoinCostState extends State<CoinCostWidget> {
     return [
       charts.Series<LinearTime, DateTime>(
         id: 'TimeSeriesOfClosePrice',
-        colorFn: (_, __) => charts.MaterialPalette.purple.shadeDefault,
+        colorFn: (_, __) => charts.MaterialPalette.deepOrange.shadeDefault,
+        fillColorFn: (_, __) => charts.MaterialPalette.deepOrange.shadeDefault,
+        strokeWidthPxFn: (_, __) => 3,
         domainFn: (LinearTime f, _) => f.time,
         measureFn: (LinearTime f, _) => f.close,
         data: data,
