@@ -28,7 +28,15 @@ class CoinListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return new Card(
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            const Color.fromRGBO(62, 71, 115, 1),
+            const Color.fromRGBO(54, 62, 100, 1),
+          ],
+        ),
+      ),
       child: new Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[

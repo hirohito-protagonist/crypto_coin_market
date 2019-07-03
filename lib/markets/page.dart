@@ -20,40 +20,62 @@ class MarketsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text('Markets'),
-          backgroundColor: Colors.transparent,
-          elevation: 0.0,
-          textTheme: TextTheme(
-            title: Theme.of(context).textTheme.title
-          ),
-          actions: <Widget>[
-            StoreConnector<AppState, MarketsSelectors>(
-              converter: (Store<AppState> store) => MarketsSelectors.create(store),
-              builder: (BuildContext context, MarketsSelectors model) {
-                return IconButton(
-                  icon: Icon(
-                    Icons.refresh,
-                  ),
-                  onPressed: () => model.onRefresh(),
-                );
-              }
+    return Stack(
+      children: <Widget>[
+        Container(
+          decoration: BoxDecoration(
+            gradient: RadialGradient(
+              center: const Alignment(0.0, -0.6),
+              radius: 0.7,
+              colors: [
+                const Color.fromRGBO(56, 64, 104, 1),
+                const Color.fromRGBO(42, 49, 81, 1),
+              ],
+              stops: [0.4, 1.0],
             ),
-          ],
+          ),
         ),
-        body: _VolumeListWidget(),
-        bottomNavigationBar: BottomAppBar(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              _VolumePageDropDownWidget(),
-              Padding(padding: EdgeInsets.symmetric(horizontal: 5.0)),
-              _CurrencyDropDownWidget(),
-              Padding(padding: EdgeInsets.symmetric(horizontal: 5.0)),
+        Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            title: Text('MARKETS'),
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+            centerTitle: true,
+            textTheme: TextTheme(
+              title: Theme.of(context).textTheme.title,
+            ),
+            actions: <Widget>[
+              StoreConnector<AppState, MarketsSelectors>(
+                  converter: (Store<AppState> store) => MarketsSelectors.create(store),
+                  builder: (BuildContext context, MarketsSelectors model) {
+                    return IconButton(
+                      icon: Icon(
+                        Icons.refresh,
+                      ),
+                      onPressed: () => model.onRefresh(),
+                    );
+                  }
+              ),
             ],
           ),
-        ));
+          body: _VolumeListWidget(),
+          bottomNavigationBar: BottomAppBar(
+            elevation: 0.0,
+            color: Colors.transparent,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                _VolumePageDropDownWidget(),
+                Padding(padding: EdgeInsets.symmetric(horizontal: 5.0)),
+                _CurrencyDropDownWidget(),
+                Padding(padding: EdgeInsets.symmetric(horizontal: 5.0)),
+              ],
+            ),
+          )
+        )
+      ],
+    );
   }
 }
 
