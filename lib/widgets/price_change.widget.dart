@@ -18,6 +18,7 @@ class PriceChange extends StatelessWidget {
             price == '' ? '' : '${price}%',
             style: TextStyle(
               color: change == 0 ? Colors.black : change > 0 ? Colors.green : Colors.red,
+              fontWeight: FontWeight.bold,
             ),
           ),
           Column(

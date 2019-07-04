@@ -91,6 +91,7 @@ class _VolumeListWidget extends StatelessWidget {
             : model.dataState() == ServiceDataState.Error
             ? ErrorMessageWidget(message: 'Upps we can load data')
             : ListView.builder(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 0.0),
           itemCount: data.length,
           itemBuilder: (context, i) {
             final item = data[i];
