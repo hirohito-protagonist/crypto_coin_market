@@ -10,6 +10,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:crypto_coin_market/widgets/price_change.widget.dart';
 import 'package:crypto_coin_market/widgets/coin_cost.widget.dart';
 import 'package:crypto_coin_market/widgets/coin_volume.widget.dart';
+import 'package:crypto_coin_market/widgets/coin_list_tile.widget.dart';
 import 'package:crypto_coin_market/widgets/loading.widget.dart';
 import 'package:crypto_coin_market/widgets/error.widget.dart';
 
@@ -25,71 +26,86 @@ class DetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: StoreConnector<AppState, PageModel>(
-            converter: (Store<AppState> store) => PageModel.create(store),
-            builder: (BuildContext context, PageModel model) =>
-                Text(model.details.coinInformation.fullName)),
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        textTheme: TextTheme(
-            title: Theme.of(context).textTheme.title
-        ),
-        actions: <Widget>[
-          StoreConnector<AppState, PageModel>(
-              converter: (Store<AppState> store) => PageModel.create(store),
-              builder: (BuildContext context, PageModel model) {
-                return IconButton(
-                  icon: Icon(
-                    Icons.refresh,
-                  ),
-                  onPressed: () => model.onRefresh(),
-                );
-              }
+
+    return Stack(
+      children: <Widget>[
+        Container(
+          decoration: BoxDecoration(
+            gradient: RadialGradient(
+              center: const Alignment(0.0, -0.6),
+              radius: 0.7,
+              colors: [
+                const Color.fromRGBO(56, 64, 104, 1),
+                const Color.fromRGBO(42, 49, 81, 1),
+              ],
+              stops: [0.4, 1.0],
+            ),
           ),
-        ],
-      ),
-      body: Container(
-        padding: EdgeInsets.all(10.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Container(
-              padding: const EdgeInsets.all(0.0),
-              alignment: Alignment.center,
-              width: 1.7976931348623157e+308,
-              child: _CoinInformationWidget(),
+        ),
+        Scaffold(
+          appBar: AppBar(
+            title: Text('DETAILS'),
+            centerTitle: true,
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+            textTheme: TextTheme(
+                title: Theme.of(context).textTheme.title
             ),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  Expanded(
-                    child: _HistogramCostWidget(),
-                  ),
-                ],
+            actions: <Widget>[
+              StoreConnector<AppState, PageModel>(
+                  converter: (Store<AppState> store) => PageModel.create(store),
+                  builder: (BuildContext context, PageModel model) {
+                    return IconButton(
+                      icon: Icon(
+                        Icons.refresh,
+                      ),
+                      onPressed: () => model.onRefresh(),
+                    );
+                  }
               ),
+            ],
+          ),
+          body: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 0.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Container(
+                  alignment: Alignment.center,
+                  width: 1.7976931348623157e+308,
+                  child: _CoinInformationWidget(),
+                ),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      Expanded(
+                        child: _HistogramCostWidget(),
+                      ),
+                    ],
+                  ),
+                ),
+                _HistogramVolumeWidget(),
+              ],
             ),
-            _HistogramVolumeWidget(),
-          ],
+          ),
+          bottomNavigationBar: BottomAppBar(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                _HistogramTimeRangDropDownWidget(),
+                Padding(padding: EdgeInsets.symmetric(horizontal: 5.0)),
+                _CurrencyDropDownWidget(),
+                Padding(padding: EdgeInsets.symmetric(horizontal: 5.0)),
+              ],
+            ),
+          ),
         ),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            _HistogramTimeRangDropDownWidget(),
-            Padding(padding: EdgeInsets.symmetric(horizontal: 5.0)),
-            _CurrencyDropDownWidget(),
-            Padding(padding: EdgeInsets.symmetric(horizontal: 5.0)),
-          ],
-        ),
-      ),
+      ],
     );
   }
 }
@@ -180,36 +196,14 @@ class _CoinInformationWidget extends StatelessWidget {
     return StoreConnector<AppState, PageModel>(
       converter: (Store<AppState> store) => PageModel.create(store),
       builder: (BuildContext context, PageModel model) {
-        return Card(
-          child: Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Row(
-              children: <Widget>[
-                CachedNetworkImage(
-                  imageUrl: model.details.coinInformation.imageUrl,
-                  placeholder: (context, url) => CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
-                  height: 30.0,
-                ),
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        '${model.details.coinInformation.formattedPrice}',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20.0),
-                      ),
-                    ],
-                  ),
-                ),
-                PriceChange(
-                  change: model.details.coinInformation.priceChange,
-                  price: model.details.coinInformation.formattedPriceChange,
-                ),
-              ],
-            ),
-          ),
+
+        return CoinListTile(
+          imageUrl: model.details.coinInformation.imageUrl,
+          name: model.details.coinInformation.name,
+          fullName: model.details.coinInformation.fullName,
+          formattedPrice: model.details.coinInformation.formattedPrice,
+          formattedPriceChange: model.details.coinInformation.formattedPriceChange,
+          priceChange: model.details.coinInformation.priceChange,
         );
       },
     );
