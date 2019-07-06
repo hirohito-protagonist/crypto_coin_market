@@ -84,12 +84,18 @@ class DetailsPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
                       Expanded(
-                        child: _HistogramCostWidget(),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 5.0),
+                          child: _HistogramCostWidget(),
+                        ),
                       ),
                     ],
                   ),
                 ),
-                _HistogramVolumeWidget(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 5.0),
+                  child: _HistogramVolumeWidget(),
+                ),
               ],
             ),
           ),

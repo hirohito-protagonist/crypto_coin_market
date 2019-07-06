@@ -25,7 +25,16 @@ class CoinVolumeState extends State<CoinVolumeWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 5.0),
+      decoration: BoxDecoration(
+        color: const Color.fromRGBO(67, 78, 122, 1),
+        borderRadius: BorderRadius.circular(10.0),
+        border: Border.all(
+          color: const Color.fromRGBO(67, 76, 112, 1),
+          width: 2.0,
+        ),
+      ),
       child: Column(
         children: <Widget>[
           Padding(
