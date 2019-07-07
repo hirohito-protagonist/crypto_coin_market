@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
@@ -68,33 +69,35 @@ class DetailsPage extends StatelessWidget {
           body: Container(
             padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 0.0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 Container(
-                  alignment: Alignment.center,
-                  width: 1.7976931348623157e+308,
                   child: _CoinInformationWidget(),
                 ),
                 Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 5.0),
-                          child: _HistogramCostWidget(),
-                        ),
+                  child: Container(
+                    child: DefaultTabController(
+                      length: 2,
+                      child: Column(
+                        children: <Widget>[
+                          TabBar(
+                            tabs: [
+                              Tab(text: 'COST',),
+                              Tab(text: 'VOLUME',),
+                            ],
+                          ),
+                          Expanded(
+                            child: TabBarView(
+                              physics: NeverScrollableScrollPhysics(),
+                              children: [
+                                _HistogramCostWidget(),
+                                _HistogramVolumeWidget(),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 5.0),
-                  child: _HistogramVolumeWidget(),
                 ),
               ],
             ),
