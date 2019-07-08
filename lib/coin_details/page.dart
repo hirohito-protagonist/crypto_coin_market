@@ -44,6 +44,7 @@ class DetailsPage extends StatelessWidget {
           ),
         ),
         Scaffold(
+          backgroundColor: Colors.transparent,
           appBar: AppBar(
             title: Text('DETAILS'),
             centerTitle: true,
@@ -79,11 +80,20 @@ class DetailsPage extends StatelessWidget {
                       length: 2,
                       child: Column(
                         children: <Widget>[
-                          TabBar(
-                            tabs: [
-                              Tab(text: 'COST',),
-                              Tab(text: 'VOLUME',),
-                            ],
+                          Container(
+                            decoration: BoxDecoration(
+                              color: const Color.fromRGBO(67, 78, 122, 1),
+                              border: Border.all(
+                                color: const Color.fromRGBO(67, 76, 112, 1),
+                                width: 2.0,
+                              ),
+                            ),
+                            child: TabBar(
+                              tabs: [
+                                Tab(text: 'Cost',),
+                                Tab(text: 'Volume',),
+                              ],
+                            ),
                           ),
                           Expanded(
                             child: TabBarView(
