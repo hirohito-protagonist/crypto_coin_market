@@ -29,16 +29,11 @@ class CoinVolumeState extends State<CoinVolumeWidget> {
       padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 5.0),
       child: Column(
         children: <Widget>[
-          Padding(
-            padding: EdgeInsets.all(5.0),
-            child: Text('Volume'),
-          ),
-          Padding(
-            padding: EdgeInsets.all(8.0),
+          Expanded(
             child: _buildCoinVolumeChart(),
           ),
         ],
-      ),
+      )
     );
   }
 
