@@ -51,10 +51,10 @@ class CoinVolumeState extends State<CoinVolumeWidget> {
           renderSpec: charts.SmallTickRendererSpec(
             minimumPaddingBetweenLabelsPx: 0,
             labelStyle: charts.TextStyleSpec(
-              color: charts.MaterialPalette.white,
+              color: charts.Color.fromHex(code: '#848eaf'),
             ),
             lineStyle: charts.LineStyleSpec(
-              color: charts.MaterialPalette.white,
+              color: charts.Color.fromHex(code: '#343c5c'),
             ),
           ),
         ),
@@ -64,10 +64,10 @@ class CoinVolumeState extends State<CoinVolumeWidget> {
             renderSpec: charts.GridlineRendererSpec(
               tickLengthPx: 2,
               labelStyle: charts.TextStyleSpec(
-                color: charts.MaterialPalette.white,
+                color: charts.Color.fromHex(code: '#848eaf'),
               ),
               lineStyle: charts.LineStyleSpec(
-                color: charts.MaterialPalette.white,
+                color: charts.Color.fromHex(code: '#343c5c'),
               ),
             )
         ),
@@ -90,8 +90,8 @@ class CoinVolumeState extends State<CoinVolumeWidget> {
     return [
       charts.Series<LinearTime, DateTime>(
         id: 'TimeSeriesOfVolume',
-        colorFn: (_, __) => charts.MaterialPalette.deepOrange.shadeDefault,
-        fillColorFn: (_, __) => charts.MaterialPalette.deepOrange.shadeDefault,
+        colorFn: (_, __) => charts.Color.fromHex(code: '#b15ace'),
+        fillColorFn: (_, __) => charts.Color.fromHex(code: '#b15ace'),
         domainFn: (LinearTime f, _) => f.time,
         measureFn: (LinearTime f, _) => f.volumeTo,
         data: data,

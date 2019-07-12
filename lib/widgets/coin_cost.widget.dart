@@ -149,10 +149,10 @@ class CoinCostState extends State<CoinCostWidget> {
               renderSpec: charts.SmallTickRendererSpec(
                 minimumPaddingBetweenLabelsPx: 0,
                 labelStyle: charts.TextStyleSpec(
-                  color: charts.MaterialPalette.white,
+                  color: charts.Color.fromHex(code: '#848eaf'),
                 ),
                 lineStyle: charts.LineStyleSpec(
-                  color: charts.MaterialPalette.white,
+                  color: charts.Color.fromHex(code: '#343c5c'),
                 ),
               ),
             ),
@@ -162,17 +162,21 @@ class CoinCostState extends State<CoinCostWidget> {
               renderSpec: charts.GridlineRendererSpec(
                 tickLengthPx: 2,
                 labelStyle: charts.TextStyleSpec(
-                  color: charts.MaterialPalette.white,
+                  color: charts.Color.fromHex(code: '#848eaf'),
                 ),
                 lineStyle: charts.LineStyleSpec(
-                  color: charts.MaterialPalette.white,
+                  color: charts.Color.fromHex(code: '#343c5c'),
                 ),
               )
             ),
             behaviors: [
               charts.Slider(
-                initialDomainValue: histData[0].time,
+                initialDomainValue: histData[(histData.length / 2).floor()].time,
                 onChangeCallback: _onSliderChange,
+                style: charts.SliderStyle(
+                  fillColor: charts.Color.fromHex(code: '#848eaf'),
+                  strokeWidthPx: 0.0,
+                ),
                 snapToDatum: true,
               )
             ],
@@ -188,8 +192,8 @@ class CoinCostState extends State<CoinCostWidget> {
     return [
       charts.Series<LinearTime, DateTime>(
         id: 'TimeSeriesOfClosePrice',
-        colorFn: (_, __) => charts.MaterialPalette.deepOrange.shadeDefault,
-        fillColorFn: (_, __) => charts.MaterialPalette.deepOrange.shadeDefault,
+        colorFn: (_, __) => charts.Color.fromHex(code: '#b15ace'),
+        fillColorFn: (_, __) => charts.Color.fromHex(code: '#b15ace'),
         strokeWidthPxFn: (_, __) => 3,
         domainFn: (LinearTime f, _) => f.time,
         measureFn: (LinearTime f, _) => f.close,
