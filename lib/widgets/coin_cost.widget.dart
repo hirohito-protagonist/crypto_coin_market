@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/scheduler.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/foundation.dart';
@@ -144,6 +146,7 @@ class CoinCostState extends State<CoinCostWidget> {
           charts.TimeSeriesChart(
             _createHistCostData(histData),
             animate: true,
+            defaultInteractions: false,
             domainAxis: charts.DateTimeAxisSpec(
               showAxisLine: true,
               renderSpec: charts.SmallTickRendererSpec(
@@ -174,7 +177,8 @@ class CoinCostState extends State<CoinCostWidget> {
                 initialDomainValue: histData[(histData.length / 2).floor()].time,
                 onChangeCallback: _onSliderChange,
                 style: charts.SliderStyle(
-                  fillColor: charts.Color.fromHex(code: '#848eaf'),
+                  fillColor: charts.Color(a: 100, r: 122, g: 132, b: 166),
+                  handleSize: Rectangle(0, 0, 40, 100),
                   strokeWidthPx: 0.0,
                 ),
                 snapToDatum: true,
