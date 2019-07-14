@@ -142,7 +142,7 @@ class CoinCostState extends State<CoinCostWidget> {
         child: Container(
           padding: const EdgeInsets.all(0.0),
           alignment: Alignment.center,
-          child:
+          child: histData.length == 0 ? Icon(Icons.error) :
           charts.TimeSeriesChart(
             _createHistCostData(histData),
             animate: true,
