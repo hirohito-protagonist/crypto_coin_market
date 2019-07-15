@@ -209,21 +209,19 @@ class CoinCostState extends State<CoinCostWidget> {
   _onSliderChange(point, dynamic domain, charts.SliderListenerDragState dragState) {
 
       void rebuild(_) {
-
-        histData.forEach((d) {
-          final date = d.time;
-
-          if (date.isAtSameMomentAs(domain)) {
+        if (dragState == charts.SliderListenerDragState.end) {
+          final histogramModel = histData.where((d) => d.time.isAtSameMomentAs(domain)).single;
+          if (histogramModel != null) {
             setState(() {
               _selectionChartSliderValue = _SelectionChartSliderValue(
                 date: domain.toString(),
-                close: d.close.toString(),
-                high: d.high.toString(),
-                low: d.low.toString(),
+                close: histogramModel.close.toString(),
+                high: histogramModel.high.toString(),
+                low: histogramModel.low.toString(),
               );
             });
           }
-        });
+        }
       }
 
       SchedulerBinding.instance.addPostFrameCallback(rebuild);
