@@ -60,78 +60,52 @@ class CoinCostState extends State<CoinCostWidget> {
 
   @override
   Widget build(BuildContext context) {
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 5.0),
-      child: Column(
-        children: <Widget>[
-          SizedBox(
-            height: 35.0,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(_selectionChartSliderValue.close == '' ?  '' : 'Close: '),
-                    Text(
-                      _selectionChartSliderValue.close == '' ?  '' : '${_selectionChartSliderValue.close}',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18.0,
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      _selectionChartSliderValue.low == '' ?  '' : ' Low: ',
-                      style: TextStyle(
-                        fontSize: 12.0,
-                      ),
-                    ),
-                    Text(
-                      _selectionChartSliderValue.low == '' ?  '' : '${_selectionChartSliderValue.low}',
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 12.0,
-                      ),
-                    ),
-                    Text(
-                      _selectionChartSliderValue.high == '' ?  '' : ' High: ',
-                      style: TextStyle(
-                        fontSize: 12.0,
-                      ),
-                    ),
-                    Text(
-                      _selectionChartSliderValue.high == '' ?  '' : ' ${_selectionChartSliderValue.high}',
-                      style: TextStyle(
-                        color: Colors.green,
-                        fontSize: 12.0,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+    return Stack(
+      children: <Widget>[
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 5.0),
+          child: Column(
+            children: <Widget>[
+              _buildCoinCostChart(),
+            ],
           ),
-          _buildCoinCostChart(),
-          Padding(
-            padding: EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
-            child: SizedBox(
-              height: 15.0,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(_selectionChartSliderValue.date == '' ? '' : '${_selectionChartSliderValue.date}'),
-                ],
+        ),
+        Positioned(
+          child:  Container(
+            child: Text(
+              _selectionChartSliderValue.date == '' ? '' : '${_selectionChartSliderValue.date}',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 10.0
               ),
             ),
+            decoration: BoxDecoration(
+              color: Color.fromRGBO(70, 82, 130, 0.8),
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            padding: EdgeInsets.all(10.0),
           ),
-        ],
-      ),
+          right: 10.0,
+          top: 10.0,
+        ),
+        Positioned(
+          child:  Container(
+            child: Text(
+              _selectionChartSliderValue.close == '' ?  '' : '${_selectionChartSliderValue.close}',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            decoration: BoxDecoration(
+              color: Color.fromRGBO(70, 82, 130, 0.8),
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            padding: EdgeInsets.all(10.0),
+          ),
+          right: 10.0,
+          top: 50.0,
+        ),
+      ],
     );
   }
 
