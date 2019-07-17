@@ -5,6 +5,7 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:crypto_coin_market/data_source/data_source.dart';
+import 'package:intl/intl.dart';
 
 class CoinCostWidget extends StatefulWidget {
 
@@ -71,41 +72,56 @@ class CoinCostState extends State<CoinCostWidget> {
           ),
         ),
         Positioned(
-          child:  Container(
-            child: Text(
-              _selectionChartSliderValue.date == '' ? '' : '${_selectionChartSliderValue.date}',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 10.0
+          child:  _buildSliderInformation(
+            children: <Widget>[
+              Text(
+                _selectionChartSliderValue.date == '' ? '' :
+                '${DateFormat('yyyy.MM.dd').format(DateTime.parse(_selectionChartSliderValue.date))}',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 10.0
+                ),
               ),
-            ),
-            decoration: BoxDecoration(
-              color: Color.fromRGBO(70, 82, 130, 0.8),
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            padding: EdgeInsets.all(10.0),
+              Text(
+                _selectionChartSliderValue.date == '' ? '' :
+                '  ${DateFormat('HH:mm:ss').format(DateTime.parse(_selectionChartSliderValue.date))}',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
           ),
           right: 10.0,
           top: 10.0,
         ),
         Positioned(
-          child:  Container(
-            child: Text(
-              _selectionChartSliderValue.close == '' ?  '' : '${_selectionChartSliderValue.close}',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
+          child:  _buildSliderInformation(
+            children: <Widget>[
+              Text(
+                _selectionChartSliderValue.close == '' ?  '' : '${_selectionChartSliderValue.close}',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            decoration: BoxDecoration(
-              color: Color.fromRGBO(70, 82, 130, 0.8),
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            padding: EdgeInsets.all(10.0),
+            ],
           ),
           right: 10.0,
           top: 50.0,
         ),
       ],
+    );
+  }
+
+  Widget _buildSliderInformation({List<Widget> children}) {
+    return Container(
+      child: Row(
+        children: children,
+      ),
+      decoration: BoxDecoration(
+        color: Color.fromRGBO(70, 82, 130, 0.8),
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      padding: EdgeInsets.all(10.0),
     );
   }
 
