@@ -26,10 +26,8 @@ class CoinCostState extends State<CoinCostWidget> {
 
   List<HistogramDataModel> histData = [];
   _SelectionChartSliderValue _selectionChartSliderValue = _SelectionChartSliderValue(
-      close: '',
-      date: '',
-      low: '',
-      high: ''
+    price: -1,
+    date: null,
   );
 
   CoinCostState({this.histData,});
@@ -38,25 +36,12 @@ class CoinCostState extends State<CoinCostWidget> {
   void initState() {
     super.initState();
     if (histData.length > 0) {
+      final index = (histData.length / 2).floor();
       _selectionChartSliderValue = _SelectionChartSliderValue(
-        close: histData[0].close.toString(),
-        date: histData[0].time.toString(),
-        high: histData[0].high.toString(),
-        low: histData[0].low.toString(),
+        price: histData[index].close,
+        date: histData[index].time,
       );
     }
-  }
-
-  void update(histData, isRefresh) {
-    setState(() {
-      this.histData = histData;
-      _selectionChartSliderValue = _SelectionChartSliderValue(
-        close: histData[0].close.toString(),
-        date: histData[0].time.toString(),
-        high: histData[0].high.toString(),
-        low: histData[0].low.toString(),
-      );
-    });
   }
 
   @override
@@ -75,16 +60,16 @@ class CoinCostState extends State<CoinCostWidget> {
           child:  _buildSliderInformation(
             children: <Widget>[
               Text(
-                _selectionChartSliderValue.date == '' ? '' :
-                '${DateFormat('yyyy.MM.dd').format(DateTime.parse(_selectionChartSliderValue.date))}',
+                _selectionChartSliderValue.date == null ? '' :
+                '${DateFormat('yyyy.MM.dd').format(_selectionChartSliderValue.date)}',
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 10.0
                 ),
               ),
               Text(
-                _selectionChartSliderValue.date == '' ? '' :
-                '  ${DateFormat('HH:mm:ss').format(DateTime.parse(_selectionChartSliderValue.date))}',
+                _selectionChartSliderValue.date == null ? '' :
+                '  ${DateFormat('HH:mm:ss').format(_selectionChartSliderValue.date)}',
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                 ),
@@ -98,7 +83,7 @@ class CoinCostState extends State<CoinCostWidget> {
           child:  _buildSliderInformation(
             children: <Widget>[
               Text(
-                _selectionChartSliderValue.close == '' ?  '' : '${_selectionChartSliderValue.close}',
+                _selectionChartSliderValue.price == -1 ?  '' : '${_selectionChartSliderValue.price}',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
@@ -164,7 +149,7 @@ class CoinCostState extends State<CoinCostWidget> {
             ),
             behaviors: [
               charts.Slider(
-                initialDomainValue: histData[(histData.length / 2).floor()].time,
+                initialDomainValue: _selectionChartSliderValue.date,
                 onChangeCallback: _onSliderChange,
                 style: charts.SliderStyle(
                   fillColor: charts.Color(a: 100, r: 122, g: 132, b: 166),
@@ -204,10 +189,8 @@ class CoinCostState extends State<CoinCostWidget> {
           if (histogramModel != null) {
             setState(() {
               _selectionChartSliderValue = _SelectionChartSliderValue(
-                date: domain.toString(),
-                close: histogramModel.close.toString(),
-                high: histogramModel.high.toString(),
-                low: histogramModel.low.toString(),
+                date: domain,
+                price: histogramModel.close,
               );
             });
           }
@@ -229,10 +212,8 @@ class LinearTime {
 }
 
 class _SelectionChartSliderValue {
-  final String date;
-  final String close;
-  final String high;
-  final String low;
+  final DateTime date;
+  final num price;
 
-  _SelectionChartSliderValue({this.date, this.close, this.high, this.low});
+  _SelectionChartSliderValue({this.date, this.price});
 }
