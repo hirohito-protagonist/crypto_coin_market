@@ -19,9 +19,8 @@ class CoinVolumeWidget extends StatefulWidget {
 
 class CoinVolumeState extends State<CoinVolumeWidget> {
   List<HistogramDataModel> histData = [];
-  bool isRefresh;
 
-  CoinVolumeState({this.histData, this.isRefresh});
+  CoinVolumeState({this.histData});
 
   @override
   Widget build(BuildContext context) {
@@ -74,13 +73,6 @@ class CoinVolumeState extends State<CoinVolumeWidget> {
         defaultRenderer: charts.BarRendererConfig<DateTime>(),
       ),
     );
-  }
-
-  void update(histData, isRefresh) {
-    setState(() {
-      this.histData = histData;
-      this.isRefresh = isRefresh;
-    });
   }
 
   static List<charts.Series<LinearTime, DateTime>> _createHistVolumeData(List<HistogramDataModel> histData)  {
