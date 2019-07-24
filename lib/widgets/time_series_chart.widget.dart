@@ -153,9 +153,10 @@ class TimeSeriesChartStateWidget_ extends State<TimeSeriesChartWidget> {
                       initialDomainValue: _selectionValue.time,
                       onChangeCallback: _onSliderChange,
                       style: charts.SliderStyle(
-                        fillColor: charts.Color(a: 100, r: 122, g: 132, b: 166),
-                        handleSize: Rectangle(0, 0, 40, 100),
-                        strokeWidthPx: 0.0,
+                        fillColor: charts.Color(a: 0, r: 122, g: 132, b: 166),
+                        handleSize: Rectangle(0, 0, 1000, 1000),
+                        strokeWidthPx: 2.0,
+                        strokeColor: charts.Color.fromHex(code: '#f65497')
                       ),
                       snapToDatum: true,
                     )
