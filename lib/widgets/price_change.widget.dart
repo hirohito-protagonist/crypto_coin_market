@@ -17,7 +17,7 @@ class PriceChange extends StatelessWidget {
           Text(
             price == '' ? '' : '${price}%',
             style: TextStyle(
-              color: change == 0 ? Colors.black : change > 0 ? Colors.green : Colors.red,
+              color: change == 0 ? const Color(0xFFa2aed0) : change > 0 ? const Color(0xFFa2ea76) : const Color(0xFFff66b9),
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -25,7 +25,7 @@ class PriceChange extends StatelessWidget {
             children: <Widget>[
               Icon(
                 change == 0 ? Icons.trending_flat : change > 0 ? Icons.trending_up : Icons.trending_down,
-                color: change == 0 ? Colors.black : change > 0 ? Colors.green : Colors.red,
+                color: change == 0 ? const Color(0xFFa2aed0) : change > 0 ? const Color(0xFFa2ea76) : const Color(0xFFff66b9),
               ),
             ],
           ),

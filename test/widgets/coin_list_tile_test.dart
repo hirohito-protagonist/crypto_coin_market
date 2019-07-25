@@ -50,7 +50,7 @@ void main() {
     ));
 
     expect(find.byWidgetPredicate(
-      (Widget widget) => widget is Text && widget.style == TextStyle(color: Colors.black),
+      (Widget widget) => widget is Text && widget.style == TextStyle(color: const Color(0xFFa2aed0)),
       description: 'Black text for unchanged price change',
     ), findsOneWidget);
   });
@@ -66,7 +66,7 @@ void main() {
     ));
 
     expect(find.byWidgetPredicate(
-          (Widget widget) => widget is Text && widget.style == TextStyle(color: Colors.red),
+          (Widget widget) => widget is Text && widget.style == TextStyle(color: const Color(0xFFff66b9)),
       description: 'Red text for price change going down',
     ), findsOneWidget);
   });
@@ -82,7 +82,7 @@ void main() {
     ));
 
     expect(find.byWidgetPredicate(
-          (Widget widget) => widget is Text && widget.style == TextStyle(color: Colors.green),
+          (Widget widget) => widget is Text && widget.style == TextStyle(color: const Color(0xFFa2ea76)),
       description: 'Green text for price change going up',
     ), findsOneWidget);
   });

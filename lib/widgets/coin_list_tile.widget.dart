@@ -13,6 +13,7 @@ class CoinListTile extends StatelessWidget {
   final num priceChange;
   final String formattedPriceChange;
   final SelectedCoinTileCallback onSelect;
+  final BorderRadiusGeometry borderRadius;
 
   const CoinListTile({
     Key key,
@@ -22,6 +23,7 @@ class CoinListTile extends StatelessWidget {
     this.formattedPrice = '',
     this.priceChange = 0,
     this.formattedPriceChange = '',
+    this.borderRadius = null,
     this.onSelect
   }) : super(key: key);
 
@@ -34,7 +36,7 @@ class CoinListTile extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 5.0),
         decoration: BoxDecoration(
           color: const Color.fromRGBO(67, 78, 122, 1),
-          borderRadius: BorderRadius.circular(10.0),
+          borderRadius: borderRadius ?? BorderRadius.circular(10.0),
           border: Border.all(
             color: const Color.fromRGBO(67, 76, 112, 1),
             width: 2.0,

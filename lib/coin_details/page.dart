@@ -223,6 +223,7 @@ class _CoinInformationWidget extends StatelessWidget {
           formattedPrice: model.details.coinInformation.formattedPrice,
           formattedPriceChange: model.details.coinInformation.formattedPriceChange,
           priceChange: model.details.coinInformation.priceChange,
+          borderRadius: BorderRadius.only(topLeft: Radius.circular(10.0), topRight: Radius.circular(10.0)),
         );
       },
     );
