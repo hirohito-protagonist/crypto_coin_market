@@ -6,7 +6,7 @@ import 'package:crypto_coin_market/data_source/data_source.dart';
 import './model.dart';
 
 class NavigationKeys {
-  static final navigationState = new GlobalKey<NavigatorState>();
+  static final navigationState = GlobalKey<NavigatorState>();
 }
 
 class NavigationChangeToDetailsPageAction {

@@ -53,7 +53,7 @@ class CoinListTile extends StatelessWidget {
                 height: 30.0,
               ),
               onTap: () {
-                this.onSelect(new SelectedCoinTile(
+                this.onSelect(SelectedCoinTile(
                   fullName: fullName,
                   imageUrl: imageUrl,
                   name: name,

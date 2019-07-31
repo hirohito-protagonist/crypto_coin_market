@@ -128,9 +128,9 @@ class _CurrencyDropDownWidget extends StatelessWidget {
           return DropdownButton(
             value: model.activeCurrency(),
             items: model.availableCurrencies().map((String value) {
-              return new DropdownMenuItem<String>(
+              return DropdownMenuItem<String>(
                 value: value,
-                child: new Text(value),
+                child: Text(value),
               );
             }).toList(),
             onChanged: (String currency) {
@@ -150,9 +150,9 @@ class _VolumePageDropDownWidget extends StatelessWidget {
         return DropdownButton(
           value: model.activePage() + 1,
           items: List.generate(26, (i) => i + 1).map((int value) {
-            return new DropdownMenuItem<num>(
+            return DropdownMenuItem<num>(
               value: value,
-              child: new Text(value.toString()),
+              child: Text(value.toString()),
             );
           }).toList(),
           onChanged: (page) {

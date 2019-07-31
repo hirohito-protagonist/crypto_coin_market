@@ -195,9 +195,9 @@ class _CurrencyDropDownWidget extends StatelessWidget {
           return DropdownButton(
             value: model.activeCurrency,
             items: model.availableCurrencies.map((String value) {
-              return new DropdownMenuItem<String>(
+              return DropdownMenuItem<String>(
                 value: value,
-                child: new Text(value),
+                child: Text(value),
               );
             }).toList(),
             onChanged: (String currency) {
