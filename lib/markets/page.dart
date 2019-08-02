@@ -38,7 +38,14 @@ class MarketsPage extends StatelessWidget {
         Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
-            title: Text('MARKETS'),
+            title: Text(
+              'MARKETS',
+              style: TextStyle(
+                letterSpacing: 4.0,
+                fontSize: 15.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             backgroundColor: Colors.transparent,
             elevation: 0.0,
             centerTitle: true,
