@@ -121,7 +121,7 @@ class TimeSeriesChartStateWidget_ extends State<TimeSeriesChartWidget> {
               ? Icon(Icons.error)
               : charts.TimeSeriesChart(
                   _createHistData(data),
-                  animate: true,
+                  animate: false,
                   defaultInteractions: false,
                   domainAxis: charts.DateTimeAxisSpec(
                     showAxisLine: true,
@@ -153,10 +153,10 @@ class TimeSeriesChartStateWidget_ extends State<TimeSeriesChartWidget> {
                       initialDomainValue: _selectionValue.time,
                       onChangeCallback: _onSliderChange,
                       style: charts.SliderStyle(
-                        fillColor: charts.Color(a: 0, r: 122, g: 132, b: 166),
-                        handleSize: Rectangle(0, 0, 1000, 1000),
-                        strokeWidthPx: 2.0,
-                        strokeColor: charts.Color.fromHex(code: '#f65497')
+                        fillColor: charts.Color(a: 50, r: 122, g: 132, b: 166),
+                        handleSize: Rectangle(0, 0, 50, 100),
+                        strokeWidthPx: 1.0,
+                        strokeColor: charts.Color.fromHex(code: '#848eaf')
                       ),
                       snapToDatum: true,
                     )
