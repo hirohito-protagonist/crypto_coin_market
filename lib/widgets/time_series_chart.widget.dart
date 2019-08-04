@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/foundation.dart';
@@ -23,6 +24,7 @@ class TimeSeriesChartWidget extends StatefulWidget {
 }
 
 class TimeSeriesChartStateWidget_ extends State<TimeSeriesChartWidget> {
+  final GlobalKey<_ChartSliderInformationStateWidget> _key = GlobalKey();
   List<ChartDataModel> data = [];
   ChartDataModel _selectionValue = ChartDataModel(
     value: -1,
@@ -58,55 +60,14 @@ class TimeSeriesChartStateWidget_ extends State<TimeSeriesChartWidget> {
           ),
         ),
         Positioned(
-          child: _buildSliderInformation(
-            children: <Widget>[
-              Text(
-                _selectionValue.time == null
-                    ? ''
-                    : '${DateFormat('yyyy.MM.dd').format(_selectionValue.time)}',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10.0),
-              ),
-              Text(
-                _selectionValue.time == null
-                    ? ''
-                    : '  ${DateFormat('HH:mm:ss').format(_selectionValue.time)}',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
+          child: _ChartSliderInformationWidget(
+            model: _selectionValue,
+            key: _key,
           ),
           right: 10.0,
           top: 10.0,
         ),
-        Positioned(
-          child: _buildSliderInformation(
-            children: <Widget>[
-              Text(
-                _selectionValue.value == -1 ? '' : '${_selectionValue.value}',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          right: 10.0,
-          top: 50.0,
-        ),
       ],
-    );
-  }
-
-  Widget _buildSliderInformation({List<Widget> children}) {
-    return Container(
-      child: Row(
-        children: children,
-      ),
-      decoration: BoxDecoration(
-        color: Color.fromRGBO(70, 82, 130, 0.8),
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      padding: EdgeInsets.all(10.0),
     );
   }
 
@@ -188,12 +149,10 @@ class TimeSeriesChartStateWidget_ extends State<TimeSeriesChartWidget> {
       if (dragState == charts.SliderListenerDragState.end) {
         final model = data.where((d) => d.time.isAtSameMomentAs(domain)).single;
         if (model != null) {
-          setState(() {
-            _selectionValue = ChartDataModel(
-              time: domain,
-              value: model.value,
-            );
-          });
+          _key.currentState.update(ChartDataModel(
+            time: domain,
+            value: model.value,
+          ));
         }
       }
     }
@@ -207,4 +166,80 @@ class ChartDataModel {
   final num value;
 
   ChartDataModel({this.time, this.value});
+}
+
+
+class _ChartSliderInformationWidget extends StatefulWidget {
+  ChartDataModel model;
+
+  _ChartSliderInformationWidget({
+    Key key,
+    this.model,
+  }) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() {
+    return _ChartSliderInformationStateWidget(
+      model: model,
+    );
+  }
+}
+
+class _ChartSliderInformationStateWidget extends State<_ChartSliderInformationWidget> {
+  ChartDataModel model;
+
+  _ChartSliderInformationStateWidget({
+    this.model,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: <Widget>[
+        _buildInformation(
+          children: [
+            Text(model.time == null ? '' : '${DateFormat('yyyy.MM.dd').format(model.time)}',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10.0),
+            ),
+            Text(model.time == null ? '' : '  ${DateFormat('HH:mm:ss').format(model.time)}',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+        _buildInformation(
+          children: [
+            Text(
+              model.value == -1 ? '' : '${model.value}',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ]
+        ),
+      ],
+    );
+  }
+
+  Widget _buildInformation({List<Widget> children}) {
+    return Container(
+      child: Row(
+        children: children,
+      ),
+      decoration: BoxDecoration(
+        color: Color.fromRGBO(70, 82, 130, 0.8),
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      margin: EdgeInsets.symmetric(horizontal: 0.0, vertical: 5.0),
+      padding: EdgeInsets.all(10.0),
+    );
+  }
+
+  update(ChartDataModel m) {
+    setState(() {
+      model = m;
+    });
+  }
 }
