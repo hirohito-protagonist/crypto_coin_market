@@ -80,51 +80,90 @@ class TimeSeriesChartStateWidget_ extends State<TimeSeriesChartWidget> {
           alignment: Alignment.center,
           child: data.length == 0
               ? Icon(Icons.error)
-              : charts.TimeSeriesChart(
-                  _createHistData(data),
-                  animate: false,
-                  defaultInteractions: false,
-                  domainAxis: charts.DateTimeAxisSpec(
-                    showAxisLine: true,
-                    renderSpec: charts.SmallTickRendererSpec(
-                      minimumPaddingBetweenLabelsPx: 0,
-                      labelStyle: charts.TextStyleSpec(
-                        color: charts.Color.fromHex(code: '#848eaf'),
-                      ),
-                      lineStyle: charts.LineStyleSpec(
-                        color: charts.Color.fromHex(code: '#343c5c'),
-                      ),
-                    ),
-                  ),
-                  primaryMeasureAxis: charts.NumericAxisSpec(
-                      tickProviderSpec:
-                          charts.BasicNumericTickProviderSpec(zeroBound: false),
-                      showAxisLine: true,
-                      renderSpec: charts.GridlineRendererSpec(
-                        tickLengthPx: 2,
-                        labelStyle: charts.TextStyleSpec(
-                          color: charts.Color.fromHex(code: '#848eaf'),
-                        ),
-                        lineStyle: charts.LineStyleSpec(
-                          color: charts.Color.fromHex(code: '#343c5c'),
-                        ),
-                      )),
-                  behaviors: [
-                    charts.Slider(
-                      initialDomainValue: _selectionValue.time,
-                      onChangeCallback: _onSliderChange,
-                      style: charts.SliderStyle(
-                        fillColor: charts.Color(a: 50, r: 122, g: 132, b: 166),
-                        handleSize: Rectangle(0, 0, 50, 100),
-                        strokeWidthPx: 1.0,
-                        strokeColor: charts.Color.fromHex(code: '#848eaf')
-                      ),
-                      snapToDatum: true,
-                    )
-                  ],
-                ),
+              : _TimeChartWidget(
+            data: data,
+            onChange: (model) {
+              _key.currentState.update(model);
+            }
+          ),
         ),
       ),
+    );
+  }
+
+}
+
+class ChartDataModel {
+  final DateTime time;
+  final num value;
+
+  ChartDataModel({this.time, this.value});
+}
+
+class _TimeChartWidget extends StatelessWidget {
+
+  List<ChartDataModel> data = [];
+  ChartDataModel _model;
+  final Function(ChartDataModel) onChange;
+
+  _TimeChartWidget({
+    Key key,
+    this.data,
+    this.onChange
+  }) : super(key: key) {
+    if (data.length > 0) {
+      final index = (data.length / 2).floor();
+      _model = ChartDataModel(
+        value: data[index].value,
+        time: data[index].time,
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return charts.TimeSeriesChart(
+      _createHistData(data),
+      animate: false,
+      defaultInteractions: false,
+      domainAxis: charts.DateTimeAxisSpec(
+        showAxisLine: true,
+        renderSpec: charts.SmallTickRendererSpec(
+          minimumPaddingBetweenLabelsPx: 0,
+          labelStyle: charts.TextStyleSpec(
+            color: charts.Color.fromHex(code: '#848eaf'),
+          ),
+          lineStyle: charts.LineStyleSpec(
+            color: charts.Color.fromHex(code: '#343c5c'),
+          ),
+        ),
+      ),
+      primaryMeasureAxis: charts.NumericAxisSpec(
+          tickProviderSpec:
+          charts.BasicNumericTickProviderSpec(zeroBound: false),
+          showAxisLine: true,
+          renderSpec: charts.GridlineRendererSpec(
+            tickLengthPx: 2,
+            labelStyle: charts.TextStyleSpec(
+              color: charts.Color.fromHex(code: '#848eaf'),
+            ),
+            lineStyle: charts.LineStyleSpec(
+              color: charts.Color.fromHex(code: '#343c5c'),
+            ),
+          )),
+      behaviors: [
+        charts.Slider(
+          initialDomainValue: _model.time,
+          onChangeCallback: _onSliderChange,
+          style: charts.SliderStyle(
+              fillColor: charts.Color(a: 50, r: 122, g: 132, b: 166),
+              handleSize: Rectangle(0, 0, 50, 100),
+              strokeWidthPx: 1.0,
+              strokeColor: charts.Color.fromHex(code: '#848eaf')
+          ),
+          snapToDatum: true,
+        )
+      ],
     );
   }
 
@@ -149,7 +188,7 @@ class TimeSeriesChartStateWidget_ extends State<TimeSeriesChartWidget> {
       if (dragState == charts.SliderListenerDragState.end) {
         final model = data.where((d) => d.time.isAtSameMomentAs(domain)).single;
         if (model != null) {
-          _key.currentState.update(ChartDataModel(
+          this.onChange(ChartDataModel(
             time: domain,
             value: model.value,
           ));
@@ -159,13 +198,6 @@ class TimeSeriesChartStateWidget_ extends State<TimeSeriesChartWidget> {
 
     SchedulerBinding.instance.addPostFrameCallback(rebuild);
   }
-}
-
-class ChartDataModel {
-  final DateTime time;
-  final num value;
-
-  ChartDataModel({this.time, this.value});
 }
 
 
