@@ -183,7 +183,7 @@ class _TimeChartWidget extends StatelessWidget {
   }
 
   _onSliderChange(
-      point, dynamic domain, charts.SliderListenerDragState dragState) {
+      point, dynamic domain, roleId, charts.SliderListenerDragState dragState) {
     void rebuild(_) {
       if (dragState == charts.SliderListenerDragState.end) {
         final model = data.where((d) => d.time.isAtSameMomentAs(domain)).single;
