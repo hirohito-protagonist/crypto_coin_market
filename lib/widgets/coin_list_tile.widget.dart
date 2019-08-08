@@ -23,7 +23,7 @@ class CoinListTile extends StatelessWidget {
     this.formattedPrice = '',
     this.priceChange = 0,
     this.formattedPriceChange = '',
-    this.borderRadius = null,
+    this.borderRadius,
     this.onSelect
   }) : super(key: key);
 
@@ -69,14 +69,14 @@ class CoinListTile extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '${fullName}',
+                            fullName,
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           Text(
-                            '${name}',
+                            name,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
@@ -88,7 +88,7 @@ class CoinListTile extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: <Widget>[
                         Text(
-                          '${formattedPrice}',
+                          formattedPrice,
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,

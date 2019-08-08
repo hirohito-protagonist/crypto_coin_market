@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
@@ -7,8 +6,6 @@ import 'package:crypto_coin_market/core/core.dart';
 import 'package:crypto_coin_market/data_source/data_source.dart';
 
 
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:crypto_coin_market/widgets/price_change.widget.dart';
 import 'package:crypto_coin_market/widgets/coin_cost.widget.dart';
 import 'package:crypto_coin_market/widgets/coin_volume.widget.dart';
 import 'package:crypto_coin_market/widgets/coin_list_tile.widget.dart';

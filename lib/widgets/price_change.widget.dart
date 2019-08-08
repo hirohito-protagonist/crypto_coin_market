@@ -15,7 +15,7 @@ class PriceChange extends StatelessWidget {
       child: Row(
         children: <Widget>[
           Text(
-            price == '' ? '' : '${price}%',
+            price == '' ? '' : price,
             style: TextStyle(
               color: change == 0 ? const Color(0xFFa2aed0) : change > 0 ? const Color(0xFFa2ea76) : const Color(0xFFff66b9),
               fontWeight: FontWeight.bold,

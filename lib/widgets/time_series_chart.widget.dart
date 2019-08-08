@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class TimeSeriesChartWidget extends StatefulWidget {
-  List<ChartDataModel> data = [];
+  final List<ChartDataModel> data;
 
   TimeSeriesChartWidget({
     Key key,
@@ -17,13 +17,13 @@ class TimeSeriesChartWidget extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return TimeSeriesChartStateWidget_(
+    return _TimeSeriesChartStateWidget(
       data: data,
     );
   }
 }
 
-class TimeSeriesChartStateWidget_ extends State<TimeSeriesChartWidget> {
+class _TimeSeriesChartStateWidget extends State<TimeSeriesChartWidget> {
   final GlobalKey<_ChartSliderInformationStateWidget> _key = GlobalKey();
   List<ChartDataModel> data = [];
   ChartDataModel _selectionValue = ChartDataModel(
@@ -31,7 +31,7 @@ class TimeSeriesChartStateWidget_ extends State<TimeSeriesChartWidget> {
     time: null,
   );
 
-  TimeSeriesChartStateWidget_({
+  _TimeSeriesChartStateWidget({
     this.data,
   });
 
@@ -102,7 +102,7 @@ class ChartDataModel {
 
 class _TimeChartWidget extends StatelessWidget {
 
-  List<ChartDataModel> data = [];
+  final List<ChartDataModel> data;
   ChartDataModel _model;
   final Function(ChartDataModel) onChange;
 
@@ -202,7 +202,7 @@ class _TimeChartWidget extends StatelessWidget {
 
 
 class _ChartSliderInformationWidget extends StatefulWidget {
-  ChartDataModel model;
+  final ChartDataModel model;
 
   _ChartSliderInformationWidget({
     Key key,

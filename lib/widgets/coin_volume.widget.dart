@@ -4,7 +4,7 @@ import './time_series_chart.widget.dart';
 
 class CoinVolumeWidget extends StatefulWidget {
 
-  List<HistogramDataModel> histData = [];
+  final List<HistogramDataModel> histData;
 
   CoinVolumeWidget({Key key, this.histData,}): super(key: key);
 

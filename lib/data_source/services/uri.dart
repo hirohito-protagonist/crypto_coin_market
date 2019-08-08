@@ -19,7 +19,7 @@ class UriService {
       HistogramServiceType.Hour: 'hour',
       HistogramServiceType.Minute: 'minute'
     }[histogramServiceType];
-    return Uri.https(authority, 'data/histo${histogramType}', queryParameters);
+    return Uri.https(authority, 'data/histo' + histogramType, queryParameters);
   }
 }
 
