@@ -2,8 +2,11 @@
 Crypto currency mobile app explorer build with flutter.
 The data is from [CryptoCompare](https://www.cryptocompare.com/) API.
 
-![](/screenshots/coin_list.png)
-![](/screenshots/coin_details.png)
+<p align="center">
+  <img src="./screenshots/coin_list.png" alt="Markets" width="150">
+  <img src="./screenshots/coin_details.png" alt="Price details" width="150">
+  <img src="./screenshots/coin_details2.png" alt="Volume details" width="150">
+</p>
 
 ## Getting started
 
