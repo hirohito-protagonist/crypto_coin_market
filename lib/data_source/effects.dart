@@ -28,7 +28,7 @@ class _VolumeWithPricesEffects implements MiddlewareClass<AppState> {
 
     store.dispatch(LoadingAction(serviceType: ServicesType.Volume));
     _dataOperation = CancelableOperation.fromFuture(
-        TopListsService(client: http.Client()).volume(currency, page: page)
+        TopListsService(client: http.Client()).totalVolume(currency, page: page)
             .then((volume) {
 
           store.dispatch(SuccessAction(serviceType: ServicesType.Volume, response: volume));

@@ -45,35 +45,45 @@ void main() {
       expect(data[0].coinInfo.imageUrl, 'https://www.cryptocompare.com/btc.png');
     });
 
-    test('error response should return empty collection', () async {
+    test('server error should throw exception', () async {
 
       // Given
       final client = MockClient();
       final service = TopListsService(client: client);
+      var errorMessage = '';
 
       // When
       when(client.get(topListUrl))
-          .thenAnswer((_) async => http.Response('', 500));
+          .thenAnswer((_) async => http.Response('Server Error', 500));
 
-      final data = await service.totalVolume(Currency.fromCurrencyCode('USD'));
+      try {
+        await service.totalVolume(Currency.fromCurrencyCode('USD'));
+      } catch(e) {
+        errorMessage = e.message;
+      }
 
       // Then
-      expect(data.length, 0);
+      expect(errorMessage, 'Unexpected character');
     });
 
-    test('parse error resposne should return empty collection', () async {
+    test('parse error resposne should throw exception', () async {
 
       // Given
       final client = MockClient();
       final service = TopListsService(client: client);
+      var errorMessage = '';
 
       // When
       when(client.get(topListUrl))
-          .thenAnswer((_) async => http.Response('', 200));
-      final data = await service.totalVolume(Currency.fromCurrencyCode('USD'));
+          .thenAnswer((_) async => http.Response('Plain text', 200));
+      try {
+        await service.totalVolume(Currency.fromCurrencyCode('USD'));
+      } catch(e) {
+        errorMessage = e.message;
+      }
 
       // Then
-      expect(data.length, 0);
+      expect(errorMessage, 'Unexpected character');
     });
   });
 
