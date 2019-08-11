@@ -1,11 +1,11 @@
 # crypto_coin_market
-Crypto currency mobile app explorer build with flutter.
-The data is from [CryptoCompare](https://www.cryptocompare.com/) API.
+The crypto coin market is an mobile application implemented in [Flutter](https://flutter.io/)
+and consume [CryptoCompare](https://www.cryptocompare.com/) API.
 
 <p align="center">
-  <img src="./screenshots/coin_list.png" alt="Markets" width="150">
-  <img src="./screenshots/coin_details.png" alt="Price details" width="150">
-  <img src="./screenshots/coin_details2.png" alt="Volume details" width="150">
+  <img src="./screenshots/coin_list.png" alt="Markets" width="250">
+  <img src="./screenshots/coin_details.png" alt="Price details" width="250">
+  <img src="./screenshots/coin_details2.png" alt="Volume details" width="250">
 </p>
 
 ## Getting started
@@ -18,6 +18,17 @@ The data is from [CryptoCompare](https://www.cryptocompare.com/) API.
 $ git clone https://github.com/hirohito-protagonist/crypto_coin_market.git
 $ cd crypto_coin_market/
 ```
+
+#### 3. Run application
+```sh
+$ flutter run
+```
+
+#### 4. (Optional) Run test
+```sh
+$ flutter test
+```
+
 
 ## What is Flutter?
 
