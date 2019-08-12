@@ -9,8 +9,8 @@ void main() {
   testWidgets('Should render price change as black when it was not change in the price', (WidgetTester tester) async {
 
     await tester.pumpWidget(MaterialApp(
-      home: Material(
-        child: PriceChange(
+      home: Scaffold(
+        body: PriceChange(
           change: 0,
           price: '5.98',
         ),
@@ -27,8 +27,8 @@ void main() {
   testWidgets('Should render price change as red when the price go down', (WidgetTester tester) async {
 
     await tester.pumpWidget(MaterialApp(
-      home: Material(
-        child: PriceChange(
+      home: Scaffold(
+        body: PriceChange(
           change: -2.5,
           price: '5.98',
         ),
@@ -45,8 +45,8 @@ void main() {
   testWidgets('Should render price change as green when the price go up', (WidgetTester tester) async {
 
     await tester.pumpWidget(MaterialApp(
-      home: Material(
-        child: PriceChange(
+      home: Scaffold(
+        body: PriceChange(
           change: 3,
           price: '5.98',
         ),

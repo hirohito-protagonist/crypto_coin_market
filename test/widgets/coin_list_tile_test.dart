@@ -7,27 +7,35 @@ void main() {
 
   testWidgets('Should render content with defualt data', (WidgetTester tester) async {
 
-    await tester.pumpWidget(new MaterialApp(
-      home: new Material(
-        child: new CoinListTile(),
+    await tester.pumpWidget(MaterialApp(
+      home: Scaffold(
+        body: ListView(
+          children: <Widget>[
+            CoinListTile()
+          ],
+        ),
       ),
     ));
 
-
+    print(tester.allWidgets.toList());
     expect(find.text(''), findsNWidgets(4));
     expect(find.text('%'), findsNothing);
   });
 
   testWidgets('Should render content with provided data', (WidgetTester tester) async {
 
-    await tester.pumpWidget(new MaterialApp(
-      home: new Material(
-        child: new CoinListTile(
-          name: 'BTC',
-          fullName: 'Bitcoin',
-          formattedPrice: '\$ 7000',
-          formattedPriceChange: '5.98',
-          priceChange: 1.2,
+    await tester.pumpWidget(MaterialApp(
+      home: Scaffold(
+        body: ListView(
+          children: <Widget>[
+            CoinListTile(
+              name: 'BTC',
+              fullName: 'Bitcoin',
+              formattedPrice: '\$ 7000',
+              formattedPriceChange: '5.98',
+              priceChange: 1.2,
+            ),
+          ],
         ),
       ),
     ));
@@ -41,10 +49,14 @@ void main() {
 
   testWidgets('Should render price change as black when it was not change in the price', (WidgetTester tester) async {
 
-    await tester.pumpWidget(new MaterialApp(
-      home: new Material(
-        child: new CoinListTile(
-          priceChange: 0,
+    await tester.pumpWidget(MaterialApp(
+      home: Scaffold(
+        body: ListView(
+          children: <Widget>[
+            CoinListTile(
+              priceChange: 0,
+            ),
+          ],
         ),
       ),
     ));
@@ -57,10 +69,14 @@ void main() {
 
   testWidgets('Should render price change as red when the price go down', (WidgetTester tester) async {
 
-    await tester.pumpWidget(new MaterialApp(
-      home: new Material(
-        child: new CoinListTile(
-          priceChange: -2.5,
+    await tester.pumpWidget(MaterialApp(
+      home: Scaffold(
+        body: ListView(
+          children: <Widget>[
+            CoinListTile(
+              priceChange: -2.5,
+            ),
+          ],
         ),
       ),
     ));
@@ -73,10 +89,14 @@ void main() {
 
   testWidgets('Should render price change as green when the price go up', (WidgetTester tester) async {
 
-    await tester.pumpWidget(new MaterialApp(
-      home: new Material(
-        child: new CoinListTile(
-          priceChange: 3,
+    await tester.pumpWidget(MaterialApp(
+      home: Scaffold(
+        body: ListView(
+          children: <Widget>[
+            CoinListTile(
+              priceChange: 3,
+            ),
+          ],
         ),
       ),
     ));
