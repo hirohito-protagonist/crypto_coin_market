@@ -1,13 +1,18 @@
 name: crypto_coin_market
 description: A new Flutter project.
 
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
 dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^0.1.2
   http: 0.12.0+2
   flutter_redux: 0.5.3
-  cached_network_image: 1.1.1
+  cached_network_image: 2.0.0
   charts_flutter: 0.8.1
   async: ^2.3.0
   intl: 0.16.0
